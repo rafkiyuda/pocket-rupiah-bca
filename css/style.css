@@ -1783,4 +1783,32 @@ body {
     border-color: #0077C8;
 }
 
+.pocket-balance-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+}
+
+.target-label {
+    font-size: 0.7rem;
+    color: #64748B;
+    font-weight: 500;
+}
+
+.prediction-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 6px;
+}
+
+.goal-achievement {
+    font-size: 0.65rem;
+    color: #0077C8;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
 

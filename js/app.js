@@ -420,15 +420,17 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <div class="pocket-idr-card ${p.type}">
                                     <div class="pocket-card-icon">${p.type === 'emergency' ? '🚨' : p.type === 'shared' ? '👨‍👩‍👧' : '🥖'}</div>
                                     <div class="pocket-card-info">
-                                        <span class="currency">IDR ${p.balance}</span>
-                                        <div class="pocket-label-row">
-                                            <span class="label-text">${p.name}</span>
-                                            ${p.locked ? '<span class="lock-icon">🔒</span>' : ''}
+                                        <div class="pocket-balance-row">
+                                            <span class="currency">IDR ${p.balance}</span>
+                                            <span class="target-label">Target: IDR ${p.target}</span>
                                         </div>
                                         <div class="progress-bar-container">
                                             <div class="progress-fill" style="width: ${p.progress}%"></div>
                                         </div>
-                                        <span class="time-to-goal">Predictive: ${Math.ceil((100 - p.progress) / 5)} bulan lagi</span>
+                                        <div class="prediction-row">
+                                            <span class="time-to-goal">Predictive: <strong>${Math.ceil((100 - p.progress) / 5)} bulan</strong> lagi</span>
+                                            <span class="goal-achievement">Goal Achievement</span>
+                                        </div>
                                     </div>
                                 </div>
                             `).join('')}
