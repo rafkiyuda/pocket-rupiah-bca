@@ -1877,4 +1877,14 @@ body {
     letter-spacing: 0.5px;
 }
 
+.tour-tip-badge {
+    background: #FFFBEB;
+    border: 1px solid #FEF3C7;
+    color: #B45309;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
 

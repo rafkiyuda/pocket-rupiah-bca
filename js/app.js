@@ -361,8 +361,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 <header class="home-header">
                     <div class="logo-mybca">my<span>BCA</span></div>
                     <div class="header-actions">
+                        <div class="header-btn" id="btnStartTour"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
                         <div class="header-btn"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></div>
-                        <div class="header-btn"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></div>
                         <div class="header-btn" id="btnBackToHomeFromPockets"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg></div>
                     </div>
                 </header>
@@ -649,6 +649,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const btnBack = document.getElementById('btnBackToHomeFromPockets');
             if (btnBack) btnBack.onclick = () => navigateTo('home');
             
+            const btnTour = document.getElementById('btnStartTour');
+            if (btnTour) btnTour.onclick = () => {
+                state.showTour = true;
+                initTour();
+                document.querySelector('.tour-overlay').classList.add('show');
+            };
+
             const btnInsight = document.querySelector('.insight-action');
             if (btnInsight) btnInsight.onclick = () => {
                 showToast("Membuka Smart Allocation...");
@@ -781,9 +788,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const skipBtn = document.getElementById('btnSkipTour');
         
         const tourData = [
-            { title: "Smart Recommendation", desc: "AI kami akan membantu mengalokasikan tabunganmu secara otomatis berdasarkan kebiasaan transaksimu." },
-            { title: "Visual Goal Progress", desc: "Pantau kemajuan tabunganmu secara visual dengan prediksi waktu pencapaian yang akurat." },
-            { title: "Integrated Ecosystem", desc: "Hubungkan poketmu langsung dengan asuransi, investasi, dan pembayaran sekolah di ekosistem BCA." }
+            { 
+                title: "Smart AI Recommendation", 
+                desc: "AI menganalisis pola pengeluaranmu. Skenario: Kamu sering jajan? AI akan sarankan buat 'Poket Makan' agar jajanmu lebih terkontrol!",
+                tip: "Tip: Klik 'Aktifkan Sekarang' untuk setup otomatis."
+            },
+            { 
+                title: "Predictive Time-to-Goal", 
+                desc: "Skenario: Mau beli iPhone dalam 6 bulan? Cukup isi target, dan AI akan hitung kapan kamu bisa membelinya berdasarkan saldo saat ini.",
+                tip: "Tip: Pantau bar kemajuan setiap minggu!"
+            },
+            { 
+                title: "BCA Ecosystem Integration", 
+                desc: "Skenario: Biaya sekolah anak jadi beban tiap bulan? Hubungkan poket dengan fitur 'Auto-Pay Sekolah' agar tagihan terbayar tepat waktu.",
+                tip: "Tip: Hubungkan juga ke BCA Life untuk proteksi otomatis."
+            }
         ];
 
         nextBtn.onclick = () => {
@@ -791,7 +810,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (state.onboardingStep < tourData.length) {
                 document.querySelector('.tour-step-info').textContent = `Step ${state.onboardingStep + 1} of 3`;
                 document.getElementById('tourTitle').textContent = tourData[state.onboardingStep].title;
-                document.getElementById('tourDesc').textContent = tourData[state.onboardingStep].desc;
+                document.getElementById('tourDesc').innerHTML = `
+                    <p style="margin-bottom: 12px;">${tourData[state.onboardingStep].desc}</p>
+                    <div class="tour-tip-badge">${tourData[state.onboardingStep].tip}</div>
+                `;
             } else {
                 overlay.classList.remove('show');
                 state.onboardingStep = 0;
