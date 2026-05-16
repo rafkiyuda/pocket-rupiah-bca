@@ -1777,10 +1777,76 @@ body {
     cursor: pointer;
 }
 
-.eco-pill.selected {
-    background: #0077C8;
-    color: white;
-    border-color: #0077C8;
+.phase-tag {
+    font-size: 0.65rem;
+    background: #EFF6FF;
+    color: #1D4ED8;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-weight: 700;
+}
+
+.eco-grid.extended {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.eco-item {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    background: white;
+    border-radius: 16px;
+    border: 1px solid #F1F5F9;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    position: relative;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.eco-item:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+
+.eco-details {
+    display: flex;
+    flex-direction: column;
+    margin-left: 12px;
+}
+
+.eco-name { font-size: 0.9rem; font-weight: 700; color: #1E293B; }
+.eco-desc { font-size: 0.7rem; color: #64748B; }
+
+.soon-badge {
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    font-size: 0.6rem;
+    background: #F1F5F9;
+    color: #94A3B8;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 700;
+}
+
+.eco-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background-size: 24px;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.qris-auto { background-color: #E0F2FE; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230077C8' stroke-width='2'%3E%3Cpath d='M4 4h7v7H4V4zm2 2v3h3V6H6zm8-2h7v7h-7V4zm2 2v3h3V6h-3zM4 13h7v7H4v-7zm2 2v3h3v-3H6zm8 0h3v3h-3v-3zm3-3h3v3h-3v-3zm0 6h3v3h-3v-3zm-3 3h3v-3h-3v3zm3-3v-3h-3v3h3z'/%3E%3C/svg%3E"); }
+.bca-life { background-color: #DCFCE7; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2315803D' stroke-width='2'%3E%3Cpath d='M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'/%3E%3C/svg%3E"); }
+.bca-sekuritas { background-color: #FEF3C7; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23B45309' stroke-width='2'%3E%3Cline x1='12' y1='20' x2='12' y2='10'/%3E%3Cline x1='18' y1='20' x2='18' y2='4'/%3E%3Cline x1='6' y1='20' x2='6' y2='16'/%3E%3C/svg%3E"); }
+.bca-finance { background-color: #F1F5F9; filter: grayscale(1); }
+.bca-insurance-new { background-color: #F1F5F9; filter: grayscale(1); }
+
+.eco-pill.locked {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #F1F5F9;
 }
 
 .pocket-balance-row {

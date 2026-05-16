@@ -276,9 +276,10 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <span>Connect to <strong>BCA Ecosystem</strong></span>
                                 </div>
                                 <div class="ecosystem-pills">
-                                    <span class="eco-pill">🏫 Sekolah</span>
-                                    <span class="eco-pill">🛡️ Asuransi</span>
-                                    <span class="eco-pill">📈 Investasi</span>
+                                    <span class="eco-pill" data-eco="QRIS">🔄 QRIS & Auto-Pay</span>
+                                    <span class="eco-pill" data-eco="BCALife">🛡️ BCA Life</span>
+                                    <span class="eco-pill" data-eco="Sekuritas">📈 BCA Sekuritas</span>
+                                    <span class="eco-pill locked" data-eco="Finance">🚗 BCA Finance</span>
                                 </div>
                             </div>
                         </div>
@@ -442,11 +443,48 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
 
                     <div class="ecosystem-integration">
-                        <h3>BCA Ecosystem</h3>
-                        <div class="eco-grid">
-                            <div class="eco-item"><div class="eco-icon school"></div><span>Sekolah</span></div>
-                            <div class="eco-item"><div class="eco-icon insurance"></div><span>Insurance</span></div>
-                            <div class="eco-item"><div class="eco-icon invest"></div><span>Sekuritas</span></div>
+                        <div class="section-title-row">
+                            <h3>BCA Ecosystem</h3>
+                            <span class="phase-tag">Phase 1 & 2</span>
+                        </div>
+                        <div class="eco-grid extended">
+                            <div class="eco-item active" id="ecoQRIS">
+                                <div class="eco-icon qris-auto"></div>
+                                <div class="eco-details">
+                                    <span class="eco-name">QRIS & Auto-Pay</span>
+                                    <span class="eco-desc">Daily Cashflow Control</span>
+                                </div>
+                            </div>
+                            <div class="eco-item active" id="ecoBCALife">
+                                <div class="eco-icon bca-life"></div>
+                                <div class="eco-details">
+                                    <span class="eco-name">BCA Life</span>
+                                    <span class="eco-desc">Auto-Protect Mechanism</span>
+                                </div>
+                            </div>
+                            <div class="eco-item active" id="ecoSekuritas">
+                                <div class="eco-icon bca-sekuritas"></div>
+                                <div class="eco-details">
+                                    <span class="eco-name">BCA Sekuritas</span>
+                                    <span class="eco-desc">Goal Engine Invest</span>
+                                </div>
+                            </div>
+                            <div class="eco-item phase2" id="ecoFinance">
+                                <div class="eco-icon bca-finance"></div>
+                                <div class="eco-details">
+                                    <span class="eco-name">BCA Finance</span>
+                                    <span class="eco-desc">Auto-Debit Cicilan</span>
+                                </div>
+                                <div class="soon-badge">Phase 2</div>
+                            </div>
+                            <div class="eco-item phase2" id="ecoInsurance">
+                                <div class="eco-icon bca-insurance-new"></div>
+                                <div class="eco-details">
+                                    <span class="eco-name">BCA Insurance</span>
+                                    <span class="eco-desc">General Protection</span>
+                                </div>
+                                <div class="soon-badge">Phase 2</div>
+                            </div>
                         </div>
                     </div>
 
