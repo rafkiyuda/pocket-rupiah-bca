@@ -521,7 +521,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <!-- TRANSACTIONS TAB -->
                     <div class="ai-tab-content" id="tab-transactions" style="display: none;">
                         <!-- GOAL ENGINE CARD -->
-                        <div id="goalEngineCard" style="background: linear-gradient(135deg, #7C3AED 0%, #4F46E5 100%); border-radius: 20px; padding: 18px; margin-bottom: 20px; color: white; cursor: pointer; position: relative; overflow: hidden; box-shadow: 0 8px 24px rgba(124,58,237,0.3);">
+                        <div style="background: linear-gradient(135deg, #0077C8 0%, #00A3E0 100%); border-radius: 20px; padding: 18px; margin-bottom: 20px; color: white; position: relative; overflow: hidden; box-shadow: 0 8px 24px rgba(0,119,200,0.25);">
                             <div style="position: absolute; top: -20px; right: -10px; font-size: 6rem; opacity: 0.08;">⚡</div>
                             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; position: relative; z-index: 1;">
                                 <div style="background: rgba(255,255,255,0.15); border-radius: 8px; padding: 4px 10px; font-size: 0.65rem; font-weight: 700;">⚡ GOAL ENGINE</div>
@@ -533,15 +533,16 @@ document.addEventListener('DOMContentLoaded', () => {
                                 ${state.goalEngine.optimizedAlloc.map(a => `
                                 <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
                                     <div style="font-size: 0.85rem; width: 20px; text-align: center; flex-shrink: 0;">${a.icon}</div>
-                                    <div style="flex: 1;"><div style="height: 6px; background: rgba(255,255,255,0.15); border-radius: 3px; overflow: hidden;"><div style="height: 100%; width: ${Math.round(a.monthly / state.goalEngine.income * 100)}%; background: rgba(255,255,255,0.8); border-radius: 3px;"></div></div></div>
+                                    <div style="flex: 1;"><div style="height: 6px; background: rgba(255,255,255,0.15); border-radius: 3px; overflow: hidden;"><div style="height: 100%; width: ${Math.round(a.monthly / state.goalEngine.income * 100)}%; background: rgba(255,255,255,0.85); border-radius: 3px;"></div></div></div>
                                     <div style="font-size: 0.65rem; font-weight: 700; white-space: nowrap; opacity: 0.9;">Rp ${(a.monthly/1000000).toFixed(1)}Jt</div>
                                 </div>`).join('')}
                             </div>
-                            <div style="display: flex; gap: 8px; position: relative; z-index: 1;">
-                                <div style="flex:1;background:rgba(255,255,255,0.1);border-radius:10px;padding:8px;text-align:center;"><div style="font-size:0.65rem;opacity:0.7;margin-bottom:2px;">Kebutuhan</div><div style="font-size:0.9rem;font-weight:800;">${state.goalEngine.needs}%</div></div>
-                                <div style="flex:1;background:rgba(255,255,255,0.1);border-radius:10px;padding:8px;text-align:center;"><div style="font-size:0.65rem;opacity:0.7;margin-bottom:2px;">Keinginan</div><div style="font-size:0.9rem;font-weight:800;">${state.goalEngine.wants}%</div></div>
-                                <div style="flex:1;background:rgba(255,255,255,0.1);border-radius:10px;padding:8px;text-align:center;"><div style="font-size:0.65rem;opacity:0.7;margin-bottom:2px;">Tabungan</div><div style="font-size:0.9rem;font-weight:800;">${state.goalEngine.savings}%</div></div>
+                            <div style="display: flex; gap: 8px; position: relative; z-index: 1; margin-bottom: 14px;">
+                                <div style="flex:1;background:rgba(255,255,255,0.12);border-radius:10px;padding:8px;text-align:center;"><div style="font-size:0.65rem;opacity:0.75;margin-bottom:2px;">Kebutuhan</div><div style="font-size:0.9rem;font-weight:800;">${state.goalEngine.needs}%</div></div>
+                                <div style="flex:1;background:rgba(255,255,255,0.12);border-radius:10px;padding:8px;text-align:center;"><div style="font-size:0.65rem;opacity:0.75;margin-bottom:2px;">Keinginan</div><div style="font-size:0.9rem;font-weight:800;">${state.goalEngine.wants}%</div></div>
+                                <div style="flex:1;background:rgba(255,255,255,0.12);border-radius:10px;padding:8px;text-align:center;"><div style="font-size:0.65rem;opacity:0.75;margin-bottom:2px;">Tabungan</div><div style="font-size:0.9rem;font-weight:800;">${state.goalEngine.savings}%</div></div>
                             </div>
+                            <button id="goalEngineCard" style="width:100%;background:white;color:#0077C8;border:none;padding:11px;border-radius:12px;font-weight:800;font-size:0.85rem;cursor:pointer;position:relative;z-index:1;">Lihat Detail ›</button>
                         </div>
 
                         <div class="pd-search-row" style="margin-bottom: 20px;">
