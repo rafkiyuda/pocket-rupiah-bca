@@ -1258,7 +1258,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `,
         pocketDetail: () => `
-            <div class="pocket-detail-screen" style="background: #F1F5F9; min-height: 100vh;">
+            <div class="pocket-detail-screen" style="background: #F1F5F9; height: 100%; overflow-y: auto; overflow-x: hidden; padding-bottom: 40px;">
                 <header class="blue-header" style="height: 130px; align-items: flex-start; padding-top: 40px;">
                     <div class="back-btn" id="btnBackToPocketsList">
                         <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
