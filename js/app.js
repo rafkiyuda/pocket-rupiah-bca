@@ -35,6 +35,25 @@ document.addEventListener('DOMContentLoaded', () => {
         ],
         connectedLinks: [],
         ecoConnectProductId: null,
+        lifeStage: {
+            detected: 'Young Professional',
+            confidence: 92,
+            icon: '👨‍💼',
+            signals: ['Gaji rutin terdeteksi', 'Pengeluaran food & entertainment tinggi', 'Belum ada cicilan KPR', 'Usia 25-28 tahun'],
+            insight: 'Kamu sedang di fase membangun fondasi keuangan. Sekarang waktu terbaik untuk mulai investasi jangka panjang dan membangun dana darurat yang kuat.',
+            nextActions: [
+                { icon: '💰', title: 'Bangun Dana Darurat', desc: '3-6x pengeluaran bulanan (target IDR 24 Juta)', cta: 'Buat Poket', screen: 'createForm', urgent: true },
+                { icon: '📈', title: 'Mulai Investasi Reksa Dana', desc: 'BCA Sekuritas · mulai Rp 10.000/bln via SIP', cta: 'Buka BCA Sekuritas', screen: 'ecoInvestasi', urgent: false },
+                { icon: '🏠', title: 'Rencanakan KPR BCA', desc: 'Simulasikan kemampuan cicilan KPR sekarang', cta: 'Simulasi', screen: 'ecoBcaFinance', urgent: false }
+            ],
+            stages: [
+                { key: 'student', label: 'Pelajar', icon: '🎓', active: false },
+                { key: 'young_pro', label: 'Young Professional', icon: '👨‍💼', active: true },
+                { key: 'family', label: 'Berkeluarga', icon: '👨‍👩‍👧', active: false },
+                { key: 'education', label: 'Pendidikan Anak', icon: '📚', active: false },
+                { key: 'retirement', label: 'Pensiun', icon: '🏡', active: false }
+            ]
+        },
         rewards: {
             points: 1250,
             level: "Budget Boss",
@@ -561,6 +580,57 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                         ` : ''}
 
+                        <!-- AI LIFE-STAGE DETECTION CARD -->
+                        <div id="lifeStageCard" style="background: linear-gradient(135deg, #0F172A 0%, #1E3A5F 100%); border-radius: 20px; padding: 20px; margin-bottom: 24px; color: white; position: relative; overflow: hidden; cursor: pointer; box-shadow: 0 8px 24px rgba(0,0,0,0.15);">
+                            <!-- BG decoration -->
+                            <div style="position: absolute; top: -20px; right: -20px; width: 120px; height: 120px; border-radius: 50%; background: rgba(255,255,255,0.04);"></div>
+                            <div style="position: absolute; bottom: -30px; left: 40px; width: 80px; height: 80px; border-radius: 50%; background: rgba(0,163,224,0.12);"></div>
+
+                            <!-- Header -->
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; position: relative; z-index: 1;">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <div style="background: rgba(0,163,224,0.25); border-radius: 8px; padding: 4px 10px; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.5px; color: #7DD3FC;">✨ AI LIFE-STAGE DETECTION</div>
+                                </div>
+                                <div style="background: #10B981; font-size: 0.65rem; font-weight: 800; padding: 3px 8px; border-radius: 10px;">${state.lifeStage.confidence}% yakin</div>
+                            </div>
+
+                            <!-- Life Stage -->
+                            <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 14px; position: relative; z-index: 1;">
+                                <div style="font-size: 2.8rem; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));">${state.lifeStage.icon}</div>
+                                <div>
+                                    <div style="font-size: 0.72rem; color: #94A3B8; margin-bottom: 2px;">Life Stage Terdeteksi</div>
+                                    <div style="font-size: 1.3rem; font-weight: 800; color: white; line-height: 1.2;">${state.lifeStage.detected}</div>
+                                </div>
+                            </div>
+
+                            <!-- Life Stage Timeline -->
+                            <div style="display: flex; gap: 6px; margin-bottom: 14px; position: relative; z-index: 1;">
+                                ${state.lifeStage.stages.map(s => `
+                                <div style="flex: 1; text-align: center;">
+                                    <div style="height: 3px; border-radius: 2px; background: ${s.active ? '#00A3E0' : 'rgba(255,255,255,0.15)'}; margin-bottom: 5px;"></div>
+                                    <div style="font-size: 0.55rem; color: ${s.active ? '#7DD3FC' : 'rgba(255,255,255,0.4)'}; font-weight: ${s.active ? '700' : '400'}; line-height: 1.3;">${s.label}</div>
+                                </div>`).join('')}
+                            </div>
+
+                            <!-- Insight preview -->
+                            <div style="background: rgba(255,255,255,0.07); border-radius: 10px; padding: 10px 14px; margin-bottom: 14px; position: relative; z-index: 1;">
+                                <p style="font-size: 0.75rem; color: #CBD5E1; line-height: 1.5; margin: 0;">${state.lifeStage.insight.substring(0, 90)}...</p>
+                            </div>
+
+                            <!-- Next actions preview -->
+                            <div style="position: relative; z-index: 1;">
+                                <div style="font-size: 0.68rem; color: #64748B; font-weight: 700; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">Next-Best Actions</div>
+                                <div style="display: flex; gap: 8px;">
+                                    ${state.lifeStage.nextActions.slice(0, 2).map(a => `
+                                    <div style="flex: 1; background: ${a.urgent ? 'rgba(239,68,68,0.15)' : 'rgba(255,255,255,0.07)'}; border: 1px solid ${a.urgent ? 'rgba(239,68,68,0.3)' : 'rgba(255,255,255,0.1)'}; border-radius: 10px; padding: 8px 10px;">
+                                        <div style="font-size: 1rem; margin-bottom: 3px;">${a.icon}</div>
+                                        <div style="font-size: 0.68rem; font-weight: 700; color: white; line-height: 1.3;">${a.title}</div>
+                                    </div>`).join('')}
+                                    <div style="width: 36px; background: rgba(0,163,224,0.2); border: 1px solid rgba(0,163,224,0.3); border-radius: 10px; display: flex; justify-content: center; align-items: center; font-size: 1rem; color: #7DD3FC; flex-shrink: 0;">›</div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="rp-main-container" style="background: white; border-radius: 16px; padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); border: 1px solid #F1F5F9; margin-bottom: 24px;">
                             <div class="rupiah-pocket-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
                                 <div style="display: flex; align-items: flex-start; gap: 12px;">
@@ -1075,6 +1145,81 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        `,
+        lifeStageDetail: () => `
+            <div style="background:#0F172A;min-height:100%;overflow-y:auto;">
+                <header style="background:transparent;padding:40px 20px 20px;display:flex;align-items:center;gap:16px;position:relative;">
+                    <div class="back-btn" id="btnBackFromLifeStage" style="background:rgba(255,255,255,0.1);border-radius:50%;width:36px;height:36px;display:flex;justify-content:center;align-items:center;flex-shrink:0;cursor:pointer;">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="white"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+                    </div>
+                    <div>
+                        <div style="font-size:0.65rem;color:#7DD3FC;font-weight:700;letter-spacing:1px;text-transform:uppercase;">✨ AI Life-Stage Detection</div>
+                        <h2 style="color:white;font-size:1.1rem;font-weight:800;margin:2px 0 0;">Profil Keuanganmu</h2>
+                    </div>
+                </header>
+
+                <div style="padding:0 16px 40px;">
+                    <!-- Life Stage Hero -->
+                    <div style="background:linear-gradient(135deg,rgba(0,119,200,0.3),rgba(0,163,224,0.1));border:1px solid rgba(0,163,224,0.2);border-radius:20px;padding:24px;margin-bottom:20px;text-align:center;">
+                        <div style="font-size:4rem;margin-bottom:12px;filter:drop-shadow(0 4px 12px rgba(0,0,0,0.4));">${state.lifeStage.icon}</div>
+                        <h3 style="color:white;font-size:1.5rem;font-weight:800;margin:0 0 4px;">${state.lifeStage.detected}</h3>
+                        <div style="display:inline-flex;align-items:center;gap:6px;background:#10B981;border-radius:20px;padding:4px 14px;margin-bottom:16px;">
+                            <div style="width:6px;height:6px;border-radius:50%;background:white;animation:pulse 1.5s infinite;"></div>
+                            <span style="font-size:0.72rem;font-weight:700;color:white;">AI Confidence: ${state.lifeStage.confidence}%</span>
+                        </div>
+                        <!-- Confidence bar -->
+                        <div style="background:rgba(255,255,255,0.1);border-radius:4px;height:6px;overflow:hidden;">
+                            <div style="height:100%;width:${state.lifeStage.confidence}%;background:linear-gradient(90deg,#10B981,#34D399);border-radius:4px;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Life Stage Timeline -->
+                    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:16px;margin-bottom:20px;">
+                        <h4 style="color:#94A3B8;font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin:0 0 14px;">Perjalanan Life Stage</h4>
+                        <div style="display:flex;gap:0;">
+                            ${state.lifeStage.stages.map((s, i) => `
+                            <div style="flex:1;text-align:center;position:relative;">
+                                ${i < state.lifeStage.stages.length - 1 ? `<div style="position:absolute;top:18px;left:50%;width:100%;height:2px;background:${s.active || state.lifeStage.stages[i+1]?.active ? 'rgba(0,163,224,0.4)' : 'rgba(255,255,255,0.1)'};z-index:0;"></div>` : ''}
+                                <div style="width:36px;height:36px;border-radius:50%;background:${s.active ? '#0077C8' : 'rgba(255,255,255,0.08)'};border:2px solid ${s.active ? '#00A3E0' : 'rgba(255,255,255,0.1)'};display:flex;justify-content:center;align-items:center;font-size:1rem;margin:0 auto 6px;position:relative;z-index:1;">${s.icon}</div>
+                                <div style="font-size:0.55rem;color:${s.active ? '#7DD3FC' : 'rgba(255,255,255,0.35)'};font-weight:${s.active ? '700' : '400'};line-height:1.3;">${s.label}</div>
+                            </div>`).join('')}
+                        </div>
+                    </div>
+
+                    <!-- AI Signals -->
+                    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:16px;margin-bottom:20px;">
+                        <h4 style="color:#94A3B8;font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin:0 0 12px;">📊 Sinyal AI yang Terdeteksi</h4>
+                        ${state.lifeStage.signals.map(sig => `
+                        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
+                            <div style="width:6px;height:6px;border-radius:50%;background:#00A3E0;flex-shrink:0;"></div>
+                            <span style="font-size:0.8rem;color:#CBD5E1;">${sig}</span>
+                        </div>`).join('')}
+                    </div>
+
+                    <!-- Personalized Insight -->
+                    <div style="background:linear-gradient(135deg,rgba(0,119,200,0.2),rgba(0,163,224,0.05));border:1px solid rgba(0,163,224,0.2);border-radius:16px;padding:18px;margin-bottom:20px;">
+                        <div style="display:flex;gap:10px;align-items:flex-start;">
+                            <div style="font-size:1.5rem;flex-shrink:0;">🤖</div>
+                            <div>
+                                <h4 style="color:#7DD3FC;font-size:0.78rem;font-weight:700;margin:0 0 8px;">Insight Keuangan Untukmu</h4>
+                                <p style="font-size:0.82rem;color:#CBD5E1;line-height:1.6;margin:0;">${state.lifeStage.insight}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Next-Best Actions -->
+                    <h4 style="color:#94A3B8;font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin:0 0 12px;">🎯 Next-Best Actions</h4>
+                    ${state.lifeStage.nextActions.map(a => `
+                    <div class="life-stage-action" data-screen="${a.screen}" style="background:${a.urgent ? 'linear-gradient(135deg,rgba(239,68,68,0.15),rgba(239,68,68,0.05))' : 'rgba(255,255,255,0.04)'};border:1px solid ${a.urgent ? 'rgba(239,68,68,0.3)' : 'rgba(255,255,255,0.08)'};border-radius:16px;padding:16px;margin-bottom:12px;cursor:pointer;display:flex;gap:14px;align-items:center;">
+                        <div style="width:48px;height:48px;border-radius:14px;background:${a.urgent ? 'rgba(239,68,68,0.2)' : 'rgba(0,119,200,0.2)'};display:flex;justify-content:center;align-items:center;font-size:1.5rem;flex-shrink:0;">${a.icon}</div>
+                        <div style="flex:1;">
+                            <div style="font-weight:700;color:white;font-size:0.9rem;margin-bottom:3px;">${a.title}${a.urgent ? ' <span style="background:#EF4444;font-size:0.6rem;padding:1px 6px;border-radius:8px;font-weight:700;vertical-align:middle;">PRIORITAS</span>' : ''}</div>
+                            <div style="font-size:0.72rem;color:#94A3B8;line-height:1.4;">${a.desc}</div>
+                        </div>
+                        <div style="background:rgba(0,163,224,0.2);border:1px solid rgba(0,163,224,0.3);border-radius:10px;padding:6px 12px;font-size:0.72rem;font-weight:700;color:#7DD3FC;white-space:nowrap;">${a.cta} ›</div>
+                    </div>`).join('')}
                 </div>
             </div>
         `,
@@ -1655,7 +1800,12 @@ document.addEventListener('DOMContentLoaded', () => {
             // Add click for View All to go to createForm for now
             const btnViewAll = document.querySelector('.pocket-view-all-card');
             if (btnViewAll) btnViewAll.onclick = () => navigateTo('createForm');
-            
+
+            // Life Stage Card
+            const lifeCard = document.getElementById('lifeStageCard');
+            if (lifeCard) lifeCard.onclick = () => navigateTo('lifeStageDetail');
+
+
             const qrisBadges = document.querySelectorAll('.qris-shortcut-badge');
             qrisBadges.forEach(badge => {
                 badge.onclick = (e) => {
@@ -1897,6 +2047,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     state.connectedLinks = state.connectedLinks.filter(l => l.productId !== pid);
                     showToast('🔗 Koneksi produk diputus');
                     setTimeout(() => navigateTo('pocketDetail'), 800);
+                };
+            });
+        } else if (screenName === 'lifeStageDetail') {
+            document.getElementById('btnBackFromLifeStage').onclick = () => navigateTo('pocketsDashboard');
+            document.querySelectorAll('.life-stage-action').forEach(card => {
+                card.onclick = () => {
+                    const target = card.getAttribute('data-screen');
+                    if (target === 'ecoInvestasi') { state.ecoInvestasiStep = 0; navigateTo('ecoInvestasi'); }
+                    else if (target === 'ecoBcaFinance') { state.ecoBcaFinanceStep = 0; navigateTo('ecoBcaFinance'); }
+                    else { navigateTo(target); }
                 };
             });
         } else if (screenName === 'ecoConnect') {
