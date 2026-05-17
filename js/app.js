@@ -22,8 +22,12 @@ document.addEventListener('DOMContentLoaded', () => {
             locked: false,
             category: "Others"
         },
-        pendingAllocation: true, // Mock incoming fund state
+        pendingAllocation: true,
         showAllocationModal: false,
+        ecoInvestasiStep: 0,
+        ecoBcaLifeStep: 0,
+        ecoBcaFinanceStep: 0,
+        ecoFinanceSim: { harga: 200000000, dp: 40000000, tenor: 36, cicilan: 4580000 },
         rewards: {
             points: 1250,
             level: "Budget Boss",
@@ -909,6 +913,164 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             </div>
         `,
+        ecoInvestasi: () => `
+            <div style="background:#F1F5F9;min-height:100vh;">
+                <header class="blue-header" style="height:130px;align-items:flex-start;padding-top:40px;">
+                    <div class="back-btn" id="btnBackFromEcoInvestasi"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></div>
+                    <h2 class="header-title">myBCA Investasi</h2>
+                </header>
+                <div style="margin-top:-20px;padding:0 16px;position:relative;z-index:1;">
+                    <!-- Step Indicator -->
+                    <div style="background:white;border-radius:16px;padding:16px 20px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+                        <div style="display:flex;gap:8px;margin-bottom:16px;">
+                            ${[1,2,3,4].map(n=>`<div style="flex:1;height:4px;border-radius:2px;background:${n<=state.ecoInvestasiStep+1?'#0077C8':'#E2E8F0'};"></div>`).join('')}
+                        </div>
+                        <!-- STEP 0: Cek SID -->
+                        <div class="eco-inv-step">
+                            <div style="text-align:center;padding:12px 0;">
+                                <div style="font-size:3rem;margin-bottom:12px;">🪪</div>
+                                <h3 style="color:#003366;font-size:1rem;font-weight:800;margin-bottom:8px;">Cek Status SID</h3>
+                                <p style="font-size:0.8rem;color:#64748B;line-height:1.5;margin-bottom:16px;">Single Investor Identification (SID) adalah identitas investor pasar modal yang diterbitkan KSEI. Kamu belum memiliki SID.</p>
+                                <div style="background:#FFF7ED;border:1px solid #FED7AA;border-radius:12px;padding:12px;margin-bottom:16px;text-align:left;">
+                                    <p style="font-size:0.78rem;color:#92400E;margin:0;"><strong>⚠️ SID Belum Terdaftar</strong><br>Daftarkan SID-mu terlebih dahulu untuk bisa berinvestasi reksa dana.</p>
+                                </div>
+                                <button class="eco-inv-next" style="width:100%;background:#0077C8;color:white;border:none;padding:14px;border-radius:12px;font-weight:700;font-size:0.95rem;cursor:pointer;">Daftar SID Sekarang →</button>
+                            </div>
+                        </div>
+                        <!-- STEP 1: Profil Risiko -->
+                        <div class="eco-inv-step" style="display:none;">
+                            <h3 style="color:#003366;font-size:1rem;font-weight:800;margin-bottom:4px;">Profil Risiko Investasi</h3>
+                            <p style="font-size:0.78rem;color:#64748B;margin-bottom:16px;">Jawab pertanyaan berikut agar kami merekomendasikan produk yang sesuai.</p>
+                            ${[{q:'Tujuan investasi kamu?',opts:['Keamanan modal','Pertumbuhan sedang','Keuntungan maksimal']},{q:'Jika nilai investasimu turun 20%, kamu akan?',opts:['Jual semua segera','Tunggu pemulihan','Beli lebih banyak']},{q:'Horizon investasi?',opts:['< 1 tahun','1–3 tahun','> 3 tahun']}].map((item,i)=>`
+                            <div style="margin-bottom:14px;">
+                                <p style="font-size:0.82rem;font-weight:700;color:#1e293b;margin-bottom:8px;">${i+1}. ${item.q}</p>
+                                ${item.opts.map(o=>`<label style="display:flex;align-items:center;gap:10px;padding:8px 12px;border:1px solid #E2E8F0;border-radius:8px;margin-bottom:6px;font-size:0.8rem;color:#475569;cursor:pointer;"><input type="radio" name="q${i}" style="accent-color:#0077C8;"> ${o}</label>`).join('')}
+                            </div>`).join('')}
+                            <button class="eco-inv-next" style="width:100%;background:#0077C8;color:white;border:none;padding:14px;border-radius:12px;font-weight:700;font-size:0.95rem;cursor:pointer;margin-top:8px;">Lihat Rekomendasi →</button>
+                        </div>
+                        <!-- STEP 2: Pilih Produk -->
+                        <div class="eco-inv-step" style="display:none;">
+                            <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:10px;padding:10px 14px;margin-bottom:14px;"><p style="font-size:0.78rem;color:#166534;margin:0;">✅ Profil risiko: <strong>Moderat</strong>. Rekomendasi: Reksa Dana Campuran.</p></div>
+                            <h3 style="color:#003366;font-size:0.95rem;font-weight:800;margin-bottom:12px;">Pilih Produk Reksa Dana</h3>
+                            ${[{name:'BCA Dana Berencana',type:'Campuran',return:'8–12% p.a',min:'Rp 10.000',risk:'Moderat'},{name:'BCA Dana Tunai',type:'Pasar Uang',return:'4–6% p.a',min:'Rp 10.000',risk:'Rendah'},{name:'BCA Equity Fund',type:'Saham',return:'12–18% p.a',min:'Rp 100.000',risk:'Tinggi'}].map(p=>`
+                            <div style="border:1px solid #E2E8F0;border-radius:12px;padding:14px;margin-bottom:10px;background:white;cursor:pointer;" onclick="this.style.border='2px solid #0077C8';this.style.background='#F0F9FF';">
+                                <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+                                    <div><p style="font-weight:700;color:#003366;font-size:0.88rem;margin:0 0 2px;">${p.name}</p><p style="font-size:0.72rem;color:#64748B;margin:0;">${p.type} · Risiko ${p.risk}</p></div>
+                                    <span style="background:#ECFDF5;color:#059669;font-size:0.7rem;font-weight:700;padding:3px 8px;border-radius:12px;">${p.return}</span>
+                                </div>
+                                <p style="font-size:0.72rem;color:#94A3B8;margin:6px 0 0;">Min. ${p.min}</p>
+                            </div>`).join('')}
+                            <button class="eco-inv-next" style="width:100%;background:#0077C8;color:white;border:none;padding:14px;border-radius:12px;font-weight:700;font-size:0.95rem;cursor:pointer;margin-top:4px;">Pilih & Lanjut →</button>
+                        </div>
+                        <!-- STEP 3: Konfirmasi & PIN -->
+                        <div class="eco-inv-step" style="display:none;">
+                            <h3 style="color:#003366;font-size:1rem;font-weight:800;margin-bottom:12px;">Konfirmasi Pembelian</h3>
+                            <div style="background:#F8FAFC;border-radius:12px;padding:16px;margin-bottom:16px;">
+                                ${[['Produk','BCA Dana Berencana'],['Tipe','Reksa Dana Campuran'],['Sumber Dana','Poket "makan" — IDR 2.500.000'],['Nominal','IDR 500.000'],['Pembelian Berkala','Bulanan, tgl 25']].map(([k,v])=>`<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #F1F5F9;"><span style="font-size:0.78rem;color:#64748B;">${k}</span><span style="font-size:0.78rem;font-weight:700;color:#1e293b;">${v}</span></div>`).join('')}
+                            </div>
+                            <div style="background:#F0F9FF;border-radius:10px;padding:12px;margin-bottom:16px;"><p style="font-size:0.78rem;color:#0369A1;margin:0;">Dengan melanjutkan, kamu menyetujui Prospektus dan Fund Fact Sheet produk ini. Investasi mengandung risiko.</p></div>
+                            <p style="font-size:0.82rem;color:#64748B;margin-bottom:8px;text-align:center;">Masukkan PIN myBCA</p>
+                            <div style="display:flex;gap:12px;justify-content:center;margin-bottom:20px;">${Array(6).fill('<div style="width:40px;height:40px;border-radius:50%;border:2px solid #0077C8;display:flex;justify-content:center;align-items:center;font-size:1.2rem;color:#0077C8;">●</div>').join('')}</div>
+                            <button class="eco-inv-next" style="width:100%;background:#0077C8;color:white;border:none;padding:14px;border-radius:12px;font-weight:700;font-size:0.95rem;cursor:pointer;">Konfirmasi Pembelian ✓</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `,
+        ecoBcaLife: () => `
+            <div style="background:#F1F5F9;min-height:100vh;">
+                <header class="blue-header" style="height:130px;align-items:flex-start;padding-top:40px;">
+                    <div class="back-btn" id="btnBackFromEcoBcaLife"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></div>
+                    <h2 class="header-title">BCA Life Protection</h2>
+                </header>
+                <div style="margin-top:-20px;padding:0 16px;position:relative;z-index:1;">
+                    <div style="background:white;border-radius:16px;padding:16px 20px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+                        <div style="display:flex;gap:8px;margin-bottom:16px;">${[1,2,3].map(n=>`<div style="flex:1;height:4px;border-radius:2px;background:${n<=state.ecoBcaLifeStep+1?'#0077C8':'#E2E8F0'};"></div>`).join('')}</div>
+                        <!-- STEP 0: Pilih Produk -->
+                        <div class="eco-life-step">
+                            <div style="text-align:center;margin-bottom:16px;"><div style="font-size:2.5rem;">🛡️</div><h3 style="color:#003366;font-size:1rem;font-weight:800;margin:8px 0 4px;">Proteksi Jiwa BCA Life</h3><p style="font-size:0.78rem;color:#64748B;">Pilih produk asuransi yang sesuai kebutuhan goalmu.</p></div>
+                            ${[{name:'MyGuard Basic',usp:'Tanpa medical check-up',uang:'Rp 500 Juta',premi:'Rp 14.000/bln'},{name:'MyGuard Plus',usp:'Perlindungan jiwa + kecelakaan',uang:'Rp 1 Miliar',premi:'Rp 42.000/bln'},{name:'MyGuard Premier',usp:'Jiwa + rawat inap harian',uang:'Rp 1 Miliar',premi:'Rp 89.000/bln'}].map(p=>`
+                            <div style="border:1px solid #E2E8F0;border-radius:12px;padding:14px;margin-bottom:10px;background:white;cursor:pointer;" onclick="document.querySelectorAll('.life-card').forEach(c=>c.style.border='1px solid #E2E8F0');this.style.border='2px solid #0077C8';" class="life-card">
+                                <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;"><p style="font-weight:700;color:#003366;font-size:0.88rem;margin:0;">${p.name}</p><span style="background:#EEF2FF;color:#4338CA;font-size:0.68rem;font-weight:700;padding:3px 8px;border-radius:12px;">${p.premi}</span></div>
+                                <p style="font-size:0.72rem;color:#64748B;margin:0 0 4px;">💎 ${p.usp}</p>
+                                <p style="font-size:0.72rem;color:#0077C8;font-weight:700;margin:0;">Uang Pertanggungan hingga ${p.uang}</p>
+                            </div>`).join('')}
+                            <button class="eco-life-next" style="width:100%;background:#0077C8;color:white;border:none;padding:14px;border-radius:12px;font-weight:700;font-size:0.95rem;cursor:pointer;margin-top:8px;">Pilih Produk →</button>
+                        </div>
+                        <!-- STEP 1: Data Diri & Persetujuan -->
+                        <div class="eco-life-step" style="display:none;">
+                            <h3 style="color:#003366;font-size:0.95rem;font-weight:800;margin-bottom:4px;">Data Pemegang Polis</h3>
+                            <p style="font-size:0.75rem;color:#64748B;margin-bottom:14px;">Data diisi otomatis dari profil myBCA kamu.</p>
+                            ${[['Nama Lengkap','JASMINE AZZAHRA'],['Tgl Lahir','15 Agustus 1998'],['Jenis Kelamin','Perempuan'],['No. HP','08123456789'],['Email','jasmine@email.com']].map(([k,v])=>`
+                            <div style="margin-bottom:12px;"><label style="font-size:0.75rem;color:#64748B;">${k}</label><div style="border-bottom:1.5px solid #0077C8;padding:6px 0;font-size:0.9rem;font-weight:600;color:#1e293b;">${v}</div></div>`).join('')}
+                            <div style="background:#F0F9FF;border-radius:10px;padding:10px 14px;margin-top:8px;"><label style="display:flex;gap:10px;align-items:flex-start;cursor:pointer;"><input type="checkbox" checked style="accent-color:#0077C8;margin-top:2px;"><span style="font-size:0.75rem;color:#0369A1;">Saya menyetujui penggunaan data pribadi untuk penerbitan polis asuransi BCA Life.</span></label></div>
+                            <button class="eco-life-next" style="width:100%;background:#0077C8;color:white;border:none;padding:14px;border-radius:12px;font-weight:700;font-size:0.95rem;cursor:pointer;margin-top:16px;">Konfirmasi Data →</button>
+                        </div>
+                        <!-- STEP 2: Bayar & PIN -->
+                        <div class="eco-life-step" style="display:none;">
+                            <h3 style="color:#003366;font-size:1rem;font-weight:800;margin-bottom:12px;">Konfirmasi Pembayaran Premi</h3>
+                            <div style="background:#F8FAFC;border-radius:12px;padding:16px;margin-bottom:16px;">
+                                ${[['Produk','MyGuard Plus'],['Uang Pertanggungan','Rp 1.000.000.000'],['Masa Pertanggungan','1 Tahun (auto-renew)'],['Premi Bulanan','Rp 42.000/bulan'],['Sumber Dana','Rekening Utama Tahapan Xpresi'],['Auto-debit','Setiap tgl 1']].map(([k,v])=>`<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #F1F5F9;"><span style="font-size:0.77rem;color:#64748B;">${k}</span><span style="font-size:0.77rem;font-weight:700;color:#1e293b;">${v}</span></div>`).join('')}
+                            </div>
+                            <p style="font-size:0.82rem;color:#64748B;margin-bottom:8px;text-align:center;">Masukkan PIN myBCA</p>
+                            <div style="display:flex;gap:12px;justify-content:center;margin-bottom:20px;">${Array(6).fill('<div style="width:40px;height:40px;border-radius:50%;border:2px solid #0077C8;display:flex;justify-content:center;align-items:center;font-size:1.2rem;color:#0077C8;">●</div>').join('')}</div>
+                            <button class="eco-life-next" style="width:100%;background:#0077C8;color:white;border:none;padding:14px;border-radius:12px;font-weight:700;font-size:0.95rem;cursor:pointer;">Aktivasi Polis ✓</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `,
+        ecoBcaFinance: () => `
+            <div style="background:#F1F5F9;min-height:100vh;">
+                <header class="blue-header" style="height:130px;align-items:flex-start;padding-top:40px;">
+                    <div class="back-btn" id="btnBackFromEcoBcaFinance"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></div>
+                    <h2 class="header-title">BCA Finance — KKB</h2>
+                </header>
+                <div style="margin-top:-20px;padding:0 16px;position:relative;z-index:1;">
+                    <div style="background:white;border-radius:16px;padding:16px 20px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+                        <div style="display:flex;gap:8px;margin-bottom:16px;">${[1,2,3].map(n=>`<div style="flex:1;height:4px;border-radius:2px;background:${n<=state.ecoBcaFinanceStep+1?'#0077C8':'#E2E8F0'};"></div>`).join('')}</div>
+                        <!-- STEP 0: Simulasi Kredit -->
+                        <div class="eco-fin-step">
+                            <h3 style="color:#003366;font-size:0.95rem;font-weight:800;margin-bottom:4px;">Simulasi Kredit Kendaraan</h3>
+                            <p style="font-size:0.75rem;color:#64748B;margin-bottom:14px;">Saldo poketmu bisa digunakan sebagai uang muka (DP).</p>
+                            <div style="background:#ECFDF5;border:1px solid #BBF7D0;border-radius:10px;padding:10px 14px;margin-bottom:14px;"><p style="font-size:0.78rem;color:#166534;margin:0;">💡 Poket "makan" · Saldo tersedia: <strong>IDR 2.500.000</strong> → dapat digunakan sebagai bagian DP.</p></div>
+                            <div style="margin-bottom:16px;"><p style="font-size:0.82rem;font-weight:700;color:#1e293b;margin-bottom:10px;">Harga Kendaraan: <strong>IDR 200.000.000</strong></p>
+                                <label style="font-size:0.78rem;color:#64748B;">Uang Muka (DP)</label>
+                                <input type="range" id="dpSlider" min="20000000" max="100000000" step="5000000" value="40000000" style="width:100%;accent-color:#0077C8;margin:8px 0;">
+                                <div style="display:flex;justify-content:space-between;"><span style="font-size:0.75rem;color:#64748B;">IDR 20.000.000</span><span id="dpVal" style="font-size:0.82rem;font-weight:700;color:#0077C8;">IDR 40.000.000</span><span style="font-size:0.75rem;color:#64748B;">IDR 100.000.000</span></div>
+                            </div>
+                            <p style="font-size:0.82rem;font-weight:700;color:#1e293b;margin-bottom:10px;">Tenor Cicilan</p>
+                            <div style="display:flex;gap:8px;margin-bottom:16px;">${[12,24,36,48,60].map(t=>`<button class="tenor-btn" data-tenor="${t}" style="flex:1;padding:8px 0;border-radius:8px;font-size:0.75rem;font-weight:700;border:1px solid ${t===36?'#0077C8':'#E2E8F0'};background:${t===36?'#0077C8':'white'};color:${t===36?'white':'#64748B'};cursor:pointer;">${t}bln</button>`).join('')}</div>
+                            <div style="background:#F8FAFC;border-radius:12px;padding:14px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;"><span style="font-size:0.82rem;color:#64748B;">Estimasi Cicilan/bln</span><span id="cicilanVal" style="font-size:1.1rem;font-weight:800;color:#0077C8;">IDR 4.580.000/bln</span></div>
+                            <p style="font-size:0.68rem;color:#94A3B8;margin-bottom:14px;">*Estimasi bersifat indikatif. Termasuk bunga efektif ~8% p.a. Persetujuan tergantung analisis kredit.</p>
+                            <button class="eco-fin-next" style="width:100%;background:#0077C8;color:white;border:none;padding:14px;border-radius:12px;font-weight:700;font-size:0.95rem;cursor:pointer;">Ajukan Kredit →</button>
+                        </div>
+                        <!-- STEP 1: Data & Dokumen -->
+                        <div class="eco-fin-step" style="display:none;">
+                            <h3 style="color:#003366;font-size:0.95rem;font-weight:800;margin-bottom:4px;">Data Pemohon</h3>
+                            <p style="font-size:0.75rem;color:#64748B;margin-bottom:14px;">Data diisi otomatis dari profil myBCA. Lengkapi dokumen pendukung.</p>
+                            ${[['Nama','JASMINE AZZAHRA'],['NIK','3271234560001'],['Status Pekerjaan','Karyawan Tetap'],['Penghasilan/bln','IDR 8.000.000'],['Nama Perusahaan','PT. Maju Jaya Indonesia']].map(([k,v])=>`<div style="margin-bottom:12px;"><label style="font-size:0.75rem;color:#64748B;">${k}</label><div style="border-bottom:1.5px solid #E2E8F0;padding:6px 0;font-size:0.88rem;font-weight:600;color:#1e293b;">${v}</div></div>`).join('')}
+                            <div style="background:#FFF7ED;border:1px solid #FED7AA;border-radius:10px;padding:10px 14px;margin:12px 0;"><p style="font-size:0.75rem;color:#92400E;margin:0;"><strong>Dokumen Diperlukan:</strong><br>📎 KTP · 📎 NPWP · 📎 Slip Gaji 3 bln · 📎 Rekening Koran 3 bln</p></div>
+                            <button class="eco-fin-next" style="width:100%;background:#0077C8;color:white;border:none;padding:14px;border-radius:12px;font-weight:700;font-size:0.95rem;cursor:pointer;margin-top:8px;">Kirim Pengajuan →</button>
+                        </div>
+                        <!-- STEP 2: Verifikasi OTP -->
+                        <div class="eco-fin-step" style="display:none;">
+                            <div style="text-align:center;padding:12px 0;">
+                                <div style="font-size:3rem;margin-bottom:12px;">📱</div>
+                                <h3 style="color:#003366;font-size:1rem;font-weight:800;margin-bottom:8px;">Verifikasi OTP</h3>
+                                <p style="font-size:0.8rem;color:#64748B;margin-bottom:20px;">Kode OTP dikirim ke <strong>0812-XXXX-6789</strong>. Masukkan kode 6 digit untuk mengkonfirmasi pengajuan KKB.</p>
+                                <div style="display:flex;gap:10px;justify-content:center;margin-bottom:20px;">${Array(6).fill(0).map((_,i)=>`<div style="width:42px;height:50px;border-radius:8px;border:2px solid ${i<3?'#0077C8':'#E2E8F0'};display:flex;justify-content:center;align-items:center;font-size:1.3rem;font-weight:700;color:#0077C8;">${i<3?Math.floor(Math.random()*9)+1:''}</div>`).join('')}</div>
+                                <p style="font-size:0.75rem;color:#64748B;margin-bottom:20px;">Tidak menerima OTP? <span style="color:#0077C8;font-weight:700;">Kirim ulang (58s)</span></p>
+                                <div style="background:#F0F9FF;border-radius:12px;padding:14px;text-align:left;margin-bottom:20px;">
+                                    ${[['Kendaraan','Toyota Avanza 1.3 G'],['DP','IDR 40.000.000 (+ Poket)'],['Tenor','36 bulan'],['Cicilan','IDR 4.580.000/bln'],['Status','Menunggu Verifikasi']].map(([k,v])=>`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #E0F2FE;"><span style="font-size:0.75rem;color:#64748B;">${k}</span><span style="font-size:0.75rem;font-weight:700;color:#1e293b;">${v}</span></div>`).join('')}
+                                </div>
+                                <button class="eco-fin-next" style="width:100%;background:#0077C8;color:white;border:none;padding:14px;border-radius:12px;font-weight:700;font-size:0.95rem;cursor:pointer;">Konfirmasi Pengajuan ✓</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `,
         onboardingTour: () => `
             <div class="tour-overlay ${state.showTour ? 'show' : ''}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10000; display: ${state.showTour ? 'block' : 'none'}; pointer-events: auto; overflow: hidden;">
                 
@@ -1608,17 +1770,20 @@ document.addEventListener('DOMContentLoaded', () => {
             const btnCopy = document.getElementById('btnCopyPocketAcc');
             if (btnCopy) btnCopy.onclick = () => showToast("Account number copied!");
 
-            // Ecosystem Integration Actions in Pocket Detail
+            // Ecosystem Integration — navigate to proper multi-step screens
             const ecoActions = document.querySelectorAll('.eco-action-item');
             ecoActions.forEach(action => {
                 action.onclick = () => {
                     const type = action.getAttribute('data-action');
                     if (type === 'investasi') {
-                        showToast("Routing to myBCA Investasi... Auto-filling mutual fund purchase with pocket balance via API.");
+                        state.ecoInvestasiStep = 0;
+                        navigateTo('ecoInvestasi');
                     } else if (type === 'life') {
-                        showToast("Fetching BCA Life personalized protection quote based on IDR 50.000.000 target...");
+                        state.ecoBcaLifeStep = 0;
+                        navigateTo('ecoBcaLife');
                     } else if (type === 'finance') {
-                        showToast("Opening BCA Finance portal with pre-approved credit check...");
+                        state.ecoBcaFinanceStep = 0;
+                        navigateTo('ecoBcaFinance');
                     }
                 };
             });
@@ -1672,6 +1837,85 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 };
             }
+        } else if (screenName === 'ecoInvestasi') {
+            document.getElementById('btnBackFromEcoInvestasi').onclick = () => navigateTo('pocketDetail');
+            const steps = document.querySelectorAll('.eco-inv-step');
+            const renderStep = () => {
+                steps.forEach((s, i) => s.style.display = i === state.ecoInvestasiStep ? 'block' : 'none');
+            };
+            renderStep();
+            document.querySelectorAll('.eco-inv-next').forEach(btn => {
+                btn.onclick = () => {
+                    if (state.ecoInvestasiStep < steps.length - 1) {
+                        state.ecoInvestasiStep++;
+                        renderStep();
+                    } else {
+                        showToast('🎉 Pembelian Reksa Dana berhasil! Dana dipotong dari Poket.');
+                        state.ecoInvestasiStep = 0;
+                        setTimeout(() => navigateTo('pocketDetail'), 1500);
+                    }
+                };
+            });
+        } else if (screenName === 'ecoBcaLife') {
+            document.getElementById('btnBackFromEcoBcaLife').onclick = () => navigateTo('pocketDetail');
+            const steps = document.querySelectorAll('.eco-life-step');
+            const renderStep = () => {
+                steps.forEach((s, i) => s.style.display = i === state.ecoBcaLifeStep ? 'block' : 'none');
+            };
+            renderStep();
+            document.querySelectorAll('.eco-life-next').forEach(btn => {
+                btn.onclick = () => {
+                    if (state.ecoBcaLifeStep < steps.length - 1) {
+                        state.ecoBcaLifeStep++;
+                        renderStep();
+                    } else {
+                        showToast('🛡️ Polis MyGuard aktif! E-polis dikirim ke email.');
+                        state.ecoBcaLifeStep = 0;
+                        setTimeout(() => navigateTo('pocketDetail'), 1500);
+                    }
+                };
+            });
+        } else if (screenName === 'ecoBcaFinance') {
+            document.getElementById('btnBackFromEcoBcaFinance').onclick = () => navigateTo('pocketDetail');
+            const steps = document.querySelectorAll('.eco-fin-step');
+            const renderStep = () => {
+                steps.forEach((s, i) => s.style.display = i === state.ecoBcaFinanceStep ? 'block' : 'none');
+            };
+            renderStep();
+            // Simulasi DP slider
+            const dpSlider = document.getElementById('dpSlider');
+            const dpVal = document.getElementById('dpVal');
+            const cicilanVal = document.getElementById('cicilanVal');
+            if (dpSlider) {
+                dpSlider.oninput = () => {
+                    const dp = parseInt(dpSlider.value);
+                    const sisa = state.ecoFinanceSim.harga - dp;
+                    const cicilan = Math.round(sisa / state.ecoFinanceSim.tenor * 1.08);
+                    dpVal.textContent = 'IDR ' + dp.toLocaleString('id-ID');
+                    cicilanVal.textContent = 'IDR ' + cicilan.toLocaleString('id-ID') + '/bln';
+                };
+            }
+            const tenorBtns = document.querySelectorAll('.tenor-btn');
+            tenorBtns.forEach(b => {
+                b.onclick = () => {
+                    tenorBtns.forEach(x => { x.style.background='white'; x.style.color='#64748B'; x.style.border='1px solid #E2E8F0'; });
+                    b.style.background='#0077C8'; b.style.color='white'; b.style.border='1px solid #0077C8';
+                    state.ecoFinanceSim.tenor = parseInt(b.getAttribute('data-tenor'));
+                    if (dpSlider) dpSlider.oninput();
+                };
+            });
+            document.querySelectorAll('.eco-fin-next').forEach(btn => {
+                btn.onclick = () => {
+                    if (state.ecoBcaFinanceStep < steps.length - 1) {
+                        state.ecoBcaFinanceStep++;
+                        renderStep();
+                    } else {
+                        showToast('✅ Pengajuan KKB terkirim! OTP dikirim ke nomor terdaftar.');
+                        state.ecoBcaFinanceStep = 0;
+                        setTimeout(() => navigateTo('pocketDetail'), 1500);
+                    }
+                };
+            });
         }
     }
 
