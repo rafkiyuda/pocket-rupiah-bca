@@ -692,24 +692,50 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
 
                         <!-- PROTECTION & SHARED EXPANSION CARD -->
-                        <div style="background: white; border-radius: 16px; border: 1px solid #F1F5F9; padding: 18px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-                                <div style="display: flex; align-items: center; gap: 10px;">
-                                    <div style="width: 40px; height: 40px; border-radius: 12px; background: linear-gradient(135deg,#E0F2FE,#BAE6FD); display: flex; justify-content: center; align-items: center; font-size: 1.3rem;">🛡️</div>
+                        <div class="rp-main-container" style="background: white; border-radius: 16px; padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); border: 1px solid #F1F5F9; margin-bottom: 24px;">
+                            <div class="rupiah-pocket-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                                <div style="display: flex; align-items: flex-start; gap: 12px;">
+                                    <!-- Shield icon matching wallet illustration style -->
+                                    <div style="position: relative; width: 40px; height: 40px; background: #0077C8; border-radius: 8px 12px 12px 12px; display: flex; justify-content: center; align-items: center; margin-top: 4px; flex-shrink: 0;">
+                                        <div style="position: absolute; top: -4px; left: 6px; width: 24px; height: 12px; background: #E0F2FE; border-radius: 4px; transform: rotate(-10deg);"></div>
+                                        <div style="position: absolute; bottom: -6px; left: -8px; background: #FDE047; color: #b45309; font-size: 0.6rem; font-weight: bold; width: 22px; height: 22px; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border: 2px solid white;">🛡️</div>
+                                    </div>
                                     <div>
-                                        <h4 style="font-size: 0.9rem; font-weight: 800; color: #003366; margin: 0 0 2px;">Protection & Shared</h4>
-                                        <p style="font-size: 0.7rem; color: #64748B; margin: 0;">Keluarga & perlindungan terpusat</p>
+                                        <div style="color: #475569; font-size: 0.85rem; margin-bottom: 4px;">Protection & Shared</div>
+                                        <div style="font-size: 1.1rem; font-weight: 800; color: #1e293b;">Keluarga & Perlindungan</div>
                                     </div>
                                 </div>
-                                <div style="background: #EFF6FF; color: #0077C8; font-size: 0.65rem; font-weight: 700; padding: 3px 10px; border-radius: 10px;">Baru</div>
+                                <div style="background: #EFF6FF; color: #0077C8; font-size: 0.65rem; font-weight: 700; padding: 3px 10px; border-radius: 10px; margin-top: 4px;">Baru</div>
                             </div>
-                            <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px;">
-                                <div style="background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 20px; padding: 5px 12px; font-size: 0.68rem; font-weight: 600; color: #065F46;">👨‍👩‍👧 Shared Pocket</div>
-                                <div style="background: #FEF2F2; border: 1px solid #FECACA; border-radius: 20px; padding: 5px 12px; font-size: 0.68rem; font-weight: 600; color: #991B1B;">🔔 Alert Real-Time</div>
-                                <div style="background: #F5F3FF; border: 1px solid #DDD6FE; border-radius: 20px; padding: 5px 12px; font-size: 0.68rem; font-weight: 600; color: #5B21B6;">🛡️ Proteksi Proaktif</div>
+
+                            <div style="font-size: 0.75rem; color: #475569; margin-bottom: 20px;">Kelola keuangan <strong>keluarga bersama</strong>, rekomendasi proteksi, & alert real-time</div>
+
+                            <!-- Feature items matching pocket-item-box style -->
+                            <div style="margin-bottom: 20px;">
+                                ${[
+                                    { icon: '👨‍👩‍👧', label: 'Shared Pocket', sub: 'Keluarga Santoso · 3 anggota', pct: 65, color: '#10B981' },
+                                    { icon: '🛡️', label: 'Proteksi Jiwa', sub: 'Belum aktif · BCA Life tersedia', pct: 0, color: '#EF4444' },
+                                    { icon: '🔔', label: 'Alert Keuangan', sub: '2 alert aktif hari ini', pct: 80, color: '#0077C8' }
+                                ].map(f => `
+                                <div style="cursor: pointer; border: 1px solid #E2E8F0; border-radius: 12px; padding: 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 16px; background: white; transition: all 0.3s ease;">
+                                    <div style="font-size: 1.5rem; color: #0077C8;">${f.icon}</div>
+                                    <div style="flex: 1;">
+                                        <div style="font-size: 0.88rem; font-weight: 800; color: #1e293b; margin-bottom: 4px;">${f.label}</div>
+                                        <div style="font-size: 0.75rem; color: #64748B; margin-bottom: 6px;">${f.sub}</div>
+                                        <div style="display: flex; align-items: center; gap: 8px;">
+                                            <div style="flex: 1; height: 4px; background: #E2E8F0; border-radius: 2px; overflow: hidden;">
+                                                <div style="height: 100%; width: ${f.pct}%; background: ${f.color}; border-radius: 2px;"></div>
+                                            </div>
+                                            <span style="font-size: 0.65rem; color: #64748B; font-weight: 700;">${f.pct}%</span>
+                                        </div>
+                                    </div>
+                                    <span style="font-size: 1.4rem; color: #0077C8; font-weight: 300;">></span>
+                                </div>`).join('')}
                             </div>
-                            <p style="font-size: 0.75rem; color: #64748B; line-height: 1.5; margin: 0 0 14px;">Kelola keuangan keluarga bersama, pantau dari satu dashboard, dan dapatkan rekomendasi proteksi yang tepat.</p>
-                            <button id="btnOpenSharedProtection" style="width:100%;background:#0077C8;color:white;border:none;padding:11px;border-radius:12px;font-weight:800;font-size:0.85rem;cursor:pointer;">Jelajahi Fitur ›</button>
+
+                            <div style="text-align: center;">
+                                <span id="btnOpenSharedProtection" onclick="navigateTo('sharedProtection')" style="color: #0077C8; font-weight: 800; font-size: 0.95rem; display: inline-block; cursor: pointer; padding: 8px; background: white; border-radius: 8px;">Jelajahi Semua Fitur</span>
+                            </div>
                         </div>
 
                         <!-- RE-ADDED INTELLIGENT CONTROL & REWARDS -->
