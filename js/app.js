@@ -54,6 +54,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 { key: 'retirement', label: 'Pensiun', icon: '🏡', active: false }
             ]
         },
+        goalEngine: {
+            income: 8000000,
+            needs: 50,
+            wants: 30,
+            savings: 20,
+            optimizedAlloc: [
+                { pocket: 'Dana Darurat', monthly: 1600000, priority: 1, progress: 40, target: 24000000, eta: '14 bln', icon: '🚨', color: '#EF4444' },
+                { pocket: 'Investasi Reksa Dana', monthly: 500000, priority: 2, progress: 0, target: 6000000, eta: '12 bln', icon: '📈', color: '#0077C8' },
+                { pocket: 'Liburan', monthly: 500000, priority: 3, progress: 12, target: 10000000, eta: '20 bln', icon: '✈️', color: '#8B5CF6' }
+            ],
+            templates: [
+                { name: 'Dana Darurat', icon: '🚨', desc: '6x pengeluaran bulanan', color: '#FEF2F2', border: '#FCA5A5', amount: 24000000 },
+                { name: 'KPR BCA', icon: '🏠', desc: 'DP 20% rumah impian', color: '#F0F9FF', border: '#BAE6FD', amount: 80000000 },
+                { name: 'Dana Pendidikan', icon: '🎓', desc: 'Biaya kuliah S1 anak', color: '#F0FDF4', border: '#BBF7D0', amount: 100000000 },
+                { name: 'Pensiun', icon: '🏡', desc: 'Dana hari tua yang nyaman', color: '#FFF7ED', border: '#FED7AA', amount: 500000000 }
+            ]
+        },
         rewards: {
             points: 1250,
             level: "Budget Boss",
@@ -580,7 +597,43 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                         ` : ''}
 
-
+                        <!-- GOAL ENGINE CARD -->
+                        <div id="goalEngineCard" style="background: linear-gradient(135deg, #7C3AED 0%, #4F46E5 100%); border-radius: 20px; padding: 18px; margin-bottom: 24px; color: white; cursor: pointer; position: relative; overflow: hidden; box-shadow: 0 8px 24px rgba(124,58,237,0.3);">
+                            <div style="position: absolute; top: -20px; right: -10px; font-size: 6rem; opacity: 0.08;">⚡</div>
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; position: relative; z-index: 1;">
+                                <div style="background: rgba(255,255,255,0.15); border-radius: 8px; padding: 4px 10px; font-size: 0.65rem; font-weight: 700;">⚡ GOAL ENGINE</div>
+                                <div style="background: rgba(255,255,255,0.2); font-size: 0.68rem; font-weight: 700; padding: 3px 10px; border-radius: 10px;">AI Optimized</div>
+                            </div>
+                            <h3 style="font-size: 1rem; font-weight: 800; margin: 0 0 4px; position: relative; z-index: 1;">Smart Allocation Plan</h3>
+                            <p style="font-size: 0.75rem; opacity: 0.85; margin: 0 0 14px; position: relative; z-index: 1;">Alokasi otomatis IDR 8.000.000/bln berdasarkan Need vs Want & prioritas goal.</p>
+                            <!-- Mini allocation bars -->
+                            <div style="position: relative; z-index: 1; margin-bottom: 14px;">
+                                ${state.goalEngine.optimizedAlloc.map(a => `
+                                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                                    <div style="font-size: 0.85rem; width: 20px; text-align: center; flex-shrink: 0;">${a.icon}</div>
+                                    <div style="flex: 1;">
+                                        <div style="height: 6px; background: rgba(255,255,255,0.15); border-radius: 3px; overflow: hidden;">
+                                            <div style="height: 100%; width: ${Math.round(a.monthly / state.goalEngine.income * 100)}%; background: rgba(255,255,255,0.8); border-radius: 3px;"></div>
+                                        </div>
+                                    </div>
+                                    <div style="font-size: 0.65rem; font-weight: 700; white-space: nowrap; opacity: 0.9;">Rp ${(a.monthly/1000000).toFixed(1)}Jt</div>
+                                </div>`).join('')}
+                            </div>
+                            <div style="display: flex; gap: 8px; position: relative; z-index: 1;">
+                                <div style="flex: 1; background: rgba(255,255,255,0.1); border-radius: 10px; padding: 8px; text-align: center;">
+                                    <div style="font-size: 0.65rem; opacity: 0.7; margin-bottom: 2px;">Kebutuhan</div>
+                                    <div style="font-size: 0.9rem; font-weight: 800;">${state.goalEngine.needs}%</div>
+                                </div>
+                                <div style="flex: 1; background: rgba(255,255,255,0.1); border-radius: 10px; padding: 8px; text-align: center;">
+                                    <div style="font-size: 0.65rem; opacity: 0.7; margin-bottom: 2px;">Keinginan</div>
+                                    <div style="font-size: 0.9rem; font-weight: 800;">${state.goalEngine.wants}%</div>
+                                </div>
+                                <div style="flex: 1; background: rgba(255,255,255,0.1); border-radius: 10px; padding: 8px; text-align: center;">
+                                    <div style="font-size: 0.65rem; opacity: 0.7; margin-bottom: 2px;">Tabungan</div>
+                                    <div style="font-size: 0.9rem; font-weight: 800;">${state.goalEngine.savings}%</div>
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="rp-main-container" style="background: white; border-radius: 16px; padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); border: 1px solid #F1F5F9; margin-bottom: 24px;">
                             <div class="rupiah-pocket-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
@@ -1133,6 +1186,98 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <button class="eco-fin-next" style="width:100%;background:#0077C8;color:white;border:none;padding:14px;border-radius:12px;font-weight:700;font-size:0.95rem;cursor:pointer;">Konfirmasi Pengajuan ✓</button>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        `,
+        goalEngine: () => `
+            <div style="background:#F1F5F9;height:100%;overflow-y:auto;">
+                <header class="blue-header" style="background:linear-gradient(135deg,#7C3AED,#4F46E5);height:130px;align-items:flex-start;padding-top:40px;">
+                    <div class="back-btn" id="btnBackFromGoalEngine"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></div>
+                    <h2 class="header-title">Goal Engine</h2>
+                </header>
+                <div style="margin-top:-20px;padding:0 16px 40px;position:relative;z-index:1;">
+                    <!-- Smart Allocation -->
+                    <div style="background:white;border-radius:16px;padding:18px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+                            <div>
+                                <h3 style="color:#003366;font-size:0.95rem;font-weight:800;margin:0 0 2px;">Smart Allocation</h3>
+                                <p style="font-size:0.72rem;color:#64748B;margin:0;">Need vs Want vs Savings</p>
+                            </div>
+                            <div style="background:#7C3AED;color:white;font-size:0.65rem;font-weight:700;padding:4px 10px;border-radius:10px;">AI Optimized</div>
+                        </div>
+                        <div style="height:16px;border-radius:8px;overflow:hidden;display:flex;margin-bottom:12px;">
+                            <div id="ge-bar-needs" style="width:${state.goalEngine.needs}%;background:#0077C8;transition:width 0.3s;"></div>
+                            <div id="ge-bar-wants" style="width:${state.goalEngine.wants}%;background:#8B5CF6;transition:width 0.3s;"></div>
+                            <div id="ge-bar-savings" style="flex:1;background:#10B981;transition:width 0.3s;"></div>
+                        </div>
+                        <div style="display:flex;gap:12px;margin-bottom:16px;">
+                            <div style="display:flex;align-items:center;gap:5px;"><div style="width:10px;height:10px;border-radius:2px;background:#0077C8;"></div><span style="font-size:0.72rem;color:#475569;">Kebutuhan <strong id="ge-needs-lbl">${state.goalEngine.needs}%</strong></span></div>
+                            <div style="display:flex;align-items:center;gap:5px;"><div style="width:10px;height:10px;border-radius:2px;background:#8B5CF6;"></div><span style="font-size:0.72rem;color:#475569;">Keinginan <strong id="ge-wants-lbl">${state.goalEngine.wants}%</strong></span></div>
+                            <div style="display:flex;align-items:center;gap:5px;"><div style="width:10px;height:10px;border-radius:2px;background:#10B981;"></div><span style="font-size:0.72rem;color:#475569;">Tabungan <strong id="ge-savings-lbl">${state.goalEngine.savings}%</strong></span></div>
+                        </div>
+                        <div style="margin-bottom:10px;">
+                            <div style="display:flex;justify-content:space-between;font-size:0.73rem;color:#64748B;margin-bottom:4px;"><span>Kebutuhan</span><span id="ge-needs-val">${state.goalEngine.needs}%</span></div>
+                            <input id="ge-needs" type="range" min="30" max="70" value="${state.goalEngine.needs}" style="width:100%;accent-color:#0077C8;">
+                        </div>
+                        <div style="margin-bottom:14px;">
+                            <div style="display:flex;justify-content:space-between;font-size:0.73rem;color:#64748B;margin-bottom:4px;"><span>Keinginan</span><span id="ge-wants-val">${state.goalEngine.wants}%</span></div>
+                            <input id="ge-wants" type="range" min="10" max="50" value="${state.goalEngine.wants}" style="width:100%;accent-color:#8B5CF6;">
+                        </div>
+                        <div style="background:#F0FDF4;border-radius:8px;padding:10px;font-size:0.75rem;color:#065F46;display:flex;align-items:center;gap:8px;">
+                            <span>💡</span> Tabungan otomatis: <strong id="ge-savings-disp">${state.goalEngine.savings}%</strong> = <strong id="ge-savings-amt">IDR ${(state.goalEngine.income * state.goalEngine.savings / 100).toLocaleString('id-ID')}/bln</strong>
+                        </div>
+                    </div>
+                    <!-- Goal Templates -->
+                    <div style="background:white;border-radius:16px;padding:18px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+                        <h3 style="color:#003366;font-size:0.95rem;font-weight:800;margin:0 0 4px;">Template Poket Otomatis</h3>
+                        <p style="font-size:0.72rem;color:#64748B;margin:0 0 14px;">Pilih goal, AI buat poket + rencana nabung langsung.</p>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                            ${state.goalEngine.templates.map(t => `
+                            <div class="ge-template-card" data-name="${t.name}" style="background:${t.color};border:1px solid ${t.border};border-radius:12px;padding:14px;cursor:pointer;">
+                                <div style="font-size:1.6rem;margin-bottom:6px;">${t.icon}</div>
+                                <div style="font-weight:700;font-size:0.82rem;color:#1e293b;margin-bottom:2px;">${t.name}</div>
+                                <div style="font-size:0.68rem;color:#64748B;margin-bottom:6px;">${t.desc}</div>
+                                <div style="font-size:0.7rem;font-weight:700;color:#0077C8;">IDR ${(t.amount/1000000).toFixed(0)} Jt</div>
+                            </div>`).join('')}
+                        </div>
+                    </div>
+                    <!-- Optimized Allocation Plan -->
+                    <div style="background:white;border-radius:16px;padding:18px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+                            <h3 style="color:#003366;font-size:0.95rem;font-weight:800;margin:0;">Rencana Alokasi Optimal</h3>
+                            <div style="font-size:0.68rem;color:#7C3AED;font-weight:700;">⚡ Linear Program</div>
+                        </div>
+                        <div style="background:#F5F3FF;border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:0.75rem;color:#5B21B6;">
+                            🤖 AI menghitung alokasi optimal dari gaji <strong>IDR 8.000.000</strong> berdasarkan prioritas goal & perilaku belanjamu.
+                        </div>
+                        ${state.goalEngine.optimizedAlloc.map((a, i) => `
+                        <div style="border:1px solid #F1F5F9;border-radius:12px;padding:14px;margin-bottom:10px;">
+                            <div style="display:flex;gap:12px;align-items:center;margin-bottom:10px;">
+                                <div style="width:36px;height:36px;border-radius:10px;background:#F0F9FF;display:flex;justify-content:center;align-items:center;font-size:1.1rem;flex-shrink:0;">${a.icon}</div>
+                                <div style="flex:1;">
+                                    <div style="font-weight:700;color:#1e293b;font-size:0.85rem;margin-bottom:1px;">${a.pocket}</div>
+                                    <div style="font-size:0.68rem;color:#64748B;">Prioritas #${a.priority} · Target IDR ${(a.target/1000000).toFixed(0)}Jt · ETA ${a.eta}</div>
+                                </div>
+                                <div style="text-align:right;flex-shrink:0;">
+                                    <div style="font-size:0.8rem;font-weight:800;color:#7C3AED;">Rp ${(a.monthly/1000).toFixed(0)}K</div>
+                                    <div style="font-size:0.62rem;color:#94A3B8;">/bulan</div>
+                                </div>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:8px;">
+                                <div style="flex:1;height:6px;background:#E2E8F0;border-radius:3px;overflow:hidden;"><div style="height:100%;width:${a.progress}%;background:${a.color};border-radius:3px;"></div></div>
+                                <span style="font-size:0.65rem;color:#64748B;font-weight:700;">${a.progress}%</span>
+                            </div>
+                        </div>`).join('')}
+                        <button id="btnApplyGoalPlan" style="width:100%;background:linear-gradient(135deg,#7C3AED,#4F46E5);color:white;border:none;padding:14px;border-radius:12px;font-weight:700;font-size:0.95rem;cursor:pointer;margin-top:4px;">⚡ Terapkan Rencana Ini</button>
+                    </div>
+                    <!-- Rules Engine -->
+                    <div style="background:linear-gradient(135deg,#0F172A,#1E3A5F);border-radius:16px;padding:18px;">
+                        <h4 style="color:#7DD3FC;font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin:0 0 14px;">⚙️ Rules Engine & Optimisasi</h4>
+                        <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:12px;"><div style="font-size:1.1rem;flex-shrink:0;">📊</div><div><div style="font-weight:700;color:white;font-size:0.8rem;margin-bottom:2px;">Analisis Perilaku</div><div style="font-size:0.72rem;color:#94A3B8;line-height:1.4;">Pola belanja & tabungan 3 bulan terakhir dianalisis secara real-time.</div></div></div>
+                        <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:12px;"><div style="font-size:1.1rem;flex-shrink:0;">🎯</div><div><div style="font-weight:700;color:white;font-size:0.8rem;margin-bottom:2px;">Prioritas Goal</div><div style="font-size:0.72rem;color:#94A3B8;line-height:1.4;">Dana Darurat selalu di prioritas #1 sebelum investasi dimulai.</div></div></div>
+                        <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:12px;"><div style="font-size:1.1rem;flex-shrink:0;">🔄</div><div><div style="font-weight:700;color:white;font-size:0.8rem;margin-bottom:2px;">Auto-Adjust Bulanan</div><div style="font-size:0.72rem;color:#94A3B8;line-height:1.4;">Alokasi disesuaikan otomatis jika ada perubahan gaji atau pengeluaran besar.</div></div></div>
+                        <div style="display:flex;gap:12px;align-items:flex-start;"><div style="font-size:1.1rem;flex-shrink:0;">📈</div><div><div style="font-weight:700;color:white;font-size:0.8rem;margin-bottom:2px;">Integrasi Bertahap ke Investasi</div><div style="font-size:0.72rem;color:#94A3B8;line-height:1.4;">Setelah Dana Darurat 100%, surplus dialihkan ke BCA Sekuritas secara otomatis.</div></div></div>
                     </div>
                 </div>
             </div>
@@ -1794,6 +1939,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const lifeCard = document.getElementById('lifeStageCard');
             if (lifeCard) lifeCard.onclick = () => navigateTo('lifeStageDetail');
 
+            // Goal Engine Card
+            const geCard = document.getElementById('goalEngineCard');
+            if (geCard) geCard.onclick = () => navigateTo('goalEngine');
 
             const qrisBadges = document.querySelectorAll('.qris-shortcut-badge');
             qrisBadges.forEach(badge => {
@@ -2038,6 +2186,52 @@ document.addEventListener('DOMContentLoaded', () => {
                     setTimeout(() => navigateTo('pocketDetail'), 800);
                 };
             });
+        } else if (screenName === 'goalEngine') {
+            document.getElementById('btnBackFromGoalEngine').onclick = () => navigateTo('pocketsDashboard');
+
+            // Slider interaction
+            const needsSlider = document.getElementById('ge-needs');
+            const wantsSlider = document.getElementById('ge-wants');
+            function updateAlloc() {
+                const n = parseInt(needsSlider.value);
+                const w = parseInt(wantsSlider.value);
+                const s = Math.max(0, 100 - n - w);
+                state.goalEngine.needs = n; state.goalEngine.wants = w; state.goalEngine.savings = s;
+                ['needs','wants','savings'].forEach(k => {
+                    const el = document.getElementById('ge-' + k + '-val');
+                    const lbl = document.getElementById('ge-' + k + '-lbl');
+                    if (el) el.textContent = state.goalEngine[k] + '%';
+                    if (lbl) lbl.textContent = state.goalEngine[k] + '%';
+                });
+                const barN = document.getElementById('ge-bar-needs');
+                const barW = document.getElementById('ge-bar-wants');
+                if (barN) barN.style.width = n + '%';
+                if (barW) barW.style.width = w + '%';
+                const disp = document.getElementById('ge-savings-disp');
+                const amt = document.getElementById('ge-savings-amt');
+                if (disp) disp.textContent = s + '%';
+                if (amt) amt.textContent = 'IDR ' + (state.goalEngine.income * s / 100).toLocaleString('id-ID') + '/bln';
+            }
+            if (needsSlider) needsSlider.oninput = updateAlloc;
+            if (wantsSlider) wantsSlider.oninput = updateAlloc;
+
+            // Template cards
+            document.querySelectorAll('.ge-template-card').forEach(card => {
+                card.onclick = () => {
+                    const name = card.getAttribute('data-name');
+                    showToast('📝 Membuat poket "' + name + '"...');
+                    setTimeout(() => navigateTo('createForm'), 800);
+                };
+            });
+
+            // Apply plan
+            const btnApply = document.getElementById('btnApplyGoalPlan');
+            if (btnApply) {
+                btnApply.onclick = () => {
+                    showToast('⚡ Rencana alokasi diterapkan!');
+                    setTimeout(() => navigateTo('pocketsDashboard'), 1200);
+                };
+            }
         } else if (screenName === 'lifeStageDetail') {
             document.getElementById('btnBackFromLifeStage').onclick = () => navigateTo('pocketsDashboard');
             document.querySelectorAll('.life-stage-action').forEach(card => {
