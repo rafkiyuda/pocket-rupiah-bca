@@ -580,7 +580,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <div class="pocket-item-box pocket-idr-card" data-id="${p.id}" ${p.id === 1 ? 'id="tour-target-2"' : ''} style="cursor: pointer; border: 1px solid #E2E8F0; border-radius: 12px; padding: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 16px; background: white; transition: all 0.3s ease;">
                                         <div class="pd-icon" ${p.id === 1 ? 'id="tour-target-4"' : ''} style="font-size: 1.5rem; color: #0077C8; position: relative;">
                                             ${p.type === 'emergency' ? '🚨' : p.type === 'shared' ? '👨‍👩‍👧' : '🚗'}
-                                            ${p.qrisEnabled ? `<div style="position: absolute; bottom: -2px; right: -6px; background: white; border-radius: 50%; padding: 2px; box-shadow: 0 1px 2px rgba(0,0,0,0.1);"><div style="background: #0077C8; color: white; font-size: 0.35rem; font-weight: bold; width: 12px; height: 12px; display: flex; justify-content: center; align-items: center; border-radius: 50%;">QR</div></div>` : ''}
+                                            ${p.qrisEnabled ? `<div class="qris-shortcut-badge" data-pocket-id="${p.id}" style="position: absolute; bottom: -2px; right: -6px; background: white; border-radius: 50%; padding: 2px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); cursor: pointer; z-index: 2;"><div style="background: #0077C8; color: white; font-size: 0.35rem; font-weight: bold; width: 12px; height: 12px; display: flex; justify-content: center; align-items: center; border-radius: 50%;">QR</div></div>` : ''}
                                         </div>
                                         <div class="pi-info" style="flex: 1;">
                                             <div style="font-size: 1.1rem; font-weight: 800; color: #1e293b; margin-bottom: 4px;">IDR <span class="dots">●●●●●●●</span></div>
@@ -884,21 +884,21 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div style="display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px; margin-left: -20px; padding-left: 20px; padding-right: 20px; scrollbar-width: none;">
                         
                         <!-- Main Account (Always Available) -->
-                        <div class="qris-source-card active" style="min-width: 140px; border: 2px solid #0077C8; background: #F0F9FF; border-radius: 12px; padding: 12px; cursor: pointer;">
-                            <div style="font-size: 0.7rem; color: #0077C8; margin-bottom: 8px; font-weight: 700;">Main Account</div>
+                        <div class="qris-source-card ${!state.selectedQrisPocketId ? 'active' : ''}" style="min-width: 140px; border: ${!state.selectedQrisPocketId ? '2px solid #0077C8' : '1px solid #E2E8F0'}; background: ${!state.selectedQrisPocketId ? '#F0F9FF' : 'white'}; border-radius: 12px; padding: 12px; cursor: pointer;">
+                            <div style="font-size: 0.7rem; color: ${!state.selectedQrisPocketId ? '#0077C8' : '#64748B'}; margin-bottom: 8px; font-weight: 700;">Main Account</div>
                             <div style="font-weight: 800; color: #1e293b; font-size: 0.9rem; margin-bottom: 4px;">Tahapan Xpresi</div>
-                            <div style="font-size: 0.8rem; color: #0077C8; font-weight: 700;">IDR ${state.balance}</div>
+                            <div style="font-size: 0.8rem; color: ${!state.selectedQrisPocketId ? '#0077C8' : '#64748B'}; font-weight: 700;">IDR ${state.balance}</div>
                         </div>
 
                         <!-- Filtered Pockets -->
                         ${state.pockets.filter(p => p.qrisEnabled).map(p => `
-                            <div class="qris-source-card" style="min-width: 140px; border: 1px solid #E2E8F0; background: white; border-radius: 12px; padding: 12px; cursor: pointer;">
+                            <div class="qris-source-card ${state.selectedQrisPocketId === p.id ? 'active' : ''}" style="min-width: 140px; border: ${state.selectedQrisPocketId === p.id ? '2px solid #0077C8' : '1px solid #E2E8F0'}; background: ${state.selectedQrisPocketId === p.id ? '#F0F9FF' : 'white'}; border-radius: 12px; padding: 12px; cursor: pointer;">
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                                    <div style="font-size: 0.7rem; color: #64748B; font-weight: 700;">QRIS Pocket</div>
+                                    <div style="font-size: 0.7rem; color: ${state.selectedQrisPocketId === p.id ? '#0077C8' : '#64748B'}; font-weight: 700;">QRIS Pocket</div>
                                     <div style="font-size: 0.8rem;">${p.type === 'emergency' ? '🚨' : p.type === 'shared' ? '👨‍👩‍👧' : '🚗'}</div>
                                 </div>
                                 <div style="font-weight: 800; color: #1e293b; font-size: 0.9rem; margin-bottom: 4px;">${p.name}</div>
-                                <div style="font-size: 0.8rem; color: #64748B; font-weight: 700;">IDR ${p.balance}</div>
+                                <div style="font-size: 0.8rem; color: ${state.selectedQrisPocketId === p.id ? '#0077C8' : '#64748B'}; font-weight: 700;">IDR ${p.balance}</div>
                             </div>
                         `).join('')}
                     </div>
@@ -1283,7 +1283,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (btnAct) btnAct.onclick = () => navigateTo('tracker');
 
             const btnQris = document.getElementById('btnQRIS');
-            if (btnQris) btnQris.onclick = () => navigateTo('qrisSelection');
+            if (btnQris) btnQris.onclick = () => {
+                state.selectedQrisPocketId = null;
+                navigateTo('qrisSelection');
+            };
 
             const btnAdd = document.getElementById('btnAddNewPocket');
             if (btnAdd) btnAdd.onclick = () => navigateTo('createForm');
@@ -1344,6 +1347,15 @@ document.addEventListener('DOMContentLoaded', () => {
             // Add click for View All to go to createForm for now
             const btnViewAll = document.querySelector('.pocket-view-all-card');
             if (btnViewAll) btnViewAll.onclick = () => navigateTo('createForm');
+            
+            const qrisBadges = document.querySelectorAll('.qris-shortcut-badge');
+            qrisBadges.forEach(badge => {
+                badge.onclick = (e) => {
+                    e.stopPropagation();
+                    state.selectedQrisPocketId = parseInt(badge.getAttribute('data-pocket-id'));
+                    navigateTo('qrisSelection');
+                };
+            });
 
             const pocketCards = document.querySelectorAll('.pocket-idr-card');
             pocketCards.forEach(card => {
