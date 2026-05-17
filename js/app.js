@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
         roundUpActive: true,
         onboardingStep: 0,
         showTour: false,
+        hasSeenPocketTour: false,
         selectedQrisPocketId: null,
         newPocketData: {
             name: "",
@@ -906,17 +907,27 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `,
         onboardingTour: () => `
-            <div class="tour-overlay ${state.showTour ? 'show' : ''}">
-                <div class="tour-card" id="tourCard">
-                    <div class="tour-step-info">Step ${state.onboardingStep + 1} of 3</div>
-                    <h3 id="tourTitle">Smart Recommendation</h3>
-                    <p id="tourDesc">AI kami akan membantu mengalokasikan tabunganmu secara otomatis berdasarkan kebiasaan transaksimu.</p>
-                    <div class="tour-footer">
-                        <button class="skip-btn" id="btnSkipTour">Skip</button>
-                        <button class="next-btn" id="btnNextTour">Next</button>
+            <div class="tour-overlay ${state.showTour ? 'show' : ''}" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); z-index: 10000; display: ${state.showTour ? 'flex' : 'none'}; justify-content: center; align-items: center; padding: 20px; pointer-events: auto;">
+                
+                <div class="tour-card" id="tourCard" style="background: #39A9DB; color: white; border-radius: 4px; padding: 24px 20px; width: 100%; max-width: 340px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); position: relative; animation: slideUp 0.3s ease; font-family: sans-serif;">
+                    
+                    <!-- Triangle pointer (top left) -->
+                    <div style="position: absolute; top: -10px; left: 24px; width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-bottom: 10px solid #39A9DB;"></div>
+                    
+                    <div class="tour-step-info" style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; opacity: 0.9;">Step ${state.onboardingStep + 1} of 4</div>
+                    
+                    <h3 id="tourTitle" style="font-size: 1.2rem; font-weight: 800; margin-bottom: 12px; line-height: 1.3;">1. Buat Poket Pertamamu</h3>
+                    
+                    <div id="tourDesc" style="font-size: 0.95rem; line-height: 1.5; font-weight: 500; opacity: 0.95;">
+                        <p style="margin-bottom: 12px;">Mulai atur keuanganmu dengan membuat Poket. Skenario: Pisahkan dana untuk jajan, liburan, atau dana darurat agar tidak tercampur dengan rekening utama.</p>
+                        <div class="tour-tip-badge" style="background: rgba(255,255,255,0.2); padding: 8px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 700;">Tip: Klik ikon '+' dan manfaatkan template Smart AI Recommendation!</div>
+                    </div>
+                    
+                    <div class="tour-footer" style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px;">
+                        <button class="skip-btn" id="btnSkipTour" style="background: transparent; color: white; border: none; font-size: 0.9rem; font-weight: 600; opacity: 0.8; cursor: pointer;">Skip Tour</button>
+                        <button class="next-btn" id="btnNextTour" style="background: white; color: #39A9DB; border: none; padding: 10px 20px; border-radius: 20px; font-weight: 800; font-size: 0.95rem; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">Next</button>
                     </div>
                 </div>
-                <div class="tour-pointer" id="tourPointer"></div>
             </div>
         `,
         rewardHub: () => `
@@ -1268,9 +1279,8 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const btnPromo = document.getElementById('btnPromo');
             if (btnPromo) btnPromo.onclick = () => {
-                state.showTour = true;
-                initTour();
-                document.querySelector('.tour-overlay').classList.add('show');
+                showToast("Membuka Pockets...");
+                setTimeout(() => navigateTo('pocketsDashboard'), 500);
             };
 
             const btnReward = document.getElementById('btnRewardHub');
@@ -1281,6 +1291,16 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (screenName === 'pocketsDashboard') {
             const btnBack = document.getElementById('btnBackToHomeFromPockets');
             if (btnBack) btnBack.onclick = () => navigateTo('home');
+            
+            if (!state.hasSeenPocketTour) {
+                state.hasSeenPocketTour = true;
+                state.showTour = true;
+                setTimeout(() => {
+                    initTour();
+                    const overlay = document.querySelector('.tour-overlay');
+                    if (overlay) overlay.classList.add('show');
+                }, 500);
+            }
             
             // Tab switching logic
             const tabs = document.querySelectorAll('.ai-tab');
@@ -1563,26 +1583,31 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const tourData = [
             { 
-                title: "Smart AI Recommendation", 
-                desc: "AI menganalisis pola pengeluaranmu. Skenario: Kamu sering jajan? AI akan sarankan buat 'Poket Makan' agar jajanmu lebih terkontrol!",
-                tip: "Tip: Klik 'Aktifkan Sekarang' untuk setup otomatis."
+                title: "1. Buat Poket Pertamamu", 
+                desc: "Mulai atur keuanganmu dengan membuat Poket. Skenario: Pisahkan dana untuk jajan, liburan, atau dana darurat agar tidak tercampur dengan rekening utama.",
+                tip: "Tip: Klik ikon '+' dan manfaatkan template Smart AI Recommendation!"
             },
             { 
-                title: "Predictive Time-to-Goal", 
-                desc: "Skenario: Mau beli iPhone dalam 6 bulan? Cukup isi target, dan AI akan hitung kapan kamu bisa membelinya berdasarkan saldo saat ini.",
-                tip: "Tip: Pantau bar kemajuan setiap minggu!"
+                title: "2. Lihat Detail & Motivasi", 
+                desc: "Skenario: Bosan menabung? Klik salah satu Poket untuk melihat Goal Visibility Dashboard. Prediksi AI akan menghitung kapan targetmu tercapai!",
+                tip: "Tip: Pertahankan konsistensi menabungmu untuk mendapat 'Streak' dan Poin Reward!"
             },
             { 
-                title: "BCA Ecosystem Integration", 
-                desc: "Skenario: Biaya sekolah anak jadi beban tiap bulan? Hubungkan poket dengan fitur 'Auto-Pay Sekolah' agar tagihan terbayar tepat waktu.",
-                tip: "Tip: Hubungkan juga ke BCA Life untuk proteksi otomatis."
+                title: "3. AI Wealth Insight", 
+                desc: "Skenario: Ingin tahu kondisi keuangan secara keseluruhan? Buka tab 'Insight'. AI kami akan merangkum performa semua poketmu secara cerdas.",
+                tip: "Tip: Evaluasi performa menabungmu setiap akhir bulan di halaman ini."
+            },
+            { 
+                title: "4. Auto-Allocation & QRIS", 
+                desc: "Skenario: Ada gaji masuk? AI akan tawarkan alokasi otomatis! Kamu juga bisa bayar belanjaan langsung dari Poket jajan via QRIS.",
+                tip: "Tip: Aktifkan 'QRIS Payment' saat membuat poket khusus pengeluaran."
             }
         ];
 
         nextBtn.onclick = () => {
             state.onboardingStep++;
             if (state.onboardingStep < tourData.length) {
-                document.querySelector('.tour-step-info').textContent = `Step ${state.onboardingStep + 1} of 3`;
+                document.querySelector('.tour-step-info').textContent = `Step ${state.onboardingStep + 1} of ${tourData.length}`;
                 document.getElementById('tourTitle').textContent = tourData[state.onboardingStep].title;
                 document.getElementById('tourDesc').innerHTML = `
                     <p style="margin-bottom: 12px;">${tourData[state.onboardingStep].desc}</p>
