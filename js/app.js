@@ -815,9 +815,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                     
                     <!-- INSIGHT TAB -->
-                    <div class="ai-tab-content" id="tab-insight" style="display: none; padding-top: 8px;">
+                    <div class="ai-tab-content" id="tab-insight" style="display: none;">
                         <!-- AI LIFE-STAGE DETECTION CARD -->
-                        <div id="lifeStageCard" style="background: linear-gradient(135deg, #0F172A 0%, #1E3A5F 100%); border-radius: 20px; padding: 20px; margin-bottom: 20px; color: white; position: relative; overflow: hidden; cursor: pointer; box-shadow: 0 8px 24px rgba(0,0,0,0.15);">
+                        <div id="lifeStageCard" style="background: linear-gradient(135deg, #0F172A 0%, #1E3A5F 100%); border-radius: 20px; padding: 20px; margin-bottom: 20px; margin-top: 16px; color: white; position: relative; overflow: hidden; cursor: pointer; box-shadow: 0 8px 24px rgba(0,0,0,0.15);">
                             <div style="position: absolute; top: -20px; right: -20px; width: 120px; height: 120px; border-radius: 50%; background: rgba(255,255,255,0.04);"></div>
                             <div style="position: absolute; bottom: -30px; left: 40px; width: 80px; height: 80px; border-radius: 50%; background: rgba(0,163,224,0.12);"></div>
                             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; position: relative; z-index: 1;">
