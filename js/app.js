@@ -580,56 +580,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                         ` : ''}
 
-                        <!-- AI LIFE-STAGE DETECTION CARD -->
-                        <div id="lifeStageCard" style="background: linear-gradient(135deg, #0F172A 0%, #1E3A5F 100%); border-radius: 20px; padding: 20px; margin-bottom: 24px; color: white; position: relative; overflow: hidden; cursor: pointer; box-shadow: 0 8px 24px rgba(0,0,0,0.15);">
-                            <!-- BG decoration -->
-                            <div style="position: absolute; top: -20px; right: -20px; width: 120px; height: 120px; border-radius: 50%; background: rgba(255,255,255,0.04);"></div>
-                            <div style="position: absolute; bottom: -30px; left: 40px; width: 80px; height: 80px; border-radius: 50%; background: rgba(0,163,224,0.12);"></div>
 
-                            <!-- Header -->
-                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; position: relative; z-index: 1;">
-                                <div style="display: flex; align-items: center; gap: 8px;">
-                                    <div style="background: rgba(0,163,224,0.25); border-radius: 8px; padding: 4px 10px; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.5px; color: #7DD3FC;">✨ AI LIFE-STAGE DETECTION</div>
-                                </div>
-                                <div style="background: #10B981; font-size: 0.65rem; font-weight: 800; padding: 3px 8px; border-radius: 10px;">${state.lifeStage.confidence}% yakin</div>
-                            </div>
-
-                            <!-- Life Stage -->
-                            <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 14px; position: relative; z-index: 1;">
-                                <div style="font-size: 2.8rem; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));">${state.lifeStage.icon}</div>
-                                <div>
-                                    <div style="font-size: 0.72rem; color: #94A3B8; margin-bottom: 2px;">Life Stage Terdeteksi</div>
-                                    <div style="font-size: 1.3rem; font-weight: 800; color: white; line-height: 1.2;">${state.lifeStage.detected}</div>
-                                </div>
-                            </div>
-
-                            <!-- Life Stage Timeline -->
-                            <div style="display: flex; gap: 6px; margin-bottom: 14px; position: relative; z-index: 1;">
-                                ${state.lifeStage.stages.map(s => `
-                                <div style="flex: 1; text-align: center;">
-                                    <div style="height: 3px; border-radius: 2px; background: ${s.active ? '#00A3E0' : 'rgba(255,255,255,0.15)'}; margin-bottom: 5px;"></div>
-                                    <div style="font-size: 0.55rem; color: ${s.active ? '#7DD3FC' : 'rgba(255,255,255,0.4)'}; font-weight: ${s.active ? '700' : '400'}; line-height: 1.3;">${s.label}</div>
-                                </div>`).join('')}
-                            </div>
-
-                            <!-- Insight preview -->
-                            <div style="background: rgba(255,255,255,0.07); border-radius: 10px; padding: 10px 14px; margin-bottom: 14px; position: relative; z-index: 1;">
-                                <p style="font-size: 0.75rem; color: #CBD5E1; line-height: 1.5; margin: 0;">${state.lifeStage.insight.substring(0, 90)}...</p>
-                            </div>
-
-                            <!-- Next actions preview -->
-                            <div style="position: relative; z-index: 1;">
-                                <div style="font-size: 0.68rem; color: #64748B; font-weight: 700; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">Next-Best Actions</div>
-                                <div style="display: flex; gap: 8px;">
-                                    ${state.lifeStage.nextActions.slice(0, 2).map(a => `
-                                    <div style="flex: 1; background: ${a.urgent ? 'rgba(239,68,68,0.15)' : 'rgba(255,255,255,0.07)'}; border: 1px solid ${a.urgent ? 'rgba(239,68,68,0.3)' : 'rgba(255,255,255,0.1)'}; border-radius: 10px; padding: 8px 10px;">
-                                        <div style="font-size: 1rem; margin-bottom: 3px;">${a.icon}</div>
-                                        <div style="font-size: 0.68rem; font-weight: 700; color: white; line-height: 1.3;">${a.title}</div>
-                                    </div>`).join('')}
-                                    <div style="width: 36px; background: rgba(0,163,224,0.2); border: 1px solid rgba(0,163,224,0.3); border-radius: 10px; display: flex; justify-content: center; align-items: center; font-size: 1rem; color: #7DD3FC; flex-shrink: 0;">›</div>
-                                </div>
-                            </div>
-                        </div>
 
                         <div class="rp-main-container" style="background: white; border-radius: 16px; padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); border: 1px solid #F1F5F9; margin-bottom: 24px;">
                             <div class="rupiah-pocket-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
@@ -779,6 +730,44 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     <!-- INSIGHT TAB -->
                     <div class="ai-tab-content" id="tab-insight" style="display: none;">
+                        <!-- AI LIFE-STAGE DETECTION CARD -->
+                        <div id="lifeStageCard" style="background: linear-gradient(135deg, #0F172A 0%, #1E3A5F 100%); border-radius: 20px; padding: 20px; margin-bottom: 20px; color: white; position: relative; overflow: hidden; cursor: pointer; box-shadow: 0 8px 24px rgba(0,0,0,0.15);">
+                            <div style="position: absolute; top: -20px; right: -20px; width: 120px; height: 120px; border-radius: 50%; background: rgba(255,255,255,0.04);"></div>
+                            <div style="position: absolute; bottom: -30px; left: 40px; width: 80px; height: 80px; border-radius: 50%; background: rgba(0,163,224,0.12);"></div>
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; position: relative; z-index: 1;">
+                                <div style="background: rgba(0,163,224,0.25); border-radius: 8px; padding: 4px 10px; font-size: 0.65rem; font-weight: 700; color: #7DD3FC;">✨ AI LIFE-STAGE DETECTION</div>
+                                <div style="background: #10B981; font-size: 0.65rem; font-weight: 800; padding: 3px 8px; border-radius: 10px;">${state.lifeStage.confidence}% yakin</div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 14px; position: relative; z-index: 1;">
+                                <div style="font-size: 2.8rem; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));">${state.lifeStage.icon}</div>
+                                <div>
+                                    <div style="font-size: 0.72rem; color: #94A3B8; margin-bottom: 2px;">Life Stage Terdeteksi</div>
+                                    <div style="font-size: 1.3rem; font-weight: 800; color: white; line-height: 1.2;">${state.lifeStage.detected}</div>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 6px; margin-bottom: 14px; position: relative; z-index: 1;">
+                                ${state.lifeStage.stages.map(s => `
+                                <div style="flex: 1; text-align: center;">
+                                    <div style="height: 3px; border-radius: 2px; background: ${s.active ? '#00A3E0' : 'rgba(255,255,255,0.15)'}; margin-bottom: 5px;"></div>
+                                    <div style="font-size: 0.55rem; color: ${s.active ? '#7DD3FC' : 'rgba(255,255,255,0.4)'}; font-weight: ${s.active ? '700' : '400'}; line-height: 1.3;">${s.label}</div>
+                                </div>`).join('')}
+                            </div>
+                            <div style="background: rgba(255,255,255,0.07); border-radius: 10px; padding: 10px 14px; margin-bottom: 14px; position: relative; z-index: 1;">
+                                <p style="font-size: 0.75rem; color: #CBD5E1; line-height: 1.5; margin: 0;">${state.lifeStage.insight.substring(0, 90)}...</p>
+                            </div>
+                            <div style="position: relative; z-index: 1;">
+                                <div style="font-size: 0.68rem; color: #64748B; font-weight: 700; margin-bottom: 8px; text-transform: uppercase;">Next-Best Actions</div>
+                                <div style="display: flex; gap: 8px;">
+                                    ${state.lifeStage.nextActions.slice(0, 2).map(a => `
+                                    <div style="flex: 1; background: ${a.urgent ? 'rgba(239,68,68,0.15)' : 'rgba(255,255,255,0.07)'}; border: 1px solid ${a.urgent ? 'rgba(239,68,68,0.3)' : 'rgba(255,255,255,0.1)'}; border-radius: 10px; padding: 8px 10px;">
+                                        <div style="font-size: 1rem; margin-bottom: 3px;">${a.icon}</div>
+                                        <div style="font-size: 0.68rem; font-weight: 700; color: white; line-height: 1.3;">${a.title}</div>
+                                    </div>`).join('')}
+                                    <div style="width: 36px; background: rgba(0,163,224,0.2); border: 1px solid rgba(0,163,224,0.3); border-radius: 10px; display: flex; justify-content: center; align-items: center; font-size: 1rem; color: #7DD3FC; flex-shrink: 0;">›</div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="goal-motivation-engine" style="margin-bottom: 24px;">
                             <h3 style="margin-bottom: 16px; color: #003366; font-size: 1rem;">Overall Progress</h3>
                             
