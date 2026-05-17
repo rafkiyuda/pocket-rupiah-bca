@@ -592,6 +592,37 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                             <span class="acc-arrow" style="font-size: 1.4rem; color: #0077C8; font-weight: 300;">></span>
                         </div>
+
+                        <!-- REWARDS CARD -->
+                        <div class="rp-main-container" style="background: white; border-radius: 16px; padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); border: 1px solid #F1F5F9; margin-bottom: 16px; cursor: pointer; margin-top: 16px;" onclick="navigateTo('rewards')">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                                <div style="display: flex; align-items: flex-start; gap: 12px;">
+                                    <div style="position: relative; width: 40px; height: 40px; background: #0077C8; border-radius: 8px 12px 12px 12px; display: flex; justify-content: center; align-items: center; margin-top: 4px; flex-shrink: 0;">
+                                        <div style="position: absolute; top: -4px; left: 6px; width: 24px; height: 12px; background: #E0F2FE; border-radius: 4px; transform: rotate(-10deg);"></div>
+                                        <div style="position: absolute; bottom: -6px; left: -8px; background: #FDE047; color: #b45309; font-size: 0.7rem; font-weight: bold; width: 22px; height: 22px; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border: 2px solid white;">🏆</div>
+                                    </div>
+                                    <div>
+                                        <div style="color: #475569; font-size: 0.85rem; margin-bottom: 4px;">Pocket Rewards</div>
+                                        <div style="font-size: 1.25rem; font-weight: 800; color: #1e293b;">${state.rewards.points} <span style="font-size:0.8rem;color:#64748B;font-weight:600;">Pts</span></div>
+                                    </div>
+                                </div>
+                                <div style="text-align:right;margin-top:4px;">
+                                    <div style="background:#FEF08A;color:#B45309;font-size:0.68rem;font-weight:700;padding:3px 10px;border-radius:10px;margin-bottom:4px;">${state.rewards.level}</div>
+                                    <div style="font-size:0.65rem;color:#94A3B8;">🔥 ${state.rewards.streak} day streak</div>
+                                </div>
+                            </div>
+                            <div style="font-size: 0.72rem; color: #64748B; margin-bottom: 8px;">${state.rewards.nextLevelPts - state.rewards.points} Pts to next level</div>
+                            <div style="height:6px;background:#E2E8F0;border-radius:3px;overflow:hidden;margin-bottom:16px;">
+                                <div style="height:100%;width:${Math.round(state.rewards.points/state.rewards.nextLevelPts*100)}%;background:linear-gradient(90deg,#0077C8,#00A3E0);border-radius:3px;"></div>
+                            </div>
+                            <div style="display:flex;gap:10px;align-items:center;margin-bottom:14px;">
+                                ${state.rewards.badges.map(b => `<div style="width:36px;height:36px;border-radius:50%;background:${b.unlocked?'#FEF08A':'#E2E8F0'};display:flex;justify-content:center;align-items:center;font-size:1.1rem;opacity:${b.unlocked?1:0.4};border:2px solid ${b.unlocked?'#FDE047':'#E2E8F0'}">${b.icon}</div>`).join('')}
+                                <span style="font-size:0.72rem;color:#64748B;margin-left:4px;">${state.rewards.badges.filter(b=>b.unlocked).length}/${state.rewards.badges.length} badges</span>
+                            </div>
+                            <div style="text-align:center;">
+                                <span style="color:#0077C8;font-weight:800;font-size:0.95rem;">View Rewards ›</span>
+                            </div>
+                        </div>
                     </div>
                     
                     <!-- POCKET TAB -->
@@ -721,37 +752,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                         </div>
 
-                        <!-- REWARDS CARD -->
-                        <div class="rp-main-container" style="background: white; border-radius: 16px; padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); border: 1px solid #F1F5F9; margin-bottom: 16px; cursor: pointer;" onclick="navigateTo('rewards')">
-                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
-                                <div style="display: flex; align-items: flex-start; gap: 12px;">
-                                    <div style="position: relative; width: 40px; height: 40px; background: #0077C8; border-radius: 8px 12px 12px 12px; display: flex; justify-content: center; align-items: center; margin-top: 4px; flex-shrink: 0;">
-                                        <div style="position: absolute; top: -4px; left: 6px; width: 24px; height: 12px; background: #E0F2FE; border-radius: 4px; transform: rotate(-10deg);"></div>
-                                        <div style="position: absolute; bottom: -6px; left: -8px; background: #FDE047; color: #b45309; font-size: 0.7rem; font-weight: bold; width: 22px; height: 22px; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border: 2px solid white;">🏆</div>
-                                    </div>
-                                    <div>
-                                        <div style="color: #475569; font-size: 0.85rem; margin-bottom: 4px;">Pocket Rewards</div>
-                                        <div style="font-size: 1.25rem; font-weight: 800; color: #1e293b;">${state.rewards.points} <span style="font-size:0.8rem;color:#64748B;font-weight:600;">Pts</span></div>
-                                    </div>
-                                </div>
-                                <div style="text-align:right;margin-top:4px;">
-                                    <div style="background:#FEF08A;color:#B45309;font-size:0.68rem;font-weight:700;padding:3px 10px;border-radius:10px;margin-bottom:4px;">${state.rewards.level}</div>
-                                    <div style="font-size:0.65rem;color:#94A3B8;">🔥 ${state.rewards.streak} day streak</div>
-                                </div>
-                            </div>
-                            <div style="font-size: 0.72rem; color: #64748B; margin-bottom: 8px;">${state.rewards.nextLevelPts - state.rewards.points} Pts to next level</div>
-                            <div style="height:6px;background:#E2E8F0;border-radius:3px;overflow:hidden;margin-bottom:16px;">
-                                <div style="height:100%;width:${Math.round(state.rewards.points/state.rewards.nextLevelPts*100)}%;background:linear-gradient(90deg,#0077C8,#00A3E0);border-radius:3px;"></div>
-                            </div>
-                            <!-- Badges mini row -->
-                            <div style="display:flex;gap:10px;align-items:center;margin-bottom:14px;">
-                                ${state.rewards.badges.map(b => `<div style="width:36px;height:36px;border-radius:50%;background:${b.unlocked?'#FEF08A':'#E2E8F0'};display:flex;justify-content:center;align-items:center;font-size:1.1rem;opacity:${b.unlocked?1:0.4};border:2px solid ${b.unlocked?'#FDE047':'#E2E8F0'}">${b.icon}</div>`).join('')}
-                                <span style="font-size:0.72rem;color:#64748B;margin-left:4px;">${state.rewards.badges.filter(b=>b.unlocked).length}/${state.rewards.badges.length} badges</span>
-                            </div>
-                            <div style="text-align:center;">
-                                <span style="color:#0077C8;font-weight:800;font-size:0.95rem;">View Rewards ›</span>
-                            </div>
-                        </div>
 
                         <div class="forex-pocket-card" style="background: white; border-radius: 12px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); display: flex; gap: 16px; margin-bottom: 32px;">
                             <div class="fp-icon-cluster" style="position: relative; width: 50px; height: 50px; flex-shrink: 0;">
