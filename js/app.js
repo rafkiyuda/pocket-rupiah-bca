@@ -1412,21 +1412,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>`}
                     </div>
 
-                    <h3 class="pd-section-title">ACCOUNT TRANSACTIONS</h3>
-                    <div class="pd-search-row">
-                        <div class="pd-search-box">
-                            <span class="search-icon">🔍</span>
-                            <input type="text" placeholder="Search" style="background: transparent;">
-                        </div>
-                        <div class="pd-filter-btn">
-                            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/></svg>
-                        </div>
-                    </div>
-                    
-                    <div class="pd-empty-state">
-                        <div class="empty-doc-icon"></div>
-                        <p>No transaction found.</p>
-                    </div>
                 </div>
             </div>
         `,
