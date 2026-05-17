@@ -578,9 +578,9 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div class="pocket-list-items" style="margin-bottom: 20px;">
                                 ${state.pockets.map(p => `
                                     <div class="pocket-item-box pocket-idr-card" data-id="${p.id}" ${p.id === 1 ? 'id="tour-target-2"' : ''} style="cursor: pointer; border: 1px solid #E2E8F0; border-radius: 12px; padding: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 16px; background: white; transition: all 0.3s ease;">
-                                        <div class="pd-icon" style="font-size: 1.5rem; color: #0077C8; position: relative;">
+                                        <div class="pd-icon" ${p.id === 1 ? 'id="tour-target-4"' : ''} style="font-size: 1.5rem; color: #0077C8; position: relative;">
                                             ${p.type === 'emergency' ? '🚨' : p.type === 'shared' ? '👨‍👩‍👧' : '🚗'}
-                                            ${p.qrisEnabled ? `<div ${p.id === 1 ? 'id="tour-target-4"' : ''} style="position: absolute; bottom: -2px; right: -6px; background: white; border-radius: 50%; padding: 2px; box-shadow: 0 1px 2px rgba(0,0,0,0.1);"><div style="background: #0077C8; color: white; font-size: 0.35rem; font-weight: bold; width: 12px; height: 12px; display: flex; justify-content: center; align-items: center; border-radius: 50%;">QR</div></div>` : ''}
+                                            ${p.qrisEnabled ? `<div style="position: absolute; bottom: -2px; right: -6px; background: white; border-radius: 50%; padding: 2px; box-shadow: 0 1px 2px rgba(0,0,0,0.1);"><div style="background: #0077C8; color: white; font-size: 0.35rem; font-weight: bold; width: 12px; height: 12px; display: flex; justify-content: center; align-items: center; border-radius: 50%;">QR</div></div>` : ''}
                                         </div>
                                         <div class="pi-info" style="flex: 1;">
                                             <div style="font-size: 1.1rem; font-weight: 800; color: #1e293b; margin-bottom: 4px;">IDR <span class="dots">●●●●●●●</span></div>
@@ -1616,6 +1616,14 @@ document.addEventListener('DOMContentLoaded', () => {
         ];
 
         function updateTourHighlight() {
+            if (state.onboardingStep === 2) {
+                const insightTab = document.querySelector('.ai-tab[data-target="insight"]');
+                if (insightTab) insightTab.click();
+            } else if (state.onboardingStep === 3) {
+                const pocketTab = document.querySelector('.ai-tab[data-target="pocket"]');
+                if (pocketTab) pocketTab.click();
+            }
+
             const targetId = 'tour-target-' + (state.onboardingStep + 1);
             const targetEl = document.getElementById(targetId);
             const cutout = document.getElementById('tour-cutout');
@@ -1639,8 +1647,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     cutout.setAttribute('height', rect.height + 8);
                     
                     let cardTop = relTop + rect.height + 20;
-                    if (cardTop + 250 > appContainer.clientHeight) {
-                        cardTop = relTop - 250 - 20;
+                    const estimatedCardHeight = card.offsetHeight || 250;
+                    if (cardTop + estimatedCardHeight > appContainer.clientHeight) {
+                        cardTop = relTop - estimatedCardHeight - 20;
                         pointer.style.bottom = "-10px";
                         pointer.style.top = "auto";
                         pointer.style.borderBottom = "none";
