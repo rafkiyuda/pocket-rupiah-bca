@@ -690,7 +690,28 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <span style="color: #0077C8; font-size: 0.8rem; font-weight: 700;">Activate Now</span>
                             </div>
                         </div>
-                        
+
+                        <!-- PROTECTION & SHARED EXPANSION CARD -->
+                        <div style="background: white; border-radius: 16px; border: 1px solid #F1F5F9; padding: 18px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <div style="width: 40px; height: 40px; border-radius: 12px; background: linear-gradient(135deg,#E0F2FE,#BAE6FD); display: flex; justify-content: center; align-items: center; font-size: 1.3rem;">🛡️</div>
+                                    <div>
+                                        <h4 style="font-size: 0.9rem; font-weight: 800; color: #003366; margin: 0 0 2px;">Protection & Shared</h4>
+                                        <p style="font-size: 0.7rem; color: #64748B; margin: 0;">Keluarga & perlindungan terpusat</p>
+                                    </div>
+                                </div>
+                                <div style="background: #EFF6FF; color: #0077C8; font-size: 0.65rem; font-weight: 700; padding: 3px 10px; border-radius: 10px;">Baru</div>
+                            </div>
+                            <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px;">
+                                <div style="background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 20px; padding: 5px 12px; font-size: 0.68rem; font-weight: 600; color: #065F46;">👨‍👩‍👧 Shared Pocket</div>
+                                <div style="background: #FEF2F2; border: 1px solid #FECACA; border-radius: 20px; padding: 5px 12px; font-size: 0.68rem; font-weight: 600; color: #991B1B;">🔔 Alert Real-Time</div>
+                                <div style="background: #F5F3FF; border: 1px solid #DDD6FE; border-radius: 20px; padding: 5px 12px; font-size: 0.68rem; font-weight: 600; color: #5B21B6;">🛡️ Proteksi Proaktif</div>
+                            </div>
+                            <p style="font-size: 0.75rem; color: #64748B; line-height: 1.5; margin: 0 0 14px;">Kelola keuangan keluarga bersama, pantau dari satu dashboard, dan dapatkan rekomendasi proteksi yang tepat.</p>
+                            <button id="btnOpenSharedProtection" style="width:100%;background:#0077C8;color:white;border:none;padding:11px;border-radius:12px;font-weight:800;font-size:0.85rem;cursor:pointer;">Jelajahi Fitur ›</button>
+                        </div>
+
                         <!-- RE-ADDED INTELLIGENT CONTROL & REWARDS -->
                         <div style="display: none;">
                             <div class="intelligent-control-section" style="margin-bottom: 32px;">
@@ -1173,6 +1194,125 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <button class="eco-fin-next" style="width:100%;background:#0077C8;color:white;border:none;padding:14px;border-radius:12px;font-weight:700;font-size:0.95rem;cursor:pointer;">Konfirmasi Pengajuan ✓</button>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        `,
+        sharedProtection: () => `
+            <div style="background:#F1F5F9;height:100%;overflow-y:auto;">
+                <header class="blue-header" style="height:130px;align-items:flex-start;padding-top:40px;">
+                    <div class="back-btn" id="btnBackFromSharedProt"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></div>
+                    <h2 class="header-title">Protection & Shared</h2>
+                </header>
+                <div style="margin-top:-20px;padding:0 16px 40px;position:relative;z-index:1;">
+
+                    <!-- SHARED POCKETS -->
+                    <div style="background:white;border-radius:16px;padding:18px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+                            <div>
+                                <h3 style="color:#003366;font-size:0.95rem;font-weight:800;margin:0 0 2px;">👨‍👩‍👧 Shared Pocket</h3>
+                                <p style="font-size:0.72rem;color:#64748B;margin:0;">Kelola keuangan keluarga bersama</p>
+                            </div>
+                            <div id="btnCreateSharedPocket" style="background:#0077C8;color:white;font-size:0.68rem;font-weight:700;padding:5px 12px;border-radius:16px;cursor:pointer;">+ Buat</div>
+                        </div>
+                        <!-- Existing shared pocket -->
+                        <div style="border:1px solid #E2E8F0;border-radius:12px;padding:14px;margin-bottom:10px;">
+                            <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+                                <div style="font-size:1.5rem;">👨‍👩‍👧</div>
+                                <div style="flex:1;">
+                                    <div style="font-weight:700;color:#1e293b;font-size:0.88rem;">Keluarga Santoso</div>
+                                    <div style="font-size:0.7rem;color:#64748B;">3 anggota · Saldo: IDR ●●●●●</div>
+                                </div>
+                                <div style="font-size:0.7rem;color:#10B981;font-weight:700;">Aktif</div>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;">
+                                <div style="display:flex;">${['👨','👩','👧'].map((e,i) => `<div style="width:28px;height:28px;border-radius:50%;background:#E0F2FE;border:2px solid white;display:flex;justify-content:center;align-items:center;font-size:0.85rem;margin-left:${i>0?'-8px':'0'};">${e}</div>`).join('')}</div>
+                                <div style="font-size:0.7rem;color:#64748B;">Ayah · Ibu · Siti</div>
+                                <div class="sp-invite-btn" style="margin-left:auto;font-size:0.68rem;color:#0077C8;font-weight:700;border:1px solid #0077C8;border-radius:10px;padding:3px 10px;cursor:pointer;">+ Undang</div>
+                            </div>
+                            <div style="font-size:0.7rem;color:#64748B;margin-bottom:4px;">Kontribusi bulan ini</div>
+                            <div style="height:8px;background:#E2E8F0;border-radius:4px;overflow:hidden;display:flex;">
+                                <div style="width:50%;background:#0077C8;"></div>
+                                <div style="width:30%;background:#00A3E0;"></div>
+                                <div style="width:20%;background:#BAE6FD;"></div>
+                            </div>
+                            <div style="display:flex;gap:10px;margin-top:6px;">
+                                <div style="display:flex;align-items:center;gap:4px;"><div style="width:8px;height:8px;border-radius:2px;background:#0077C8;"></div><span style="font-size:0.65rem;color:#64748B;">Ayah 50%</span></div>
+                                <div style="display:flex;align-items:center;gap:4px;"><div style="width:8px;height:8px;border-radius:2px;background:#00A3E0;"></div><span style="font-size:0.65rem;color:#64748B;">Ibu 30%</span></div>
+                                <div style="display:flex;align-items:center;gap:4px;"><div style="width:8px;height:8px;border-radius:2px;background:#BAE6FD;"></div><span style="font-size:0.65rem;color:#64748B;">Siti 20%</span></div>
+                            </div>
+                        </div>
+                        <div id="btnCreateSharedPocket2" style="border:1.5px dashed #CBD5E1;border-radius:12px;padding:14px;text-align:center;cursor:pointer;">
+                            <div style="font-size:1.5rem;margin-bottom:4px;">➕</div>
+                            <div style="font-size:0.78rem;color:#64748B;font-weight:600;">Buat Shared Pocket baru</div>
+                            <div style="font-size:0.68rem;color:#94A3B8;margin-top:2px;">Undang pasangan, orang tua, atau anak</div>
+                        </div>
+                    </div>
+
+                    <!-- PROACTIVE PROTECTION RECOMMENDATIONS -->
+                    <div style="background:white;border-radius:16px;padding:18px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+                            <div>
+                                <h3 style="color:#003366;font-size:0.95rem;font-weight:800;margin:0 0 2px;">🛡️ Rekomendasi Proteksi</h3>
+                                <p style="font-size:0.72rem;color:#64748B;margin:0;">Berdasarkan profil & life stage kamu</p>
+                            </div>
+                        </div>
+                        <div style="background:#FFF7ED;border:1px solid #FED7AA;border-radius:10px;padding:12px;margin-bottom:12px;display:flex;gap:10px;align-items:flex-start;">
+                            <div style="font-size:1.2rem;flex-shrink:0;">⚠️</div>
+                            <div>
+                                <div style="font-weight:700;font-size:0.8rem;color:#92400E;margin-bottom:2px;">Protection Gap Terdeteksi</div>
+                                <div style="font-size:0.72rem;color:#B45309;line-height:1.4;">Kamu belum memiliki asuransi jiwa. Sebagai Young Professional, proteksi sangat penting untuk melindungi tabungan & keluargamu.</div>
+                            </div>
+                        </div>
+                        ${[{icon:'🛡️',product:'BCA Life MyGuard Basic',benefit:'Uang Pertanggungan Rp 500 Jt',premi:'Rp 42.000/bln',tag:'Prioritas',tagColor:'#EF4444',screen:'ecoBcaLife'},{icon:'🏥',product:'BCA Life Hospital Care',benefit:'Rawat Inap hingga Rp 1 Jt/hari',premi:'Rp 89.000/bln',tag:'Direkomendasikan',tagColor:'#0077C8',screen:'ecoBcaLife'},{icon:'📈',product:'BCA Sekuritas + Proteksi',benefit:'Investasi sekaligus dilindungi',premi:'Rp 200.000/bln',tag:'Populer',tagColor:'#10B981',screen:'ecoInvestasi'}].map(p => `
+                        <div class="sp-prot-card" data-screen="${p.screen}" style="border:1px solid #F1F5F9;border-radius:12px;padding:14px;margin-bottom:10px;display:flex;gap:12px;align-items:center;cursor:pointer;">
+                            <div style="width:40px;height:40px;border-radius:10px;background:#EEF2FF;display:flex;justify-content:center;align-items:center;font-size:1.2rem;flex-shrink:0;">${p.icon}</div>
+                            <div style="flex:1;">
+                                <div style="font-weight:700;color:#1e293b;font-size:0.82rem;margin-bottom:2px;">${p.product}</div>
+                                <div style="font-size:0.7rem;color:#64748B;margin-bottom:4px;">${p.benefit}</div>
+                                <div style="font-size:0.72rem;font-weight:700;color:#0077C8;">${p.premi}</div>
+                            </div>
+                            <div>
+                                <div style="background:${p.tagColor}1A;color:${p.tagColor};font-size:0.62rem;font-weight:700;padding:3px 8px;border-radius:8px;white-space:nowrap;margin-bottom:6px;">${p.tag}</div>
+                                <div style="font-size:0.68rem;color:#0077C8;text-align:right;">Pilih ›</div>
+                            </div>
+                        </div>`).join('')}
+                    </div>
+
+                    <!-- REAL-TIME FINANCIAL ALERTS -->
+                    <div style="background:white;border-radius:16px;padding:18px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+                            <div>
+                                <h3 style="color:#003366;font-size:0.95rem;font-weight:800;margin:0 0 2px;">🔔 Alert Keuangan Real-Time</h3>
+                                <p style="font-size:0.72rem;color:#64748B;margin:0;">Notifikasi proaktif berdasarkan aktivitas</p>
+                            </div>
+                            <div style="font-size:0.68rem;color:#0077C8;font-weight:700;">Atur ›</div>
+                        </div>
+                        ${[{icon:'🚨',color:'#FEF2F2',border:'#FECACA',text:'Saldo Poket Dana Darurat di bawah 30% target',time:'2 mnt lalu'},{icon:'💸',color:'#FFF7ED',border:'#FED7AA',text:'Pengeluaran F&B minggu ini sudah 80% budget (Rp 320K)',time:'1 jam lalu'},{icon:'✅',color:'#F0FDF4',border:'#BBF7D0',text:'Auto-debit Dana Darurat Rp 1.600.000 berhasil',time:'Kemarin'},{icon:'👨‍👩‍👧',color:'#F0F9FF',border:'#BAE6FD',text:'Ibu menambahkan Rp 500.000 ke Shared Pocket Keluarga',time:'2 hari lalu'}].map(a => `
+                        <div style="background:${a.color};border:1px solid ${a.border};border-radius:10px;padding:12px;margin-bottom:8px;display:flex;gap:10px;align-items:flex-start;">
+                            <div style="font-size:1.1rem;flex-shrink:0;margin-top:1px;">${a.icon}</div>
+                            <div style="flex:1;"><div style="font-size:0.78rem;color:#1e293b;font-weight:600;line-height:1.4;margin-bottom:2px;">${a.text}</div><div style="font-size:0.65rem;color:#94A3B8;">${a.time}</div></div>
+                        </div>`).join('')}
+                        <div style="border-top:1px solid #F1F5F9;margin-top:14px;padding-top:14px;">
+                            <div style="font-size:0.72rem;color:#64748B;font-weight:700;margin-bottom:10px;">Aktifkan Alert:</div>
+                            ${[['Saldo mendekati batas minimum','spAlertBalance',true],['Aktivitas Shared Pocket','spAlertShared',true],['Rekomendasi proteksi baru','spAlertProt',false]].map(([label,id,on]) => `
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                                <span style="font-size:0.78rem;color:#475569;">${label}</span>
+                                <div class="sp-alert-toggle" data-id="${id}" style="width:40px;height:22px;border-radius:11px;background:${on ? '#0077C8' : '#E2E8F0'};position:relative;cursor:pointer;transition:background 0.2s;">
+                                    <div style="width:18px;height:18px;border-radius:50%;background:white;position:absolute;top:2px;${on ? 'right:2px' : 'left:2px'};transition:all 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.2);"></div>
+                                </div>
+                            </div>`).join('')}
+                        </div>
+                    </div>
+
+                    <!-- FAMILY DASHBOARD -->
+                    <div style="background:linear-gradient(135deg,#0F172A,#1E3A5F);border-radius:16px;padding:18px;">
+                        <h4 style="color:#7DD3FC;font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin:0 0 14px;">📊 Family Dashboard</h4>
+                        ${[['Total Aset Keluarga','IDR ●●●●●●●','↑ +3.2% bulan ini'],['Total Pengeluaran','IDR ●●●●●','80% dari budget'],['Shared Pocket','IDR ●●●●','3 anggota aktif'],['Proteksi Aktif','Belum ada','⚠️ Segera aktifkan']].map(([label,val,sub]) => `
+                        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
+                            <span style="font-size:0.78rem;color:#94A3B8;">${label}</span>
+                            <div style="text-align:right;"><div style="font-size:0.82rem;font-weight:700;color:white;">${val}</div><div style="font-size:0.65rem;color:#64748B;">${sub}</div></div>
+                        </div>`).join('')}
                     </div>
                 </div>
             </div>
@@ -2171,6 +2311,28 @@ document.addEventListener('DOMContentLoaded', () => {
                     state.connectedLinks = state.connectedLinks.filter(l => l.productId !== pid);
                     showToast('🔗 Koneksi produk diputus');
                     setTimeout(() => navigateTo('pocketDetail'), 800);
+                };
+            });
+        } else if (screenName === 'sharedProtection') {
+            document.getElementById('btnBackFromSharedProt').onclick = () => navigateTo('pocketsDashboard');
+            document.getElementById('btnCreateSharedPocket').onclick = () => showToast('👨‍👩‍👧 Fitur buat Shared Pocket akan segera hadir!');
+            document.getElementById('btnCreateSharedPocket2').onclick = () => showToast('👨‍👩‍👧 Fitur buat Shared Pocket akan segera hadir!');
+            document.querySelectorAll('.sp-invite-btn').forEach(b => b.onclick = (e) => { e.stopPropagation(); showToast('📨 Undangan dikirim!'); });
+            document.querySelectorAll('.sp-prot-card').forEach(card => {
+                card.onclick = () => {
+                    const s = card.getAttribute('data-screen');
+                    if (s === 'ecoBcaLife') { state.ecoBcaLifeStep = 0; navigateTo('ecoBcaLife'); }
+                    else if (s === 'ecoInvestasi') { state.ecoInvestasiStep = 0; navigateTo('ecoInvestasi'); }
+                };
+            });
+            document.querySelectorAll('.sp-alert-toggle').forEach(toggle => {
+                toggle.onclick = () => {
+                    const isOn = toggle.style.background === 'rgb(0, 119, 200)';
+                    toggle.style.background = isOn ? '#E2E8F0' : '#0077C8';
+                    const knob = toggle.querySelector('div');
+                    knob.style.left = isOn ? '2px' : '';
+                    knob.style.right = isOn ? '' : '2px';
+                    showToast(isOn ? '🔕 Alert dinonaktifkan' : '🔔 Alert diaktifkan');
                 };
             });
         } else if (screenName === 'goalEngine') {
