@@ -520,29 +520,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     <!-- TRANSACTIONS TAB -->
                     <div class="ai-tab-content" id="tab-transactions" style="display: none;">
-                        <!-- GOAL ENGINE CARD -->
-                        <div style="background: linear-gradient(135deg, #0077C8 0%, #00A3E0 100%); border-radius: 20px; padding: 18px; margin-bottom: 20px; color: white; position: relative; overflow: hidden; box-shadow: 0 8px 24px rgba(0,119,200,0.25);">
-                            <div style="position: absolute; top: -20px; right: -10px; font-size: 6rem; opacity: 0.08;">⚡</div>
-                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; position: relative; z-index: 1;">
-                                <div style="background: rgba(255,255,255,0.15); border-radius: 8px; padding: 4px 10px; font-size: 0.65rem; font-weight: 700;">⚡ GOAL ENGINE</div>
-                                <div style="background: rgba(255,255,255,0.2); font-size: 0.68rem; font-weight: 700; padding: 3px 10px; border-radius: 10px;">AI Optimized</div>
+                        <!-- SMART RECOMMENDATION -->
+                        <div class="ai-allocation-banner" style="background: linear-gradient(135deg, #0077C8, #00A3E0); border-radius: 16px; padding: 16px; margin-bottom: 20px; color: white; position: relative; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 119, 200, 0.2);">
+                            <div style="position: absolute; top: -10px; right: -10px; font-size: 4rem; opacity: 0.1;">✨</div>
+                            <div style="display: flex; gap: 12px; align-items: flex-start; position: relative; z-index: 1;">
+                                <div style="background: rgba(255,255,255,0.2); width: 36px; height: 36px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; flex-shrink: 0;">🤖</div>
+                                <div>
+                                    <h4 style="font-size: 0.9rem; margin-bottom: 4px; font-weight: 700;">Smart Recommendation</h4>
+                                    <p style="font-size: 0.75rem; opacity: 0.9; margin-bottom: 12px; line-height: 1.4;">Incoming fund <strong>IDR 2.500.000</strong> detected from Payroll. AI has generated an optimal allocation plan.</p>
+                                    <button id="btnReviewAllocation" style="background: #FDE047; color: #003366; border: none; padding: 6px 16px; border-radius: 16px; font-size: 0.75rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px;">Review & Approve <span style="font-size: 1rem;">></span></button>
+                                </div>
                             </div>
-                            <h3 style="font-size: 1rem; font-weight: 800; margin: 0 0 4px; position: relative; z-index: 1;">Smart Allocation Plan</h3>
-                            <p style="font-size: 0.75rem; opacity: 0.85; margin: 0 0 14px; position: relative; z-index: 1;">Alokasi otomatis IDR 8.000.000/bln berdasarkan Need vs Want & prioritas goal.</p>
-                            <div style="position: relative; z-index: 1; margin-bottom: 14px;">
-                                ${state.goalEngine.optimizedAlloc.map(a => `
-                                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
-                                    <div style="font-size: 0.85rem; width: 20px; text-align: center; flex-shrink: 0;">${a.icon}</div>
-                                    <div style="flex: 1;"><div style="height: 6px; background: rgba(255,255,255,0.15); border-radius: 3px; overflow: hidden;"><div style="height: 100%; width: ${Math.round(a.monthly / state.goalEngine.income * 100)}%; background: rgba(255,255,255,0.85); border-radius: 3px;"></div></div></div>
-                                    <div style="font-size: 0.65rem; font-weight: 700; white-space: nowrap; opacity: 0.9;">Rp ${(a.monthly/1000000).toFixed(1)}Jt</div>
-                                </div>`).join('')}
-                            </div>
-                            <div style="display: flex; gap: 8px; position: relative; z-index: 1; margin-bottom: 14px;">
-                                <div style="flex:1;background:rgba(255,255,255,0.12);border-radius:10px;padding:8px;text-align:center;"><div style="font-size:0.65rem;opacity:0.75;margin-bottom:2px;">Kebutuhan</div><div style="font-size:0.9rem;font-weight:800;">${state.goalEngine.needs}%</div></div>
-                                <div style="flex:1;background:rgba(255,255,255,0.12);border-radius:10px;padding:8px;text-align:center;"><div style="font-size:0.65rem;opacity:0.75;margin-bottom:2px;">Keinginan</div><div style="font-size:0.9rem;font-weight:800;">${state.goalEngine.wants}%</div></div>
-                                <div style="flex:1;background:rgba(255,255,255,0.12);border-radius:10px;padding:8px;text-align:center;"><div style="font-size:0.65rem;opacity:0.75;margin-bottom:2px;">Tabungan</div><div style="font-size:0.9rem;font-weight:800;">${state.goalEngine.savings}%</div></div>
-                            </div>
-                            <button id="goalEngineCard" style="width:100%;background:white;color:#0077C8;border:none;padding:11px;border-radius:12px;font-weight:800;font-size:0.85rem;cursor:pointer;position:relative;z-index:1;">Lihat Detail ›</button>
                         </div>
 
                         <div class="pd-search-row" style="margin-bottom: 20px;">
@@ -608,19 +596,30 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     <!-- POCKET TAB -->
                     <div class="ai-tab-content active" id="tab-pocket">
-                        ${state.pendingAllocation ? `
-                        <div class="ai-allocation-banner" style="background: linear-gradient(135deg, #0077C8, #00A3E0); border-radius: 16px; padding: 16px; margin-bottom: 24px; color: white; position: relative; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 119, 200, 0.2);">
-                            <div style="position: absolute; top: -10px; right: -10px; font-size: 4rem; opacity: 0.1;">✨</div>
-                            <div style="display: flex; gap: 12px; align-items: flex-start; position: relative; z-index: 1;">
-                                <div style="background: rgba(255,255,255,0.2); width: 36px; height: 36px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; flex-shrink: 0;">🤖</div>
-                                <div>
-                                    <h4 style="font-size: 0.9rem; margin-bottom: 4px; font-weight: 700;">Smart Recommendation</h4>
-                                    <p style="font-size: 0.75rem; opacity: 0.9; margin-bottom: 12px; line-height: 1.4;">Incoming fund <strong>IDR 2.500.000</strong> detected from Payroll. AI has generated an optimal allocation plan.</p>
-                                    <button id="btnReviewAllocation" style="background: #FDE047; color: #003366; border: none; padding: 6px 16px; border-radius: 16px; font-size: 0.75rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px;">Review & Approve <span style="font-size: 1rem;">></span></button>
-                                </div>
+                        <!-- SMART ALLOCATION PLAN (GOAL ENGINE) -->
+                        <div style="background: linear-gradient(135deg, #0077C8 0%, #00A3E0 100%); border-radius: 20px; padding: 18px; margin-bottom: 20px; color: white; position: relative; overflow: hidden; box-shadow: 0 8px 24px rgba(0,119,200,0.25);">
+                            <div style="position: absolute; top: -20px; right: -10px; font-size: 6rem; opacity: 0.08;">⚡</div>
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; position: relative; z-index: 1;">
+                                <div style="background: rgba(255,255,255,0.15); border-radius: 8px; padding: 4px 10px; font-size: 0.65rem; font-weight: 700;">⚡ GOAL ENGINE</div>
+                                <div style="background: rgba(255,255,255,0.2); font-size: 0.68rem; font-weight: 700; padding: 3px 10px; border-radius: 10px;">AI Optimized</div>
                             </div>
+                            <h3 style="font-size: 1rem; font-weight: 800; margin: 0 0 4px; position: relative; z-index: 1;">Smart Allocation Plan</h3>
+                            <p style="font-size: 0.75rem; opacity: 0.85; margin: 0 0 14px; position: relative; z-index: 1;">Alokasi otomatis IDR 8.000.000/bln berdasarkan Need vs Want & prioritas goal.</p>
+                            <div style="position: relative; z-index: 1; margin-bottom: 14px;">
+                                ${state.goalEngine.optimizedAlloc.map(a => `
+                                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                                    <div style="font-size: 0.85rem; width: 20px; text-align: center; flex-shrink: 0;">${a.icon}</div>
+                                    <div style="flex: 1;"><div style="height: 6px; background: rgba(255,255,255,0.15); border-radius: 3px; overflow: hidden;"><div style="height: 100%; width: ${Math.round(a.monthly / state.goalEngine.income * 100)}%; background: rgba(255,255,255,0.85); border-radius: 3px;"></div></div></div>
+                                    <div style="font-size: 0.65rem; font-weight: 700; white-space: nowrap; opacity: 0.9;">Rp ${(a.monthly/1000000).toFixed(1)}Jt</div>
+                                </div>`).join('')}
+                            </div>
+                            <div style="display: flex; gap: 8px; position: relative; z-index: 1; margin-bottom: 14px;">
+                                <div style="flex:1;background:rgba(255,255,255,0.12);border-radius:10px;padding:8px;text-align:center;"><div style="font-size:0.65rem;opacity:0.75;margin-bottom:2px;">Kebutuhan</div><div style="font-size:0.9rem;font-weight:800;">${state.goalEngine.needs}%</div></div>
+                                <div style="flex:1;background:rgba(255,255,255,0.12);border-radius:10px;padding:8px;text-align:center;"><div style="font-size:0.65rem;opacity:0.75;margin-bottom:2px;">Keinginan</div><div style="font-size:0.9rem;font-weight:800;">${state.goalEngine.wants}%</div></div>
+                                <div style="flex:1;background:rgba(255,255,255,0.12);border-radius:10px;padding:8px;text-align:center;"><div style="font-size:0.65rem;opacity:0.75;margin-bottom:2px;">Tabungan</div><div style="font-size:0.9rem;font-weight:800;">${state.goalEngine.savings}%</div></div>
+                            </div>
+                            <button id="goalEngineCard" style="width:100%;background:white;color:#0077C8;border:none;padding:11px;border-radius:12px;font-weight:800;font-size:0.85rem;cursor:pointer;position:relative;z-index:1;">Lihat Detail ›</button>
                         </div>
-                        ` : ''}
 
                         <div class="rp-main-container" style="background: white; border-radius: 16px; padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); border: 1px solid #F1F5F9; margin-bottom: 24px;">
                             <div class="rupiah-pocket-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
