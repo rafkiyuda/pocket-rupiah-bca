@@ -920,10 +920,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     <rect width="100%" height="100%" fill="rgba(0,0,0,0.7)" mask="url(#tour-mask)" pointer-events="auto" />
                 </svg>
 
-                <div class="tour-card" id="tourCard" style="background: #39A9DB; color: white; border-radius: 4px; padding: 24px 20px; width: 90%; max-width: 340px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); position: absolute; transition: top 0.3s ease; animation: slideUp 0.3s ease; font-family: sans-serif; left: 5%;">
+                <div class="tour-card" id="tourCard" style="background: #39A9DB; color: white; border-radius: 12px; padding: 20px 24px; width: 90%; max-width: 340px; box-sizing: border-box; box-shadow: 0 8px 24px rgba(0,0,0,0.3); position: absolute; transition: top 0.3s ease; animation: slideUp 0.3s ease; font-family: sans-serif; left: 50%; transform: translateX(-50%);">
                     
                     <!-- Triangle pointer -->
-                    <div id="tourPointerTriangle" style="position: absolute; top: -10px; left: 24px; width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-bottom: 10px solid #39A9DB; transition: all 0.3s ease;"></div>
+                    <div id="tourPointerTriangle" style="position: absolute; top: -10px; width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-bottom: 10px solid #39A9DB; transition: all 0.3s ease;"></div>
                     
                     <div class="tour-step-info" style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; opacity: 0.9;">Step ${state.onboardingStep + 1} of 4</div>
                     
@@ -1654,8 +1654,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     card.style.top = cardTop + 'px';
                     
-                    let pointerLeft = relLeft + (rect.width / 2) - (appContainer.clientWidth * 0.05) - 10;
-                    pointerLeft = Math.max(20, Math.min(pointerLeft, appContainer.clientWidth * 0.9 - 40));
+                    const targetCenter = relLeft + (rect.width / 2);
+                    const cardWidth = Math.min(appContainer.clientWidth * 0.9, 340);
+                    const cardLeft = (appContainer.clientWidth / 2) - (cardWidth / 2);
+                    
+                    let pointerLeft = targetCenter - cardLeft - 10;
+                    pointerLeft = Math.max(16, Math.min(pointerLeft, cardWidth - 36));
                     pointer.style.left = pointerLeft + 'px';
                     
                 }, 300);
