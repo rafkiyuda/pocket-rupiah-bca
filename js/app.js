@@ -20,6 +20,17 @@ document.addEventListener('DOMContentLoaded', () => {
             type: "personal",
             locked: false,
             category: "Others"
+        },
+        rewards: {
+            points: 1250,
+            level: "Budget Boss",
+            nextLevelPts: 2000,
+            streak: 5,
+            badges: [
+                { id: 1, name: "Early Bird", icon: "🌅", unlocked: true },
+                { id: 2, name: "Smart Saver", icon: "🧠", unlocked: true },
+                { id: 3, name: "Wealth Wizard", icon: "🧙‍♂️", unlocked: false }
+            ]
         }
     };
 
@@ -92,6 +103,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="promo-banner" style="cursor:pointer" id="btnPromo">
                     <span>The New Gebyar Hadiah BCA</span>
                     <span>Click to Win ></span>
+                </div>
+
+                <div class="reward-widget" id="btnRewardHub" style="cursor: pointer;">
+                    <div class="reward-icon">🏆</div>
+                    <div class="reward-info">
+                        <div class="reward-level">${state.rewards.level}</div>
+                        <div class="reward-points-row">
+                            <span class="reward-points">${state.rewards.points} Pts</span>
+                            <span class="reward-next-level">${state.rewards.nextLevelPts} Pts to next level</span>
+                        </div>
+                        <div class="reward-progress-mini">
+                            <div class="reward-progress-fill" style="width: ${(state.rewards.points / state.rewards.nextLevelPts) * 100}%"></div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="main-menu-section">
@@ -368,17 +393,43 @@ document.addEventListener('DOMContentLoaded', () => {
                 </header>
 
                 <div class="pockets-content">
-                    <div class="ai-insight-card dashboard-insight">
-                        <div class="insight-header">
-                            <span class="sparkle-icon">✨</span>
-                            <h4>Smart AI Recommendation</h4>
+                    <div class="intelligent-control-section">
+                        <div class="section-title-row" style="margin-bottom: 12px; padding: 0 16px;">
+                            <h3 style="margin: 0;">Intelligent Control</h3>
+                            <span class="sparkle-icon" style="background: rgba(0,96,175,0.1); padding: 4px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; color: var(--primary-blue);">✨ AI Powered</span>
                         </div>
-                        <p class="insight-main-desc">AI analyzes transaction patterns and automatically allocates funds to help you reach your goals faster.</p>
-                        <div class="ecosystem-feature-info">
-                            <span class="eco-label">Integrated with BCA Ecosystem:</span>
-                            <p>Auto-payment to schools, BCA Insurance, and BCA Sekuritas.</p>
+                        <div class="control-features-list">
+                            <div class="control-feature-item">
+                                <div class="cf-icon" style="background: linear-gradient(135deg, #E0F2FE 0%, #BAE6FD 100%);">🤖</div>
+                                <div class="cf-content">
+                                    <h4>Smart Auto-Allocation</h4>
+                                    <p>AI analyzes transactions and automatically allocates money to the right pocket.</p>
+                                </div>
+                                <div class="cf-toggle">
+                                    <div class="toggle-switch active"><div class="toggle-knob"></div></div>
+                                </div>
+                            </div>
+                            
+                            <div class="control-feature-item">
+                                <div class="cf-icon" style="background: linear-gradient(135deg, #FEF08A 0%, #FDE047 100%);">📱</div>
+                                <div class="cf-content">
+                                    <h4>QRIS-Linked Pocket</h4>
+                                    <p>Pay with QRIS directly from your pocket (food, shopping, and more).</p>
+                                </div>
+                                <button class="cf-action-btn" id="btnQrisLink">Link</button>
+                            </div>
+
+                            <div class="control-feature-item">
+                                <div class="cf-icon" style="background: linear-gradient(135deg, #FECACA 0%, #FCA5A5 100%);">🚨</div>
+                                <div class="cf-content">
+                                    <h4>Emergency Separation</h4>
+                                    <p>Automatically set aside money for emergencies and prioritize what matters most.</p>
+                                </div>
+                                <div class="cf-toggle">
+                                    <div class="toggle-switch active"><div class="toggle-knob"></div></div>
+                                </div>
+                            </div>
                         </div>
-                        <button class="insight-action">Aktifkan Sekarang ></button>
                     </div>
 
                     <div class="banner-carousel">
@@ -583,6 +634,66 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <div class="tour-pointer" id="tourPointer"></div>
             </div>
+        `,
+        rewardHub: () => `
+            <div class="reward-hub-screen">
+                <header class="blue-header">
+                    <div class="back-btn" id="btnBackFromRewards">
+                        <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+                    </div>
+                    <h2 class="header-title">Reward Hub</h2>
+                </header>
+                
+                <div class="reward-hero">
+                    <div class="hero-points-circle">
+                        <span class="pts">${state.rewards.points}</span>
+                        <span class="label">Pocket Points</span>
+                    </div>
+                    <h3>Level: ${state.rewards.level}</h3>
+                    <div class="streak-badges">
+                        <div class="streak-day active">S</div>
+                        <div class="streak-day active">M</div>
+                        <div class="streak-day active">T</div>
+                        <div class="streak-day active">W</div>
+                        <div class="streak-day active">T</div>
+                        <div class="streak-day">F</div>
+                        <div class="streak-day">S</div>
+                    </div>
+                    <p style="margin-top: 12px; font-size: 0.8rem; opacity: 0.8;">You're on a 5-day saving streak! 🔥</p>
+                </div>
+
+                <div class="challenges-section">
+                    <h3 style="margin-bottom: 16px; color: var(--text-primary);">Active Challenges</h3>
+                    
+                    <div class="challenge-card completed">
+                        <div class="challenge-icon">✅</div>
+                        <div class="challenge-content">
+                            <div class="challenge-title">First Pocket Created</div>
+                            <div class="challenge-desc">Start your journey by creating your first saving pocket.</div>
+                            <div class="challenge-reward">+500 Pts</div>
+                        </div>
+                    </div>
+
+                    <div class="challenge-card">
+                        <div class="challenge-icon">📈</div>
+                        <div class="challenge-content">
+                            <div class="challenge-title">Reach 50% Goal</div>
+                            <div class="challenge-desc">Maintain your balance until you reach 50% of any goal.</div>
+                            <div class="challenge-reward">+1000 Pts</div>
+                        </div>
+                    </div>
+
+                    <h3 style="margin: 24px 0 16px 0; color: var(--text-primary);">Your Badges</h3>
+                    <div class="badges-row">
+                        ${state.rewards.badges.map(b => `
+                            <div class="badge-item ${b.unlocked ? 'unlocked' : ''}">
+                                <div class="badge-circle">${b.icon}</div>
+                                <span class="badge-name">${b.name}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            </div>
         `
     };
 
@@ -642,6 +753,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 initTour();
                 document.querySelector('.tour-overlay').classList.add('show');
             };
+
+            const btnReward = document.getElementById('btnRewardHub');
+            if (btnReward) btnReward.onclick = () => navigateTo('rewardHub');
         } else if (screenName === 'menuSelection') {
             document.getElementById('btnBackToHome').onclick = () => navigateTo('home');
             document.getElementById('itemPockets').onclick = () => navigateTo('pocketsDashboard');
@@ -656,11 +770,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.querySelector('.tour-overlay').classList.add('show');
             };
 
-            const btnInsight = document.querySelector('.insight-action');
-            if (btnInsight) btnInsight.onclick = () => {
-                showToast("Membuka Smart Allocation...");
-                setTimeout(() => navigateTo('createForm'), 500);
-            };
+            const cfToggles = document.querySelectorAll('.intelligent-control-section .toggle-switch');
+            cfToggles.forEach(toggle => {
+                toggle.onclick = () => {
+                    toggle.classList.toggle('active');
+                    showToast(toggle.classList.contains('active') ? "Feature Enabled" : "Feature Disabled");
+                };
+            });
+
+            const btnQrisLink = document.getElementById('btnQrisLink');
+            if (btnQrisLink) {
+                btnQrisLink.onclick = () => navigateTo('qrisSelection');
+            }
 
             // Add click for View All to go to createForm for now
             const btnViewAll = document.querySelector('.pocket-view-all-card');
@@ -777,6 +898,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const selectedPocket = state.pockets.find(p => p.id == state.selectedQrisPocketId);
                 showToast(`Membayar menggunakan Poket: ${selectedPocket.name}...`);
             };
+        } else if (screenName === 'rewardHub') {
+            document.getElementById('btnBackFromRewards').onclick = () => navigateTo('home');
         } else if (screenName === 'onboarding') {
             document.getElementById('navHomeFromTracker').onclick = () => navigateTo('home');
         }
