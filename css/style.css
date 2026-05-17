@@ -2600,10 +2600,12 @@ body {
 .ai-tabs-container {
     display: flex;
     background: white;
-    border-radius: 12px 12px 0 0;
-    overflow: hidden;
-    margin-bottom: 16px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    border-radius: 0;
+    overflow: visible;
+    margin-bottom: 0;
+    box-shadow: none;
+    border-bottom: 1px solid #E2E8F0;
+    padding: 0 4px;
 }
 
 .ai-tab {
@@ -2615,6 +2617,11 @@ body {
     color: #64748B;
     cursor: pointer;
     border-bottom: 3px solid transparent;
+    white-space: nowrap;
+}
+
+.ai-tab-content {
+    padding-top: 20px;
 }
 
 .ai-tab.active {
