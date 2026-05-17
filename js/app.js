@@ -463,7 +463,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="ai-tab" data-target="transactions">Account Transactions</div>
                         <div class="ai-tab" data-target="card">Card</div>
                         <div class="ai-tab active" data-target="pocket">Pocket</div>
-                        <div class="ai-tab" data-target="insight">Insight</div>
+                        <div class="ai-tab" data-target="insight" id="tour-target-3">Insight</div>
                     </div>
                     
                     <!-- Tab Contents -->
@@ -577,10 +577,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
                             <div class="pocket-list-items" style="margin-bottom: 20px;">
                                 ${state.pockets.map(p => `
-                                    <div class="pocket-item-box pocket-idr-card" data-id="${p.id}" style="cursor: pointer; border: 1px solid #E2E8F0; border-radius: 12px; padding: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 16px; background: white;">
+                                    <div class="pocket-item-box pocket-idr-card" data-id="${p.id}" ${p.id === 1 ? 'id="tour-target-2"' : ''} style="cursor: pointer; border: 1px solid #E2E8F0; border-radius: 12px; padding: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 16px; background: white; transition: all 0.3s ease;">
                                         <div class="pd-icon" style="font-size: 1.5rem; color: #0077C8; position: relative;">
                                             ${p.type === 'emergency' ? '🚨' : p.type === 'shared' ? '👨‍👩‍👧' : '🚗'}
-                                            ${p.qrisEnabled ? `<div style="position: absolute; bottom: -2px; right: -6px; background: white; border-radius: 50%; padding: 2px; box-shadow: 0 1px 2px rgba(0,0,0,0.1);"><div style="background: #0077C8; color: white; font-size: 0.35rem; font-weight: bold; width: 12px; height: 12px; display: flex; justify-content: center; align-items: center; border-radius: 50%;">QR</div></div>` : ''}
+                                            ${p.qrisEnabled ? `<div ${p.id === 1 ? 'id="tour-target-4"' : ''} style="position: absolute; bottom: -2px; right: -6px; background: white; border-radius: 50%; padding: 2px; box-shadow: 0 1px 2px rgba(0,0,0,0.1);"><div style="background: #0077C8; color: white; font-size: 0.35rem; font-weight: bold; width: 12px; height: 12px; display: flex; justify-content: center; align-items: center; border-radius: 50%;">QR</div></div>` : ''}
                                         </div>
                                         <div class="pi-info" style="flex: 1;">
                                             <div style="font-size: 1.1rem; font-weight: 800; color: #1e293b; margin-bottom: 4px;">IDR <span class="dots">●●●●●●●</span></div>
@@ -599,7 +599,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                             
                             <div style="text-align: center;">
-                                <span class="pocket-view-all-card" style="color: #0077C8; font-weight: 800; font-size: 0.95rem; display: inline-block; cursor: pointer; padding: 8px;">More</span>
+                                <span class="pocket-view-all-card" id="tour-target-1" style="color: #0077C8; font-weight: 800; font-size: 0.95rem; display: inline-block; cursor: pointer; padding: 8px; background: white; border-radius: 8px;">More</span>
                             </div>
                         </div>
 
@@ -1585,7 +1585,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { 
                 title: "1. Buat Poket Pertamamu", 
                 desc: "Mulai atur keuanganmu dengan membuat Poket. Skenario: Pisahkan dana untuk jajan, liburan, atau dana darurat agar tidak tercampur dengan rekening utama.",
-                tip: "Tip: Klik ikon '+' dan manfaatkan template Smart AI Recommendation!"
+                tip: "Tip: Klik tulisan 'More' di bagian bawah daftar poket!"
             },
             { 
                 title: "2. Lihat Detail & Motivasi", 
@@ -1604,6 +1604,26 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         ];
 
+        function updateTourHighlight() {
+            document.querySelectorAll('.tour-highlight').forEach(el => {
+                el.classList.remove('tour-highlight');
+                el.style.zIndex = '';
+                el.style.position = '';
+            });
+            
+            const targetId = 'tour-target-' + (state.onboardingStep + 1);
+            const targetEl = document.getElementById(targetId);
+            if (targetEl) {
+                targetEl.classList.add('tour-highlight');
+                targetEl.style.position = 'relative';
+                targetEl.style.zIndex = '10001';
+                targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        // Initialize first highlight
+        setTimeout(updateTourHighlight, 100);
+
         nextBtn.onclick = () => {
             state.onboardingStep++;
             if (state.onboardingStep < tourData.length) {
@@ -1613,14 +1633,25 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p style="margin-bottom: 12px;">${tourData[state.onboardingStep].desc}</p>
                     <div class="tour-tip-badge">${tourData[state.onboardingStep].tip}</div>
                 `;
+                updateTourHighlight();
             } else {
                 overlay.classList.remove('show');
+                document.querySelectorAll('.tour-highlight').forEach(el => {
+                    el.classList.remove('tour-highlight');
+                    el.style.zIndex = '';
+                    el.style.position = '';
+                });
                 state.onboardingStep = 0;
             }
         };
 
         skipBtn.onclick = () => {
             overlay.classList.remove('show');
+            document.querySelectorAll('.tour-highlight').forEach(el => {
+                el.classList.remove('tour-highlight');
+                el.style.zIndex = '';
+                el.style.position = '';
+            });
             state.onboardingStep = 0;
         };
     }
