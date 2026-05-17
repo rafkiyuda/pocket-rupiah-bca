@@ -722,6 +722,38 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                         </div>
 
+                        <!-- REWARDS CARD -->
+                        <div class="rp-main-container" style="background: white; border-radius: 16px; padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); border: 1px solid #F1F5F9; margin-bottom: 16px; cursor: pointer;" onclick="navigateTo('rewards')">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                                <div style="display: flex; align-items: flex-start; gap: 12px;">
+                                    <div style="position: relative; width: 40px; height: 40px; background: #0077C8; border-radius: 8px 12px 12px 12px; display: flex; justify-content: center; align-items: center; margin-top: 4px; flex-shrink: 0;">
+                                        <div style="position: absolute; top: -4px; left: 6px; width: 24px; height: 12px; background: #E0F2FE; border-radius: 4px; transform: rotate(-10deg);"></div>
+                                        <div style="position: absolute; bottom: -6px; left: -8px; background: #FDE047; color: #b45309; font-size: 0.7rem; font-weight: bold; width: 22px; height: 22px; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border: 2px solid white;">🏆</div>
+                                    </div>
+                                    <div>
+                                        <div style="color: #475569; font-size: 0.85rem; margin-bottom: 4px;">Pocket Rewards</div>
+                                        <div style="font-size: 1.25rem; font-weight: 800; color: #1e293b;">${state.rewards.points} <span style="font-size:0.8rem;color:#64748B;font-weight:600;">Pts</span></div>
+                                    </div>
+                                </div>
+                                <div style="text-align:right;margin-top:4px;">
+                                    <div style="background:#FEF08A;color:#B45309;font-size:0.68rem;font-weight:700;padding:3px 10px;border-radius:10px;margin-bottom:4px;">${state.rewards.level}</div>
+                                    <div style="font-size:0.65rem;color:#94A3B8;">🔥 ${state.rewards.streak} day streak</div>
+                                </div>
+                            </div>
+                            <div style="font-size: 0.72rem; color: #64748B; margin-bottom: 8px;">${state.rewards.nextLevelPts - state.rewards.points} Pts to next level</div>
+                            <div style="height:6px;background:#E2E8F0;border-radius:3px;overflow:hidden;margin-bottom:16px;">
+                                <div style="height:100%;width:${Math.round(state.rewards.points/state.rewards.nextLevelPts*100)}%;background:linear-gradient(90deg,#0077C8,#00A3E0);border-radius:3px;"></div>
+                            </div>
+                            <!-- Badges mini row -->
+                            <div style="display:flex;gap:10px;align-items:center;margin-bottom:14px;">
+                                ${state.rewards.badges.map(b => `<div style="width:36px;height:36px;border-radius:50%;background:${b.unlocked?'#FEF08A':'#E2E8F0'};display:flex;justify-content:center;align-items:center;font-size:1.1rem;opacity:${b.unlocked?1:0.4};border:2px solid ${b.unlocked?'#FDE047':'#E2E8F0'}">${b.icon}</div>`).join('')}
+                                <span style="font-size:0.72rem;color:#64748B;margin-left:4px;">${state.rewards.badges.filter(b=>b.unlocked).length}/${state.rewards.badges.length} badges</span>
+                            </div>
+                            <div style="text-align:center;">
+                                <span style="color:#0077C8;font-weight:800;font-size:0.95rem;">View Rewards ›</span>
+                            </div>
+                        </div>
+
                         <div class="forex-pocket-card" style="background: white; border-radius: 12px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); display: flex; gap: 16px; margin-bottom: 32px;">
                             <div class="fp-icon-cluster" style="position: relative; width: 50px; height: 50px; flex-shrink: 0;">
                                 <div style="width: 40px; height: 40px; background: #0077C8; border-radius: 8px; position: absolute; top: 5px; left: 0;"></div>
@@ -735,48 +767,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                         </div>
 
-                        <!-- RE-ADDED INTELLIGENT CONTROL & REWARDS -->
-                        <div style="display: none;">
-                            <div class="intelligent-control-section" style="margin-bottom: 32px;">
-                            <div class="section-title-row" style="margin-bottom: 12px;">
-                                <h3 style="margin: 0; color: #003366; font-size: 1rem;">Intelligent Control</h3>
-                                <span class="sparkle-icon" style="background: rgba(0,96,175,0.1); padding: 4px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; color: var(--primary-blue);">✨ AI Powered</span>
-                            </div>
-                            <div class="control-features-list">
-                                <div class="control-feature-item" style="background: white; border-radius: 12px; padding: 16px; margin-bottom: 12px; display: flex; gap: 12px; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-                                    <div class="cf-icon" style="background: linear-gradient(135deg, #E0F2FE 0%, #BAE6FD 100%); width: 40px; height: 40px; border-radius: 8px; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; flex-shrink: 0;">✨</div>
-                                    <div class="cf-content" style="flex: 1;">
-                                        <h4 style="font-size: 0.85rem; color: #003366; margin-bottom: 4px;">AI Recommended Auto-Debit</h4>
-                                        <p style="font-size: 0.7rem; color: #64748B; line-height: 1.4;">AI dynamically adjusts your auto-debit amount based on your spending habits to maximize savings.</p>
-                                    </div>
-                                    <div class="cf-toggle">
-                                        <div class="toggle-switch active"><div class="toggle-knob"></div></div>
-                                    </div>
-                                </div>
-                                
-                                <div class="control-feature-item" style="background: white; border-radius: 12px; padding: 16px; margin-bottom: 12px; display: flex; gap: 12px; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-                                    <div class="cf-icon" style="background: linear-gradient(135deg, #FEF08A 0%, #FDE047 100%); width: 40px; height: 40px; border-radius: 8px; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; flex-shrink: 0;">📱</div>
-                                    <div class="cf-content" style="flex: 1;">
-                                        <h4 style="font-size: 0.85rem; color: #003366; margin-bottom: 4px;">QRIS-Linked Pocket</h4>
-                                        <p style="font-size: 0.7rem; color: #64748B; line-height: 1.4;">Pay with QRIS directly from your pocket (food, shopping, and more).</p>
-                                    </div>
-                                    <button class="cf-action-btn" id="btnQrisLink" style="background: #0077C8; color: white; border: none; border-radius: 16px; padding: 6px 16px; font-size: 0.75rem; font-weight: 600;">Link</button>
-                                </div>
-
-                                <div class="control-feature-item" style="background: white; border-radius: 12px; padding: 16px; margin-bottom: 12px; display: flex; gap: 12px; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-                                    <div class="cf-icon" style="background: linear-gradient(135deg, #FECACA 0%, #FCA5A5 100%); width: 40px; height: 40px; border-radius: 8px; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; flex-shrink: 0;">🚨</div>
-                                    <div class="cf-content" style="flex: 1;">
-                                        <h4 style="font-size: 0.85rem; color: #003366; margin-bottom: 4px;">Emergency Separation</h4>
-                                        <p style="font-size: 0.7rem; color: #64748B; line-height: 1.4;">Automatically set aside money for emergencies and prioritize what matters most.</p>
-                                    </div>
-                                    <div class="cf-toggle">
-                                        <div class="toggle-switch active"><div class="toggle-knob"></div></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="challenges-section" style="background: transparent; padding: 0; padding-bottom: 40px;">
+                        <!-- ACTIVE CHALLENGES & BADGES -->
+                        <div style="padding-bottom: 40px;">
                             <h3 style="margin-bottom: 16px; color: #003366; font-size: 1rem;">Active Challenges</h3>
                             
                             <div class="challenge-card completed" style="background: white; border-radius: 12px; padding: 16px; margin-bottom: 12px; display: flex; gap: 12px; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
