@@ -907,12 +907,23 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `,
         onboardingTour: () => `
-            <div class="tour-overlay ${state.showTour ? 'show' : ''}" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); z-index: 10000; display: ${state.showTour ? 'flex' : 'none'}; justify-content: center; align-items: center; padding: 20px; pointer-events: auto;">
+            <div class="tour-overlay ${state.showTour ? 'show' : ''}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10000; display: ${state.showTour ? 'block' : 'none'}; pointer-events: auto; overflow: hidden;">
                 
-                <div class="tour-card" id="tourCard" style="background: #39A9DB; color: white; border-radius: 4px; padding: 24px 20px; width: 100%; max-width: 340px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); position: relative; animation: slideUp 0.3s ease; font-family: sans-serif;">
+                <!-- SVG Mask for Spotlight Cutout -->
+                <svg width="100%" height="100%" style="position: absolute; top: 0; left: 0; pointer-events: none;">
+                    <defs>
+                        <mask id="tour-mask">
+                            <rect width="100%" height="100%" fill="white" />
+                            <rect id="tour-cutout" x="0" y="0" width="0" height="0" rx="8" fill="black" style="transition: all 0.3s ease;" />
+                        </mask>
+                    </defs>
+                    <rect width="100%" height="100%" fill="rgba(0,0,0,0.7)" mask="url(#tour-mask)" pointer-events="auto" />
+                </svg>
+
+                <div class="tour-card" id="tourCard" style="background: #39A9DB; color: white; border-radius: 4px; padding: 24px 20px; width: 90%; max-width: 340px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); position: absolute; transition: top 0.3s ease; animation: slideUp 0.3s ease; font-family: sans-serif; left: 5%;">
                     
-                    <!-- Triangle pointer (top left) -->
-                    <div style="position: absolute; top: -10px; left: 24px; width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-bottom: 10px solid #39A9DB;"></div>
+                    <!-- Triangle pointer -->
+                    <div id="tourPointerTriangle" style="position: absolute; top: -10px; left: 24px; width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-bottom: 10px solid #39A9DB; transition: all 0.3s ease;"></div>
                     
                     <div class="tour-step-info" style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; opacity: 0.9;">Step ${state.onboardingStep + 1} of 4</div>
                     
@@ -920,7 +931,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     <div id="tourDesc" style="font-size: 0.95rem; line-height: 1.5; font-weight: 500; opacity: 0.95;">
                         <p style="margin-bottom: 12px;">Mulai atur keuanganmu dengan membuat Poket. Skenario: Pisahkan dana untuk jajan, liburan, atau dana darurat agar tidak tercampur dengan rekening utama.</p>
-                        <div class="tour-tip-badge" style="background: rgba(255,255,255,0.2); padding: 8px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 700;">Tip: Klik ikon '+' dan manfaatkan template Smart AI Recommendation!</div>
+                        <div class="tour-tip-badge" style="background: rgba(255,255,255,0.2); padding: 8px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 700;">Tip: Klik tulisan 'More' di bagian bawah daftar poket!</div>
                     </div>
                     
                     <div class="tour-footer" style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px;">
@@ -1605,19 +1616,49 @@ document.addEventListener('DOMContentLoaded', () => {
         ];
 
         function updateTourHighlight() {
-            document.querySelectorAll('.tour-highlight').forEach(el => {
-                el.classList.remove('tour-highlight');
-                el.style.zIndex = '';
-                el.style.position = '';
-            });
-            
             const targetId = 'tour-target-' + (state.onboardingStep + 1);
             const targetEl = document.getElementById(targetId);
-            if (targetEl) {
-                targetEl.classList.add('tour-highlight');
-                targetEl.style.position = 'relative';
-                targetEl.style.zIndex = '10001';
+            const cutout = document.getElementById('tour-cutout');
+            const card = document.getElementById('tourCard');
+            const pointer = document.getElementById('tourPointerTriangle');
+            const appContainer = document.querySelector('.app-container');
+            
+            if (targetEl && cutout && card && appContainer) {
                 targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                
+                setTimeout(() => {
+                    const rect = targetEl.getBoundingClientRect();
+                    const containerRect = appContainer.getBoundingClientRect();
+                    
+                    const relTop = rect.top - containerRect.top;
+                    const relLeft = rect.left - containerRect.left;
+                    
+                    cutout.setAttribute('x', relLeft - 4);
+                    cutout.setAttribute('y', relTop - 4);
+                    cutout.setAttribute('width', rect.width + 8);
+                    cutout.setAttribute('height', rect.height + 8);
+                    
+                    let cardTop = relTop + rect.height + 20;
+                    if (cardTop + 250 > appContainer.clientHeight) {
+                        cardTop = relTop - 250 - 20;
+                        pointer.style.bottom = "-10px";
+                        pointer.style.top = "auto";
+                        pointer.style.borderBottom = "none";
+                        pointer.style.borderTop = "10px solid #39A9DB";
+                    } else {
+                        pointer.style.top = "-10px";
+                        pointer.style.bottom = "auto";
+                        pointer.style.borderTop = "none";
+                        pointer.style.borderBottom = "10px solid #39A9DB";
+                    }
+                    
+                    card.style.top = cardTop + 'px';
+                    
+                    let pointerLeft = relLeft + (rect.width / 2) - (appContainer.clientWidth * 0.05) - 10;
+                    pointerLeft = Math.max(20, Math.min(pointerLeft, appContainer.clientWidth * 0.9 - 40));
+                    pointer.style.left = pointerLeft + 'px';
+                    
+                }, 300);
             }
         }
 
@@ -1635,23 +1676,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 `;
                 updateTourHighlight();
             } else {
-                overlay.classList.remove('show');
-                document.querySelectorAll('.tour-highlight').forEach(el => {
-                    el.classList.remove('tour-highlight');
-                    el.style.zIndex = '';
-                    el.style.position = '';
-                });
+                overlay.style.display = 'none';
                 state.onboardingStep = 0;
             }
         };
 
         skipBtn.onclick = () => {
-            overlay.classList.remove('show');
-            document.querySelectorAll('.tour-highlight').forEach(el => {
-                el.classList.remove('tour-highlight');
-                el.style.zIndex = '';
-                el.style.position = '';
-            });
+            overlay.style.display = 'none';
             state.onboardingStep = 0;
         };
     }
