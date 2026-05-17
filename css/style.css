@@ -1033,6 +1033,12 @@ body {
     display: flex;
     gap: 12px;
     margin-bottom: 20px;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.pocket-tabs::-webkit-scrollbar {
+    display: none;
 }
 
 .pocket-tab {
@@ -2596,8 +2602,12 @@ body {
     background: white;
     border-radius: 12px 12px 0 0;
     overflow: hidden;
-    margin-bottom: 16px;
+    margin-bottom: 0;
     box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.ai-tab-content {
+    padding-top: 20px;
 }
 
 .ai-tab {
