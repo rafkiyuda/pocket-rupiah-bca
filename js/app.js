@@ -766,7 +766,18 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                         </div>
 
+                        <!-- CARD ITEM -->
+                        <div class="card-item-box" style="margin-bottom: 32px;">
+                            <div class="card-img-placeholder">💳</div>
+                            <div class="card-info">
+                                <strong>6019 - **** - **** - **59</strong>
+                                <span>PASPOR BCA GPN XPRESI</span>
+                            </div>
+                            <span class="acc-arrow" style="font-size: 1.4rem; color: #0077C8; font-weight: 300;">></span>
+                        </div>
+
                         <!-- ACTIVE CHALLENGES & BADGES -->
+
                         <div style="padding-bottom: 40px;">
                             <h3 style="margin-bottom: 16px; color: #003366; font-size: 1rem;">Active Challenges</h3>
                             
