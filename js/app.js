@@ -7,9 +7,9 @@ document.addEventListener('DOMContentLoaded', () => {
         userName: "JASMINE AZZAHRA",
         balance: "12.450.000",
         pockets: [
-            { id: 1, name: "makan", category: "Food & Drink", balance: "2.500.000", target: "5.000.000", progress: 50, type: "personal", locked: false },
-            { id: 2, name: "Dana Darurat", category: "Emergency", balance: "6.000.000", target: "15.000.000", progress: 40, type: "emergency", locked: true },
-            { id: 3, name: "Liburan Keluarga", category: "Travel", balance: "1.200.000", target: "10.000.000", progress: 12, type: "shared", members: 3 }
+            { id: 1, name: "makan", category: "Food & Drink", balance: "2.500.000", target: "5.000.000", progress: 50, type: "personal", locked: false, qrisEnabled: true },
+            { id: 2, name: "Dana Darurat", category: "Emergency", balance: "6.000.000", target: "15.000.000", progress: 40, type: "emergency", locked: true, qrisEnabled: false },
+            { id: 3, name: "Liburan Keluarga", category: "Travel", balance: "1.200.000", target: "10.000.000", progress: 12, type: "shared", members: 3, qrisEnabled: true }
         ],
         roundUpActive: true,
         onboardingStep: 0,
@@ -21,6 +21,8 @@ document.addEventListener('DOMContentLoaded', () => {
             locked: false,
             category: "Others"
         },
+        pendingAllocation: true, // Mock incoming fund state
+        showAllocationModal: false,
         rewards: {
             points: 1250,
             level: "Budget Boss",
@@ -292,26 +294,63 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                         </div>
 
+                        <div class="form-group-toggle">
+                            <div class="toggle-label-group">
+                                <label>Enable QRIS Payments</label>
+                                <span class="interest-badge" style="background: #E0F2FE; color: #0077C8;">Pay directly from pocket</span>
+                            </div>
+                            <div class="toggle-switch active">
+                                <div class="toggle-knob"></div>
+                            </div>
+                        </div>
+
                         <div class="form-group">
-                            <label>Smart Auto-Allocation</label>
-                            <p class="field-subtext">AI suggestion based on your spending</p>
-                            <div class="allocation-options">
-                                <div class="alloc-item">
-                                    <div class="alloc-check"></div>
-                                    <span>Connect to <strong>BCA Ecosystem</strong></span>
+                            <div class="toggle-label-group" style="margin-bottom: 12px;">
+                                <div>
+                                    <label>Auto-Debit (Recurring Transfer)</label>
+                                    <p class="field-subtext" style="margin-top: 4px;">Set schedule for automatic saving</p>
                                 </div>
-                                <div class="ecosystem-pills">
-                                    <span class="eco-pill" data-eco="QRIS">🔄 QRIS & Auto-Pay</span>
-                                    <span class="eco-pill" data-eco="BCALife">🛡️ BCA Life</span>
-                                    <span class="eco-pill" data-eco="Sekuritas">📈 BCA Sekuritas</span>
-                                    <span class="eco-pill locked" data-eco="Finance">🚗 BCA Finance</span>
+                                <div class="toggle-switch" id="autodebitToggle">
+                                    <div class="toggle-knob"></div>
+                                </div>
+                            </div>
+                            
+                            <div id="autodebitSettings" style="display: none; padding-top: 12px; border-top: 1px dashed #E2E8F0;">
+                                <div class="form-group-row">
+                                    <div class="row-label">Amount</div>
+                                    <div class="amount-input-group">
+                                        <span class="currency-label">IDR</span>
+                                        <input type="text" class="underlined-input amount-field" placeholder="1.000.000">
+                                    </div>
+                                </div>
+                                
+                                <!-- AI Recommendation Attachment -->
+                                <div class="ai-recommendation-box" style="background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%); border-radius: 12px; padding: 16px; margin-top: 16px; border: 1px solid #BAE6FD;">
+                                    <div class="toggle-label-group" style="margin-bottom: 8px;">
+                                        <div style="display: flex; align-items: center; gap: 8px;">
+                                            <span style="font-size: 1.2rem;">✨</span>
+                                            <label style="color: #0369A1;">AI Recommended Auto-Debit</label>
+                                        </div>
+                                        <div class="toggle-switch active" id="aiAutodebitToggle">
+                                            <div class="toggle-knob"></div>
+                                        </div>
+                                    </div>
+                                    <p style="font-size: 0.8rem; color: #334155; line-height: 1.4;">
+                                        Let AI analyze your monthly transactions and adjust this auto-debit amount dynamically to maximize your savings without disrupting your cash flow.
+                                    </p>
                                 </div>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label>Recurring Transfer Type</label>
-                            <input type="text" class="underlined-input" placeholder="">
+                            <label>Connect to BCA Ecosystem</label>
+                            <p class="field-subtext">Link pocket for auto-payments</p>
+                            <div class="ecosystem-pills" style="margin-top: 12px;">
+                                <span class="eco-pill" data-eco="QRIS">🔄 QRIS & Auto-Pay</span>
+                                <span class="eco-pill" data-eco="BCALife">🛡️ BCA Life</span>
+                                <span class="eco-pill" data-eco="Sekuritas">📈 BCA Sekuritas</span>
+                                <span class="eco-pill locked" data-eco="Finance">🚗 BCA Finance</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -382,216 +421,341 @@ document.addEventListener('DOMContentLoaded', () => {
             </nav>
         `,
         pocketsDashboard: () => `
-            <div class="pockets-dashboard">
-                <header class="home-header">
-                    <div class="logo-mybca">my<span>BCA</span></div>
-                    <div class="header-actions">
-                        <div class="header-btn" id="btnStartTour"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
-                        <div class="header-btn"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></div>
-                        <div class="header-btn" id="btnBackToHomeFromPockets"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg></div>
+            <div class="account-info-screen" style="background: #F1F5F9; height: 100%; overflow-y: auto; overflow-x: hidden; padding-bottom: 40px;">
+                <header class="blue-header" style="height: 160px; align-items: flex-start; padding-top: 40px; padding-bottom: 0;">
+                    <div class="back-btn" id="btnBackToHomeFromPockets">
+                        <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
                     </div>
+                    <h2 class="header-title">Account Information</h2>
                 </header>
 
-                <div class="pockets-content">
-                    <div class="intelligent-control-section">
-                        <div class="section-title-row" style="margin-bottom: 12px; padding: 0 16px;">
-                            <h3 style="margin: 0;">Intelligent Control</h3>
-                            <span class="sparkle-icon" style="background: rgba(0,96,175,0.1); padding: 4px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; color: var(--primary-blue);">✨ AI Powered</span>
+                <div class="account-info-content" style="margin-top: -60px; padding: 0 16px; position: relative; z-index: 1;">
+                    <!-- Top Account Card -->
+                    <div class="ai-account-card">
+                        <div class="ai-acc-top">
+                            <span class="ai-label">Account No.</span>
+                            <div class="ai-number">
+                                <strong>547 - 078 - 4808</strong>
+                                <span class="copy-icon" style="color: white; font-size: 0.9rem;">📋</span>
+                            </div>
                         </div>
-                        <div class="control-features-list">
-                            <div class="control-feature-item">
-                                <div class="cf-icon" style="background: linear-gradient(135deg, #E0F2FE 0%, #BAE6FD 100%);">🤖</div>
-                                <div class="cf-content">
-                                    <h4>Smart Auto-Allocation</h4>
-                                    <p>AI analyzes transactions and automatically allocates money to the right pocket.</p>
+                        <div class="ai-acc-bottom">
+                            <div class="ai-balance-row">
+                                <div class="ai-balance-info">
+                                    <span class="ai-label-dark">Active Balance</span>
+                                    <div class="ai-balance-amount">
+                                        <strong>IDR</strong>
+                                        <span class="dots">●●●●●●●</span>
+                                    </div>
+                                    <span class="ai-type">TAHAPAN XPRESI - IDR</span>
+                                    <span class="ai-date">17 May 2026 19:29:00 UTC+7</span>
                                 </div>
-                                <div class="cf-toggle">
-                                    <div class="toggle-switch active"><div class="toggle-knob"></div></div>
+                                <div class="ai-eye-icon" style="color: #0077C8;">
+                                    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/></svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Tabs -->
+                    <div class="ai-tabs-container">
+                        <div class="ai-tab" data-target="transactions">Account Transactions</div>
+                        <div class="ai-tab" data-target="card">Card</div>
+                        <div class="ai-tab active" data-target="pocket">Pocket</div>
+                    </div>
+                    
+                    <!-- Tab Contents -->
+                    
+                    <!-- TRANSACTIONS TAB -->
+                    <div class="ai-tab-content" id="tab-transactions" style="display: none;">
+                        <div class="pd-search-row" style="margin-bottom: 20px;">
+                            <div class="pd-search-box">
+                                <span class="search-icon">🔍</span>
+                                <input type="text" placeholder="Search" style="background: transparent;">
+                            </div>
+                            <div class="pd-filter-btn" style="width: 44px; margin-left: 12px;">📄</div>
+                            <div class="pd-filter-btn" style="width: 44px; margin-left: 8px;">
+                                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/></svg>
+                            </div>
+                        </div>
+                        <h4 style="color: #003366; font-size: 0.85rem; margin-bottom: 16px;">May</h4>
+                        
+                        <div class="transaction-list">
+                            <div class="transaction-item">
+                                <div class="tx-date">
+                                    <span class="tx-day">16</span>
+                                    <span class="tx-month">May</span>
+                                    <span class="tx-year">2026</span>
+                                </div>
+                                <div class="tx-details">
+                                    <div class="tx-desc">TRANSFER DR 535 MUHAMMAD RAFLI YUD BI-FAST CR</div>
+                                    <div class="tx-amount in">IDR 50,000.00</div>
+                                </div>
+                            </div>
+                            <div class="transaction-item">
+                                <div class="tx-date">
+                                    <span class="tx-day">16</span>
+                                    <span class="tx-month">May</span>
+                                    <span class="tx-year">2026</span>
+                                </div>
+                                <div class="tx-details">
+                                    <div class="tx-desc">1605/FTFVA/WS95031 70001/GOPAY TOPUP -- 085283971917<br>TRSF E-BANKING DB</div>
+                                    <div class="tx-amount out">IDR 17,000.00</div>
+                                </div>
+                            </div>
+                            <div class="transaction-item">
+                                <div class="tx-date">
+                                    <span class="tx-day">16</span>
+                                    <span class="tx-month">May</span>
+                                    <span class="tx-year">2026</span>
+                                </div>
+                                <div class="tx-details">
+                                    <div class="tx-desc">TGL: 0516 QR 914 00000.00Nasi Goren<br>TRANSAKSI DEBIT</div>
+                                    <div class="tx-amount out">IDR 16,000.00</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- CARD TAB -->
+                    <div class="ai-tab-content" id="tab-card" style="display: none;">
+                        <div class="card-item-box">
+                            <div class="card-img-placeholder">💳</div>
+                            <div class="card-info">
+                                <strong>6019 - **** - **** - **59</strong>
+                                <span>PASPOR BCA GPN XPRESI</span>
+                            </div>
+                            <span class="acc-arrow" style="font-size: 1.4rem; color: #0077C8; font-weight: 300;">></span>
+                        </div>
+                    </div>
+                    
+                    <!-- POCKET TAB -->
+                    <div class="ai-tab-content active" id="tab-pocket">
+                        ${state.pendingAllocation ? `
+                        <div class="ai-allocation-banner" style="background: linear-gradient(135deg, #0077C8, #00A3E0); border-radius: 16px; padding: 16px; margin-bottom: 24px; color: white; position: relative; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 119, 200, 0.2);">
+                            <div style="position: absolute; top: -10px; right: -10px; font-size: 4rem; opacity: 0.1;">✨</div>
+                            <div style="display: flex; gap: 12px; align-items: flex-start; position: relative; z-index: 1;">
+                                <div style="background: rgba(255,255,255,0.2); width: 36px; height: 36px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; flex-shrink: 0;">🤖</div>
+                                <div>
+                                    <h4 style="font-size: 0.9rem; margin-bottom: 4px; font-weight: 700;">Smart Recommendation</h4>
+                                    <p style="font-size: 0.75rem; opacity: 0.9; margin-bottom: 12px; line-height: 1.4;">Incoming fund <strong>IDR 2.500.000</strong> detected from Payroll. AI has generated an optimal allocation plan.</p>
+                                    <button id="btnReviewAllocation" style="background: #FDE047; color: #003366; border: none; padding: 6px 16px; border-radius: 16px; font-size: 0.75rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px;">Review & Approve <span style="font-size: 1rem;">></span></button>
+                                </div>
+                            </div>
+                        </div>
+                        ` : ''}
+
+                        <div class="rp-main-container" style="background: white; border-radius: 16px; padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); border: 1px solid #F1F5F9; margin-bottom: 24px;">
+                            <div class="rupiah-pocket-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                                <div style="display: flex; align-items: flex-start; gap: 12px;">
+                                    <div class="rp-wallet-illustration" style="position: relative; width: 40px; height: 40px; background: #0077C8; border-radius: 8px 12px 12px 12px; display: flex; justify-content: center; align-items: center; margin-top: 4px;">
+                                        <div style="position: absolute; top: -4px; left: 6px; width: 24px; height: 12px; background: #E0F2FE; border-radius: 4px; transform: rotate(-10deg);"></div>
+                                        <div style="position: absolute; bottom: -6px; left: -8px; background: #FDE047; color: #b45309; font-size: 0.6rem; font-weight: bold; width: 22px; height: 22px; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border: 2px solid white;">Rp</div>
+                                    </div>
+                                    <div>
+                                        <div style="color: #475569; font-size: 0.85rem; margin-bottom: 4px;">Rupiah Pocket</div>
+                                        <div style="font-size: 1.25rem; font-weight: 800; color: #1e293b;">IDR <span class="dots">●●●●●●●</span></div>
+                                    </div>
+                                </div>
+                                <div class="ai-eye-icon" style="color: #0077C8; cursor: pointer; padding: 4px;">
+                                    <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/></svg>
                                 </div>
                             </div>
                             
-                            <div class="control-feature-item">
-                                <div class="cf-icon" style="background: linear-gradient(135deg, #FEF08A 0%, #FDE047 100%);">📱</div>
-                                <div class="cf-content">
-                                    <h4>QRIS-Linked Pocket</h4>
-                                    <p>Pay with QRIS directly from your pocket (food, shopping, and more).</p>
+                            <div style="font-size: 0.75rem; color: #475569; margin-bottom: 20px;">Viewing pockets of account <strong>547 - 078 - 4808</strong></div>
+                            
+                            <div class="helper-link" style="color: #0077C8; font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; gap: 12px; margin-bottom: 28px;">
+                                <div style="width: 24px; height: 24px; border: 2px solid #0077C8; border-radius: 6px; display: flex; flex-direction: column; justify-content: space-evenly; align-items: flex-start; padding: 2px;">
+                                    <div style="width: 12px; height: 2px; background: #0077C8; border-radius: 2px;"></div>
+                                    <div style="width: 16px; height: 2px; background: #0077C8; border-radius: 2px;"></div>
+                                    <div style="width: 14px; height: 2px; background: #0077C8; border-radius: 2px;"></div>
                                 </div>
-                                <button class="cf-action-btn" id="btnQrisLink">Link</button>
+                                Select Pocket on the Homepage
                             </div>
 
-                            <div class="control-feature-item">
-                                <div class="cf-icon" style="background: linear-gradient(135deg, #FECACA 0%, #FCA5A5 100%);">🚨</div>
-                                <div class="cf-content">
-                                    <h4>Emergency Separation</h4>
-                                    <p>Automatically set aside money for emergencies and prioritize what matters most.</p>
-                                </div>
-                                <div class="cf-toggle">
-                                    <div class="toggle-switch active"><div class="toggle-knob"></div></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="banner-carousel">
-                        <div class="banner-item">
-                            <div class="banner-text">
-                                <h3>Easy Way to Buy <span>Flazz</span></h3>
-                                <p>in Lifestyle Feature</p>
-                                <button class="banner-btn">bca.id/flazzspesial</button>
-                            </div>
-                            <div class="banner-icon-box">
-                                <div class="lifestyle-icon"></div>
-                                <span>Lifestyle</span>
-                            </div>
-                        </div>
-                        <div class="carousel-dots">
-                            <span class="dot"></span>
-                            <span class="dot"></span>
-                            <span class="dot active"></span>
-                            <span class="dot"></span>
-                            <span class="dot"></span>
-                            <span class="dot"></span>
-                        </div>
-                    </div>
-
-                    <div class="pockets-section">
-                        <div class="section-title-row">
-                            <h3>Pockets</h3>
-                            <div class="round-up-badge ${state.roundUpActive ? 'active' : ''}">
-                                Round-up: <span>${state.roundUpActive ? 'ON' : 'OFF'}</span>
-                            </div>
-                        </div>
-                        <div class="pocket-tabs">
-                            <div class="pocket-tab active">Personal</div>
-                            <div class="pocket-tab">Shared</div>
-                            <div class="pocket-tab">Emergency</div>
-                        </div>
-
-                        <div class="pocket-cards-scroll">
-                            ${state.pockets.map(p => `
-                                <div class="pocket-idr-card ${p.type}">
-                                    <div class="pocket-card-icon">${p.type === 'emergency' ? '🚨' : p.type === 'shared' ? '👨‍👩‍👧' : '🥖'}</div>
-                                    <div class="pocket-card-info">
-                                        <div class="pocket-balance-row">
-                                            <span class="currency">IDR ${p.balance}</span>
-                                            <span class="target-label">Target: IDR ${p.target}</span>
+                            <div class="pocket-list-items" style="margin-bottom: 20px;">
+                                ${state.pockets.map(p => `
+                                    <div class="pocket-item-box pocket-idr-card" data-id="${p.id}" style="cursor: pointer; border: 1px solid #E2E8F0; border-radius: 12px; padding: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 16px; background: white;">
+                                        <div class="pd-icon" style="font-size: 1.5rem; color: #0077C8; position: relative;">
+                                            ${p.type === 'emergency' ? '🚨' : p.type === 'shared' ? '👨‍👩‍👧' : '🚗'}
+                                            ${p.qrisEnabled ? `<div style="position: absolute; bottom: -2px; right: -6px; background: white; border-radius: 50%; padding: 2px; box-shadow: 0 1px 2px rgba(0,0,0,0.1);"><div style="background: #0077C8; color: white; font-size: 0.35rem; font-weight: bold; width: 12px; height: 12px; display: flex; justify-content: center; align-items: center; border-radius: 50%;">QR</div></div>` : ''}
                                         </div>
-                                        <div class="progress-bar-container">
-                                            <div class="progress-fill" style="width: ${p.progress}%"></div>
+                                        <div class="pi-info" style="flex: 1;">
+                                            <div style="font-size: 1.1rem; font-weight: 800; color: #1e293b; margin-bottom: 4px;">IDR <span class="dots">●●●●●●●</span></div>
+                                            <div style="font-size: 0.8rem; color: #64748B;">${p.name}</div>
                                         </div>
-                                        <div class="prediction-row">
-                                            <span class="time-to-goal">Predictive: <strong>${Math.ceil((100 - p.progress) / 5)} bulan</strong> lagi</span>
-                                            <span class="goal-achievement">Goal Achievement</span>
-                                        </div>
+                                        <span class="acc-arrow" style="font-size: 1.4rem; color: #0077C8; font-weight: 300;">></span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            
+                            <div style="text-align: center;">
+                                <span class="pocket-view-all-card" style="color: #0077C8; font-weight: 800; font-size: 0.95rem; display: inline-block; cursor: pointer; padding: 8px;">More</span>
+                            </div>
+                        </div>
+
+                        <div class="forex-pocket-card" style="background: white; border-radius: 12px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); display: flex; gap: 16px; margin-bottom: 32px;">
+                            <div class="fp-icon-cluster" style="position: relative; width: 50px; height: 50px; flex-shrink: 0;">
+                                <div style="width: 40px; height: 40px; background: #0077C8; border-radius: 8px; position: absolute; top: 5px; left: 0;"></div>
+                                <div style="position: absolute; top: -5px; right: 0; background: #FDE047; color: #1e293b; font-size: 0.7rem; font-weight: bold; width: 22px; height: 22px; border-radius: 50%; display: flex; justify-content: center; align-items: center;">$</div>
+                                <div style="position: absolute; bottom: 0; left: -5px; background: #4ADE80; color: white; font-size: 0.7rem; font-weight: bold; width: 22px; height: 22px; border-radius: 50%; display: flex; justify-content: center; align-items: center;">¥</div>
+                            </div>
+                            <div class="fp-info" style="flex: 1;">
+                                <h4 style="font-size: 0.85rem; color: #003366; margin-bottom: 4px;">Forex Pocket</h4>
+                                <p style="font-size: 0.75rem; color: #64748B; margin-bottom: 8px; line-height: 1.4;">With Forex Pocket, transactions in various currencies are easier and more convenient.</p>
+                                <span style="color: #0077C8; font-size: 0.8rem; font-weight: 700;">Activate Now</span>
+                            </div>
+                        </div>
+                        
+                        <!-- RE-ADDED INTELLIGENT CONTROL & REWARDS -->
+                        <div style="display: none;">
+                            <div class="intelligent-control-section" style="margin-bottom: 32px;">
+                            <div class="section-title-row" style="margin-bottom: 12px;">
+                                <h3 style="margin: 0; color: #003366; font-size: 1rem;">Intelligent Control</h3>
+                                <span class="sparkle-icon" style="background: rgba(0,96,175,0.1); padding: 4px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; color: var(--primary-blue);">✨ AI Powered</span>
+                            </div>
+                            <div class="control-features-list">
+                                <div class="control-feature-item" style="background: white; border-radius: 12px; padding: 16px; margin-bottom: 12px; display: flex; gap: 12px; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                                    <div class="cf-icon" style="background: linear-gradient(135deg, #E0F2FE 0%, #BAE6FD 100%); width: 40px; height: 40px; border-radius: 8px; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; flex-shrink: 0;">✨</div>
+                                    <div class="cf-content" style="flex: 1;">
+                                        <h4 style="font-size: 0.85rem; color: #003366; margin-bottom: 4px;">AI Recommended Auto-Debit</h4>
+                                        <p style="font-size: 0.7rem; color: #64748B; line-height: 1.4;">AI dynamically adjusts your auto-debit amount based on your spending habits to maximize savings.</p>
+                                    </div>
+                                    <div class="cf-toggle">
+                                        <div class="toggle-switch active"><div class="toggle-knob"></div></div>
                                     </div>
                                 </div>
-                            `).join('')}
-                            <div class="pocket-view-all-card" id="btnAddNewPocket">
-                                <div class="view-all-icon">+</div>
-                                <span>Add New</span>
-                            </div>
-                        </div>
-                    </div>
+                                
+                                <div class="control-feature-item" style="background: white; border-radius: 12px; padding: 16px; margin-bottom: 12px; display: flex; gap: 12px; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                                    <div class="cf-icon" style="background: linear-gradient(135deg, #FEF08A 0%, #FDE047 100%); width: 40px; height: 40px; border-radius: 8px; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; flex-shrink: 0;">📱</div>
+                                    <div class="cf-content" style="flex: 1;">
+                                        <h4 style="font-size: 0.85rem; color: #003366; margin-bottom: 4px;">QRIS-Linked Pocket</h4>
+                                        <p style="font-size: 0.7rem; color: #64748B; line-height: 1.4;">Pay with QRIS directly from your pocket (food, shopping, and more).</p>
+                                    </div>
+                                    <button class="cf-action-btn" id="btnQrisLink" style="background: #0077C8; color: white; border: none; border-radius: 16px; padding: 6px 16px; font-size: 0.75rem; font-weight: 600;">Link</button>
+                                </div>
 
-                    <div class="ecosystem-integration">
-                        <div class="section-title-row">
-                            <h3>BCA Ecosystem</h3>
-                            <span class="phase-tag">Phase 1 & 2</span>
-                        </div>
-                        <div class="eco-grid extended">
-                            <div class="eco-item active" id="ecoQRIS">
-                                <div class="eco-icon qris-auto"></div>
-                                <div class="eco-details">
-                                    <span class="eco-name">QRIS & Auto-Pay</span>
-                                    <span class="eco-desc">Daily Cashflow Control</span>
+                                <div class="control-feature-item" style="background: white; border-radius: 12px; padding: 16px; margin-bottom: 12px; display: flex; gap: 12px; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                                    <div class="cf-icon" style="background: linear-gradient(135deg, #FECACA 0%, #FCA5A5 100%); width: 40px; height: 40px; border-radius: 8px; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; flex-shrink: 0;">🚨</div>
+                                    <div class="cf-content" style="flex: 1;">
+                                        <h4 style="font-size: 0.85rem; color: #003366; margin-bottom: 4px;">Emergency Separation</h4>
+                                        <p style="font-size: 0.7rem; color: #64748B; line-height: 1.4;">Automatically set aside money for emergencies and prioritize what matters most.</p>
+                                    </div>
+                                    <div class="cf-toggle">
+                                        <div class="toggle-switch active"><div class="toggle-knob"></div></div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="eco-item active" id="ecoBCALife">
-                                <div class="eco-icon bca-life"></div>
-                                <div class="eco-details">
-                                    <span class="eco-name">BCA Life</span>
-                                    <span class="eco-desc">Auto-Protect Mechanism</span>
-                                </div>
-                            </div>
-                            <div class="eco-item active" id="ecoSekuritas">
-                                <div class="eco-icon bca-sekuritas"></div>
-                                <div class="eco-details">
-                                    <span class="eco-name">BCA Sekuritas</span>
-                                    <span class="eco-desc">Goal Engine Invest</span>
-                                </div>
-                            </div>
-                            <div class="eco-item phase2" id="ecoFinance">
-                                <div class="eco-icon bca-finance"></div>
-                                <div class="eco-details">
-                                    <span class="eco-name">BCA Finance</span>
-                                    <span class="eco-desc">Auto-Debit Cicilan</span>
-                                </div>
-                                <div class="soon-badge">Phase 2</div>
-                            </div>
-                            <div class="eco-item phase2" id="ecoInsurance">
-                                <div class="eco-icon bca-insurance-new"></div>
-                                <div class="eco-details">
-                                    <span class="eco-name">BCA Insurance</span>
-                                    <span class="eco-desc">General Protection</span>
-                                </div>
-                                <div class="soon-badge">Phase 2</div>
                             </div>
                         </div>
-                    </div>
+                        
+                        <div class="challenges-section" style="background: transparent; padding: 0; padding-bottom: 40px;">
+                            <h3 style="margin-bottom: 16px; color: #003366; font-size: 1rem;">Active Challenges</h3>
+                            
+                            <div class="challenge-card completed" style="background: white; border-radius: 12px; padding: 16px; margin-bottom: 12px; display: flex; gap: 12px; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                                <div class="challenge-icon" style="font-size: 1.5rem;">✅</div>
+                                <div class="challenge-content" style="flex: 1;">
+                                    <div class="challenge-title" style="font-size: 0.85rem; color: #003366; font-weight: 700; margin-bottom: 4px;">First Pocket Created</div>
+                                    <div class="challenge-desc" style="font-size: 0.7rem; color: #64748B; line-height: 1.4;">Start your journey by creating your first saving pocket.</div>
+                                    <div class="challenge-reward" style="color: #10B981; font-weight: 700; font-size: 0.75rem; margin-top: 4px;">+500 Pts</div>
+                                </div>
+                            </div>
 
-                    <div class="wallet-section">
-                        <h3>e-Wallet</h3>
-                        <div class="wallet-grid">
-                            <div class="wallet-item">
-                                <div class="wallet-icon sakuku"></div>
-                                <span>Sakuku</span>
+                            <div class="challenge-card" style="background: white; border-radius: 12px; padding: 16px; margin-bottom: 12px; display: flex; gap: 12px; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                                <div class="challenge-icon" style="font-size: 1.5rem;">📈</div>
+                                <div class="challenge-content" style="flex: 1;">
+                                    <div class="challenge-title" style="font-size: 0.85rem; color: #003366; font-weight: 700; margin-bottom: 4px;">Reach 50% Goal</div>
+                                    <div class="challenge-desc" style="font-size: 0.7rem; color: #64748B; line-height: 1.4;">Maintain your balance until you reach 50% of any goal.</div>
+                                    <div class="challenge-reward" style="color: #0077C8; font-weight: 700; font-size: 0.75rem; margin-top: 4px;">+1000 Pts</div>
+                                </div>
                             </div>
-                            <div class="wallet-item">
-                                <div class="wallet-icon dana"></div>
-                                <span>DANA</span>
-                            </div>
-                            <div class="wallet-item">
-                                <div class="wallet-icon ovo"></div>
-                                <span>OVO</span>
+
+                            <h3 style="margin: 24px 0 16px 0; color: #003366; font-size: 1rem;">Your Badges</h3>
+                            <div class="badges-row" style="display: flex; gap: 16px; overflow-x: auto; padding-bottom: 8px;">
+                                ${state.rewards.badges.map(b => `
+                                    <div class="badge-item ${b.unlocked ? 'unlocked' : ''}" style="display: flex; flex-direction: column; align-items: center; opacity: ${b.unlocked ? '1' : '0.5'}; min-width: 60px;">
+                                        <div class="badge-circle" style="width: 50px; height: 50px; border-radius: 50%; background: ${b.unlocked ? '#FEF08A' : '#E2E8F0'}; display: flex; justify-content: center; align-items: center; font-size: 1.5rem; margin-bottom: 8px;">${b.icon}</div>
+                                        <span class="badge-name" style="font-size: 0.65rem; text-align: center; color: #64748B;">${b.name}</span>
+                                    </div>
+                                `).join('')}
                             </div>
                         </div>
+                        </div>
+                        <!-- END RE-ADDED FEATURES -->
+                        
                     </div>
+                </div>
+                
+                <!-- Allocation Modal Overlay -->
+                <div class="allocation-overlay ${state.showAllocationModal ? 'show' : ''}" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: ${state.showAllocationModal ? 'flex' : 'none'}; flex-direction: column; justify-content: flex-end; opacity: ${state.showAllocationModal ? '1' : '0'}; transition: opacity 0.3s ease;">
+                    <div class="allocation-sheet" style="background: white; border-radius: 20px 20px 0 0; padding: 24px; animation: slideUp 0.3s ease forwards;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                            <div>
+                                <h3 style="color: #003366; font-size: 1.1rem; margin-bottom: 4px;">AI Auto-Allocation</h3>
+                                <p style="color: #64748B; font-size: 0.85rem;">Incoming: IDR 2.500.000</p>
+                            </div>
+                            <button id="btnCancelAllocation" style="background: none; border: none; font-size: 1.5rem; color: #94A3B8; cursor: pointer;">×</button>
+                        </div>
 
-                    <div class="card-section-dashboard">
-                        <h3>Card</h3>
-                        <div class="card-grid-placeholders">
-                            <div class="card-placeholder"></div>
-                            <div class="card-placeholder"></div>
+                        <!-- AI Insight Box -->
+                        <div style="background: #F0F9FF; border: 1px solid #BAE6FD; border-radius: 12px; padding: 12px; margin-bottom: 20px; display: flex; gap: 12px; align-items: flex-start;">
+                            <div style="font-size: 1.2rem;">💡</div>
+                            <div>
+                                <h4 style="font-size: 0.8rem; color: #0369A1; margin-bottom: 4px; font-weight: 700;">AI Insight</h4>
+                                <p style="font-size: 0.75rem; color: #0284C7; line-height: 1.4;">Based on your recent higher food expenses, I've prioritized your "makan" pocket to prevent overdrawing, while maintaining your Emergency Fund target pace.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="alloc-items">
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #F1F5F9;">
+                                <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
+                                    <div style="font-size: 1.5rem; width: 40px; height: 40px; background: #F0F9FF; border-radius: 8px; display: flex; justify-content: center; align-items: center;">🚗</div>
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: 700; color: #1e293b; font-size: 0.9rem;">makan</div>
+                                        <div style="font-size: 0.75rem; color: #64748B;">Adjustment for recent expenses</div>
+                                    </div>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 4px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 6px 8px; width: 130px;">
+                                    <span style="font-size: 0.75rem; font-weight: 700; color: #94A3B8;">IDR</span>
+                                    <input type="text" value="1.000.000" style="width: 100%; background: transparent; border: none; outline: none; font-weight: 700; color: #10B981; font-size: 0.9rem; text-align: right; padding: 0;">
+                                </div>
+                            </div>
+                            
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #F1F5F9;">
+                                <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
+                                    <div style="font-size: 1.5rem; width: 40px; height: 40px; background: #FEF2F2; border-radius: 8px; display: flex; justify-content: center; align-items: center;">🚨</div>
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: 700; color: #1e293b; font-size: 0.9rem;">Dana Darurat</div>
+                                        <div style="font-size: 0.75rem; color: #64748B;">Consistent monthly savings</div>
+                                    </div>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 4px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 6px 8px; width: 130px;">
+                                    <span style="font-size: 0.75rem; font-weight: 700; color: #94A3B8;">IDR</span>
+                                    <input type="text" value="1.000.000" style="width: 100%; background: transparent; border: none; outline: none; font-weight: 700; color: #10B981; font-size: 0.9rem; text-align: right; padding: 0;">
+                                </div>
+                            </div>
+                            
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #F1F5F9;">
+                                <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
+                                    <div style="font-size: 1.5rem; width: 40px; height: 40px; background: #FFFBEB; border-radius: 8px; display: flex; justify-content: center; align-items: center;">👨‍👩‍👧</div>
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: 700; color: #1e293b; font-size: 0.9rem;">Liburan Keluarga</div>
+                                        <div style="font-size: 0.75rem; color: #64748B;">Bonus allocation</div>
+                                    </div>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 4px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 6px 8px; width: 130px;">
+                                    <span style="font-size: 0.75rem; font-weight: 700; color: #94A3B8;">IDR</span>
+                                    <input type="text" value="500.000" style="width: 100%; background: transparent; border: none; outline: none; font-weight: 700; color: #10B981; font-size: 0.9rem; text-align: right; padding: 0;">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 24px;">
+                            <button id="btnApproveAllocation" style="width: 100%; background: #0077C8; color: white; border: none; padding: 14px; border-radius: 12px; font-weight: 700; font-size: 1rem; cursor: pointer; box-shadow: 0 4px 12px rgba(0, 119, 200, 0.3);">Approve & Allocate</button>
                         </div>
                     </div>
                 </div>
-
-                <nav class="bottom-nav">
-                    <div class="nav-item active">
-                        <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-                        <span>Home</span>
-                    </div>
-                    <div class="nav-item">
-                        <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
-                        <span>Activity</span>
-                    </div>
-                    <div class="qris-btn-container">
-                        <div class="qris-btn">
-                            <svg viewBox="0 0 24 24"><path d="M4 4h7v7H4V4zm2 2v3h3V6H6zm8-2h7v7h-7V4zm2 2v3h3V6h-3zM4 13h7v7H4v-7zm2 2v3h3v-3H6zm8 0h3v3h-3v-3zm3-3h3v3h-3v-3zm0 6h3v3h-3v-3zm-3 3h3v-3h-3v3zm3-3v-3h-3v3h3z"/></svg>
-                        </div>
-                        <div class="qris-label">QRIS</div>
-                    </div>
-                        <div class="nav-item">
-                            <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                            <span>For You</span>
-                        </div>
-                        <div class="nav-item">
-                            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
-                            <span>My Account</span>
-                        </div>
-                    </nav>
-                </div>
-            `,
+            </div>
+        `,
         qrisSelection: () => `
             <div class="qris-selection-screen">
                 <header class="blue-header">
@@ -603,7 +767,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="qris-content">
                     <div class="qris-info">
                         <h3>Pilih Poket Sumber Dana</h3>
-                        <p>Kontrol pengeluaranmu dengan memilih poket yang sesuai.</p>
+                        <p>Pay with QRIS directly from your pocket (food, shopping, and more).</p>
                     </div>
                     <div class="qris-pocket-list">
                         ${state.pockets.map(p => `
@@ -694,6 +858,201 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 </div>
             </div>
+        `,
+        pocketDetail: () => `
+            <div class="pocket-detail-screen" style="background: #F1F5F9; min-height: 100vh;">
+                <header class="blue-header" style="height: 130px; align-items: flex-start; padding-top: 40px;">
+                    <div class="back-btn" id="btnBackToPocketsList">
+                        <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+                    </div>
+                    <h2 class="header-title">Rupiah Pocket</h2>
+                    <div class="header-options">
+                        <svg viewBox="0 0 24 24" fill="white" width="24" height="24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+                    </div>
+                </header>
+
+                <div class="pocket-detail-content" style="margin-top: -20px; padding: 0 16px; position: relative; z-index: 1;">
+                    <div class="pd-card">
+                        <div class="pd-account-row">
+                            <span class="pd-acc-label">Pocket Account No.</span>
+                            <div class="pd-acc-number">
+                                <strong>888 - 005 - 470 - 7848 - 0800</strong>
+                                <span class="copy-icon" id="btnCopyPocketAcc">📋</span>
+                            </div>
+                            <span class="acc-arrow">></span>
+                        </div>
+                        
+                        <div class="pd-main-info">
+                            <div class="pd-icon-title">
+                                <span class="pd-icon">🚗</span>
+                                <h3>Buying a house</h3>
+                            </div>
+                            <h2 class="pd-balance">IDR 0.00</h2>
+                            <span class="pd-category">Transportation</span>
+                        </div>
+                        
+                        <div class="pd-actions">
+                            <div class="pd-action-item" id="btnPocketTopUp">
+                                <div class="pd-action-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></div>
+                                <span>Top Up</span>
+                            </div>
+                            <div class="pd-action-item" id="btnPocketTransfer">
+                                <div class="pd-action-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"/></svg></div>
+                                <span>Transfer</span>
+                            </div>
+                            <div class="pd-action-item" id="btnPocketLock">
+                                <div class="pd-action-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg></div>
+                                <span>Lock</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h3 class="pd-section-title">ACCOUNT TRANSACTIONS</h3>
+                    <div class="pd-search-row">
+                        <div class="pd-search-box">
+                            <span class="search-icon">🔍</span>
+                            <input type="text" placeholder="Search" style="background: transparent;">
+                        </div>
+                        <div class="pd-filter-btn">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/></svg>
+                        </div>
+                    </div>
+                    
+                    <div class="pd-empty-state">
+                        <div class="empty-doc-icon"></div>
+                        <p>No transaction found.</p>
+                    </div>
+                </div>
+            </div>
+        `,
+        pocketTransfer: () => `
+            <div class="pocket-transfer-screen" style="background: #F1F5F9; min-height: 100vh;">
+                <header class="blue-header" style="height: 130px; align-items: flex-start; padding-top: 40px;">
+                    <div class="back-btn" id="btnBackToPocketDetail">
+                        <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+                    </div>
+                    <h2 class="header-title">Transfer</h2>
+                </header>
+
+                <div class="transfer-content" style="margin-top: -20px; padding: 0 16px; position: relative; z-index: 1;">
+                    <div class="pt-card">
+                        <div class="pt-recipient">
+                            <div class="recipient-avatar">
+                                <svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                            </div>
+                            <div class="recipient-info">
+                                <h3>MUHAMMAD RAFKI YUDAWIJAYA</h3>
+                                <span>547 - 078 - 4808 - IDR</span>
+                            </div>
+                        </div>
+                        
+                        <div class="pt-source-fund">
+                            <label>Source of Fund</label>
+                            <div class="source-box">
+                                <h4>Buying a house</h4>
+                                <span>888 - 005 - 470 - 7848 - 0800</span>
+                            </div>
+                        </div>
+                        
+                        <div class="pt-amount-input">
+                            <div class="currency-label">IDR</div>
+                            <div class="amount-field-wrapper">
+                                <label>Amount</label>
+                                <input type="number" id="transferAmount" placeholder="">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="primary-button disabled" id="btnTransferContinue" style="margin-top: 32px; background: #D1D5DB; color: white;">Continue</button>
+                </div>
+            </div>
+        `,
+        pocketTopUp: () => `
+            <div class="pocket-topup-screen" style="background: #F1F5F9; min-height: 100vh;">
+                <header class="blue-header" style="height: 130px; align-items: flex-start; padding-top: 40px;">
+                    <div class="back-btn" id="btnBackToPocketDetailFromTopUp">
+                        <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+                    </div>
+                    <h2 class="header-title">Top Up</h2>
+                </header>
+
+                <div class="transfer-content" style="margin-top: -20px; padding: 0 16px; position: relative; z-index: 1;">
+                    <div class="pt-card">
+                        <div class="pt-recipient">
+                            <div class="recipient-avatar" style="background: #F0F9FF; color: #0077C8;">
+                                <svg viewBox="0 0 24 24" fill="currentColor" width="32" height="32"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5l1.5-4.5h11L19 11H5z"/></svg>
+                            </div>
+                            <div class="recipient-info">
+                                <h3 style="font-size: 1rem; color: #003366;">Buying a house</h3>
+                                <span>888 - 005 - 470 - 7848 - 0800</span>
+                            </div>
+                        </div>
+                        
+                        <div class="pt-source-fund">
+                            <label>Source of Fund</label>
+                            <div class="source-box" style="display: flex; flex-direction: column; gap: 4px;">
+                                <h4 style="font-size: 1rem; color: #003366;">547 - 078 - 4808</h4>
+                                <span style="text-transform: uppercase;">TAHAPAN XPRESI - IDR</span>
+                            </div>
+                        </div>
+                        
+                        <div class="pt-amount-input">
+                            <div class="currency-label">IDR</div>
+                            <div class="amount-field-wrapper">
+                                <label>Amount</label>
+                                <input type="number" id="topupAmount" placeholder="">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="primary-button disabled" id="btnTopUpContinue" style="margin-top: 32px; background: #D1D5DB; color: white;">Continue</button>
+                </div>
+            </div>
+        `,
+        pocketLock: () => `
+            <div class="pocket-lock-screen" style="background: #F1F5F9; min-height: 100vh;">
+                <header class="blue-header" style="height: 130px; align-items: flex-start; padding-top: 40px;">
+                    <div class="back-btn" id="btnBackToPocketDetailFromLock">
+                        <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+                    </div>
+                    <h2 class="header-title">Lock Pocket</h2>
+                </header>
+
+                <div class="lock-content" style="margin-top: -20px; padding: 0; position: relative; z-index: 1;">
+                    <div class="pl-card" style="background: white; border-radius: 24px 24px 0 0; padding: 40px 20px; text-align: center; min-height: calc(100vh - 80px);">
+                        <div class="pl-illustration" style="margin-bottom: 40px; display: flex; justify-content: center; position: relative;">
+                            <div style="width: 100px; height: 100px; background: #003366; border-radius: 20px; position: relative;">
+                                <div style="position: absolute; top: 15px; right: 25px; width: 15px; height: 15px; background: #FDE047; border-radius: 50%;"></div>
+                                <div style="position: absolute; bottom: -10px; left: -10px; width: 50px; height: 60px; background: #00A3E0; border-radius: 10px; display: flex; justify-content: center; align-items: center;">
+                                    <span style="color: white; font-size: 1.5rem;">🔒</span>
+                                </div>
+                                <div style="position: absolute; top: -10px; right: -20px; width: 40px; height: 40px; background: #10B981; border-radius: 50%; display: flex; justify-content: center; align-items: center; border: 3px solid white;">
+                                    <span style="color: white; font-size: 1.2rem;">🏦</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="pl-feature">
+                            <div class="pl-feature-icon">🔒</div>
+                            <div class="pl-feature-text">
+                                <h4>Pocket Cannot Be Used for Transactions</h4>
+                                <p>Maintain your commitment to saving. When the Pocket is locked, all incoming funds cannot be used for transactions.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="pl-feature">
+                            <div class="pl-feature-icon">🏦</div>
+                            <div class="pl-feature-text">
+                                <h4>Unlock your Pocket at the nearest BCA ATM/Branch</h4>
+                                <p>A locked Pocket can only be opened at the nearest BCA ATM/Branch.</p>
+                                <a href="#" class="guide-link">Guide to Unlock Pocket</a>
+                            </div>
+                        </div>
+                        
+                        <button class="primary-button" id="btnLockPocketNow" style="margin-top: 60px;">Lock Pocket Now</button>
+                    </div>
+                </div>
+            </div>
         `
     };
 
@@ -763,12 +1122,20 @@ document.addEventListener('DOMContentLoaded', () => {
             const btnBack = document.getElementById('btnBackToHomeFromPockets');
             if (btnBack) btnBack.onclick = () => navigateTo('home');
             
-            const btnTour = document.getElementById('btnStartTour');
-            if (btnTour) btnTour.onclick = () => {
-                state.showTour = true;
-                initTour();
-                document.querySelector('.tour-overlay').classList.add('show');
-            };
+            // Tab switching logic
+            const tabs = document.querySelectorAll('.ai-tab');
+            const contents = document.querySelectorAll('.ai-tab-content');
+            tabs.forEach(tab => {
+                tab.onclick = () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    contents.forEach(c => c.style.display = 'none');
+                    
+                    tab.classList.add('active');
+                    const targetId = 'tab-' + tab.getAttribute('data-target');
+                    const contentEl = document.getElementById(targetId);
+                    if (contentEl) contentEl.style.display = 'block';
+                };
+            });
 
             const cfToggles = document.querySelectorAll('.intelligent-control-section .toggle-switch');
             cfToggles.forEach(toggle => {
@@ -786,6 +1153,56 @@ document.addEventListener('DOMContentLoaded', () => {
             // Add click for View All to go to createForm for now
             const btnViewAll = document.querySelector('.pocket-view-all-card');
             if (btnViewAll) btnViewAll.onclick = () => navigateTo('createForm');
+
+            const pocketCards = document.querySelectorAll('.pocket-idr-card');
+            pocketCards.forEach(card => {
+                card.style.cursor = 'pointer';
+                card.onclick = () => navigateTo('pocketDetail');
+            });
+            
+            // Allocation Flow Listeners
+            const btnReview = document.getElementById('btnReviewAllocation');
+            const overlay = document.querySelector('.allocation-overlay');
+            if (btnReview && overlay) {
+                btnReview.onclick = () => {
+                    overlay.style.display = 'flex';
+                    overlay.offsetHeight; // force reflow
+                    overlay.style.opacity = '1';
+                    overlay.classList.add('show');
+                };
+            }
+            
+            const btnCancelAlloc = document.getElementById('btnCancelAllocation');
+            if (btnCancelAlloc && overlay) {
+                btnCancelAlloc.onclick = () => {
+                    overlay.style.opacity = '0';
+                    setTimeout(() => {
+                        overlay.style.display = 'none';
+                        overlay.classList.remove('show');
+                    }, 300);
+                };
+            }
+            
+            const btnApproveAlloc = document.getElementById('btnApproveAllocation');
+            if (btnApproveAlloc && overlay) {
+                btnApproveAlloc.onclick = () => {
+                    showToast("Funds successfully allocated! ✨");
+                    overlay.style.opacity = '0';
+                    setTimeout(() => {
+                        overlay.style.display = 'none';
+                        overlay.classList.remove('show');
+                        state.pendingAllocation = false; // remove banner
+                        
+                        // Simulate balance updates for pockets
+                        state.pockets[0].balance = "3.500.000"; // +1m
+                        state.pockets[1].balance = "7.000.000"; // +1m
+                        state.pockets[2].balance = "1.700.000"; // +500k
+                        
+                        // Re-render dashboard to show updated balances
+                        navigateTo('pocketsDashboard');
+                    }, 300);
+                };
+            }
         } else if (screenName === 'createForm') {
             document.getElementById('btnBackToPockets').onclick = () => navigateTo('pocketsDashboard');
             
@@ -799,13 +1216,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
             });
 
-            const toggle = document.querySelector('.toggle-switch');
-            if (toggle) {
+            const allToggles = document.querySelectorAll('.create-pocket-screen .toggle-switch');
+            allToggles.forEach(toggle => {
                 toggle.onclick = () => {
                     toggle.classList.toggle('active');
-                    state.newPocketData.locked = toggle.classList.contains('active');
+                    
+                    const toggleLabelGroup = toggle.closest('.form-group-toggle');
+                    if (toggleLabelGroup && toggleLabelGroup.querySelector('label').textContent === 'Locked Pocket') {
+                        state.newPocketData.locked = toggle.classList.contains('active');
+                    }
+                    
+                    if (toggle.id === 'autodebitToggle') {
+                        const settings = document.getElementById('autodebitSettings');
+                        settings.style.display = toggle.classList.contains('active') ? 'block' : 'none';
+                    }
+                    
+                    if (toggle.id === 'aiAutodebitToggle') {
+                        showToast(toggle.classList.contains('active') ? "AI Recommendation Enabled" : "AI Recommendation Disabled");
+                    }
                 };
-            }
+            });
 
             const btnCategory = document.getElementById('btnSelectCategory');
             const modal = document.getElementById('categoryModal');
@@ -902,6 +1332,63 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('btnBackFromRewards').onclick = () => navigateTo('home');
         } else if (screenName === 'onboarding') {
             document.getElementById('navHomeFromTracker').onclick = () => navigateTo('home');
+        } else if (screenName === 'pocketDetail') {
+            document.getElementById('btnBackToPocketsList').onclick = () => navigateTo('pocketsDashboard');
+            document.getElementById('btnPocketTopUp').onclick = () => navigateTo('pocketTopUp');
+            document.getElementById('btnPocketTransfer').onclick = () => navigateTo('pocketTransfer');
+            document.getElementById('btnPocketLock').onclick = () => navigateTo('pocketLock');
+            const btnCopy = document.getElementById('btnCopyPocketAcc');
+            if (btnCopy) btnCopy.onclick = () => showToast("Account number copied!");
+        } else if (screenName === 'pocketTransfer') {
+            document.getElementById('btnBackToPocketDetail').onclick = () => navigateTo('pocketDetail');
+            
+            const amtInput = document.getElementById('transferAmount');
+            const btnContinue = document.getElementById('btnTransferContinue');
+            if (amtInput && btnContinue) {
+                amtInput.addEventListener('input', (e) => {
+                    if (e.target.value.length > 0) {
+                        btnContinue.classList.remove('disabled');
+                        btnContinue.style.background = 'var(--primary-blue)';
+                    } else {
+                        btnContinue.classList.add('disabled');
+                        btnContinue.style.background = '#D1D5DB';
+                    }
+                });
+                btnContinue.onclick = () => {
+                    if (!btnContinue.classList.contains('disabled')) {
+                        showToast("Transfer processed!");
+                        setTimeout(() => navigateTo('pocketDetail'), 1000);
+                    }
+                };
+            }
+        } else if (screenName === 'pocketLock') {
+            document.getElementById('btnBackToPocketDetailFromLock').onclick = () => navigateTo('pocketDetail');
+            document.getElementById('btnLockPocketNow').onclick = () => {
+                showToast("Pocket successfully locked!");
+                setTimeout(() => navigateTo('pocketDetail'), 1000);
+            };
+        } else if (screenName === 'pocketTopUp') {
+            document.getElementById('btnBackToPocketDetailFromTopUp').onclick = () => navigateTo('pocketDetail');
+            
+            const amtInput = document.getElementById('topupAmount');
+            const btnContinue = document.getElementById('btnTopUpContinue');
+            if (amtInput && btnContinue) {
+                amtInput.addEventListener('input', (e) => {
+                    if (e.target.value.length > 0) {
+                        btnContinue.classList.remove('disabled');
+                        btnContinue.style.background = 'var(--primary-blue)';
+                    } else {
+                        btnContinue.classList.add('disabled');
+                        btnContinue.style.background = '#D1D5DB';
+                    }
+                });
+                btnContinue.onclick = () => {
+                    if (!btnContinue.classList.contains('disabled')) {
+                        showToast("Top Up successful!");
+                        setTimeout(() => navigateTo('pocketDetail'), 1000);
+                    }
+                };
+            }
         }
     }
 

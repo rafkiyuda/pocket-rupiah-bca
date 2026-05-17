@@ -2167,3 +2167,540 @@ body {
     color: var(--text-secondary);
     text-align: center;
 }
+
+/* Pocket Detail Screen */
+.pocket-detail-screen, .pocket-transfer-screen, .pocket-lock-screen {
+    position: relative;
+}
+
+.pd-card {
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    margin-bottom: 24px;
+}
+
+.pd-account-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #F1F5F9;
+    margin-bottom: 16px;
+    padding-top: 16px;
+}
+
+.pd-acc-label {
+    font-size: 0.75rem;
+    color: #64748B;
+    position: absolute;
+    top: -4px;
+    left: 0;
+}
+
+.pd-acc-number {
+    font-size: 0.95rem;
+    color: #334155;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.copy-icon {
+    font-size: 1rem;
+    color: #0077C8;
+    cursor: pointer;
+}
+
+.pd-main-info {
+    margin-bottom: 24px;
+}
+
+.pd-icon-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.pd-icon {
+    font-size: 1.2rem;
+    color: #0077C8;
+}
+
+.pd-icon-title h3 {
+    font-size: 0.95rem;
+    color: #003366;
+}
+
+.pd-balance {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 4px;
+}
+
+.pd-category {
+    font-size: 0.85rem;
+    color: #64748B;
+}
+
+.pd-actions {
+    display: flex;
+    justify-content: space-around;
+    border-top: 1px solid #F1F5F9;
+    padding-top: 16px;
+}
+
+.pd-action-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.pd-action-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid #E2E8F0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #0077C8;
+    transition: var(--transition-smooth);
+}
+
+.pd-action-item:hover .pd-action-icon {
+    background: #F0F9FF;
+}
+
+.pd-action-item span {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #0077C8;
+}
+
+.pd-section-title {
+    font-size: 0.9rem;
+    color: #003366;
+    margin-bottom: 12px;
+}
+
+.pd-search-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 40px;
+}
+
+.pd-search-box {
+    flex: 1;
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #E2E8F0;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+}
+
+.pd-search-box input {
+    border: none;
+    outline: none;
+    padding: 12px 8px;
+    width: 100%;
+    font-size: 0.95rem;
+}
+
+.pd-filter-btn {
+    width: 44px;
+    height: 44px;
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #E2E8F0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #64748B;
+}
+
+.pd-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 0;
+}
+
+.empty-doc-icon {
+    width: 80px;
+    height: 100px;
+    background: #E0F2FE;
+    border-radius: 8px;
+    position: relative;
+    margin-bottom: 24px;
+    opacity: 0.8;
+}
+.empty-doc-icon::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 10px;
+    width: 100%;
+    height: 100%;
+    background: #BAE6FD;
+    border-radius: 8px;
+    z-index: -1;
+}
+
+.empty-doc-icon::after {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 15px;
+    width: 50px;
+    height: 6px;
+    background: white;
+    border-radius: 3px;
+    box-shadow: 0 12px 0 white, 0 24px 0 white, 0 36px 0 white;
+}
+
+.pd-empty-state p {
+    color: #64748B;
+    font-size: 0.95rem;
+}
+
+/* Pocket Transfer Screen */
+.pt-card {
+    background: white;
+    border-radius: 20px;
+    padding: 24px 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.pt-recipient {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+.recipient-avatar {
+    width: 56px;
+    height: 56px;
+    background: #0077C8;
+    border-radius: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.recipient-info h3 {
+    font-size: 0.9rem;
+    color: #003366;
+    margin-bottom: 4px;
+}
+
+.recipient-info span {
+    font-size: 0.8rem;
+    color: #64748B;
+}
+
+.pt-source-fund label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #0077C8;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.source-box {
+    border: 1px solid #00A3E0;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 32px;
+}
+
+.source-box h4 {
+    color: #003366;
+    margin-bottom: 4px;
+}
+
+.source-box span {
+    color: #64748B;
+    font-size: 0.85rem;
+}
+
+.pt-amount-input {
+    display: flex;
+    align-items: flex-end;
+    gap: 16px;
+}
+
+.pt-amount-input .currency-label {
+    font-size: 1rem;
+    color: #64748B;
+    padding-bottom: 8px;
+}
+
+.amount-field-wrapper {
+    flex: 1;
+    position: relative;
+}
+
+.amount-field-wrapper label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #003366;
+    position: absolute;
+    top: -20px;
+    left: 0;
+}
+
+.amount-field-wrapper input {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid #1e293b;
+    padding: 8px 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1e293b;
+    outline: none;
+    background: transparent;
+}
+
+/* Pocket Lock Screen */
+.pl-feature {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    text-align: left;
+    margin-bottom: 24px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #F1F5F9;
+}
+
+.pl-feature:last-of-type {
+    border-bottom: none;
+}
+
+.pl-feature-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: #F0F9FF;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    color: #0077C8;
+    flex-shrink: 0;
+}
+
+.pl-feature-text h4 {
+    font-size: 0.95rem;
+    color: #003366;
+    margin-bottom: 8px;
+}
+
+.pl-feature-text p {
+    font-size: 0.85rem;
+    color: #64748B;
+    line-height: 1.5;
+    margin-bottom: 8px;
+}
+
+.guide-link {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #0077C8;
+    text-decoration: none;
+}
+
+/* Account Information UI */
+.ai-account-card {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    margin-bottom: 24px;
+}
+
+.ai-acc-top {
+    background: #6A8CA6;
+    padding: 16px;
+    color: white;
+}
+
+.ai-acc-top .ai-label {
+    font-size: 0.75rem;
+    opacity: 0.9;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.ai-acc-top .ai-number {
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ai-acc-bottom {
+    background: white;
+    padding: 16px;
+}
+
+.ai-balance-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ai-balance-info {
+    flex: 1;
+}
+
+.ai-label-dark {
+    font-size: 0.75rem;
+    color: #64748B;
+    display: block;
+}
+
+.ai-balance-amount {
+    font-size: 1.2rem;
+    color: #1e293b;
+    margin: 4px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ai-type {
+    font-size: 0.75rem;
+    color: #64748B;
+    display: block;
+    text-transform: uppercase;
+}
+
+.ai-date {
+    font-size: 0.65rem;
+    color: #94A3B8;
+    display: block;
+    margin-top: 4px;
+}
+
+.ai-tabs-container {
+    display: flex;
+    background: white;
+    border-radius: 12px 12px 0 0;
+    overflow: hidden;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.ai-tab {
+    flex: 1;
+    text-align: center;
+    padding: 16px 0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #64748B;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+}
+
+.ai-tab.active {
+    color: #0077C8;
+    border-bottom-color: #0077C8;
+}
+
+.transaction-list {
+    background: white;
+    border-radius: 12px;
+    padding: 0 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.transaction-item {
+    display: flex;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid #F1F5F9;
+}
+
+.transaction-item:last-child {
+    border-bottom: none;
+}
+
+.tx-date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #64748B;
+    min-width: 40px;
+}
+
+.tx-day { font-size: 1.4rem; font-weight: 600; }
+.tx-month, .tx-year { font-size: 0.7rem; }
+
+.tx-details { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+.tx-desc { font-size: 0.75rem; font-weight: 600; color: #003366; margin-bottom: 4px; line-height: 1.4; }
+.tx-amount { font-size: 0.85rem; font-weight: 700; }
+.tx-amount.in { color: #0ea5e9; }
+.tx-amount.out { color: #ef4444; }
+
+.card-item-box {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.card-img-placeholder {
+    width: 60px;
+    height: 40px;
+    background: linear-gradient(135deg, #00A3E0, #FDE047);
+    border-radius: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+}
+
+.card-info { flex: 1; }
+.card-info strong { display: block; font-size: 0.85rem; color: #1e293b; margin-bottom: 4px; }
+.card-info span { font-size: 0.7rem; color: #64748B; }
+
+.pocket-icon-blue {
+    width: 40px;
+    height: 40px;
+    background: #0077C8;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.rp-badge {
+    position: absolute;
+    bottom: -6px;
+    left: -6px;
+    background: #FDE047;
+    color: #1e293b;
+    font-size: 0.5rem;
+    font-weight: bold;
+    padding: 2px 4px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+@keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
