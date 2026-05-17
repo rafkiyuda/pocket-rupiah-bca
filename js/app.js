@@ -1692,27 +1692,27 @@ document.addEventListener('DOMContentLoaded', () => {
             const ecoPills = document.querySelectorAll('.eco-pill');
             ecoPills.forEach(pill => {
                 pill.onclick = () => {
-                    const isActive = pill.classList.contains('active');
-                    if (!isActive) {
-                        pill.classList.add('active');
-                        pill.style.background = '#0077C8';
-                        pill.style.color = 'white';
-                        pill.style.border = '1px solid #0077C8';
-                        const ecoType = pill.getAttribute('data-eco');
-                        if (ecoType === 'Investasi') {
-                            showToast("📈 API Connected: myBCA Investasi — Reksa Dana");
-                        } else if (ecoType === 'BCALife') {
-                            showToast("🛡️ API Connected: BCA Life Insurance Engine");
-                        } else if (ecoType === 'Finance') {
-                            showToast("🚗 API Connected: BCA Finance Quotation");
+                    const ecoType = pill.getAttribute('data-eco');
+                    if (ecoType === 'QRIS') {
+                        // QRIS just toggles — it's a simple setting
+                        const isActive = pill.classList.contains('active');
+                        if (!isActive) {
+                            pill.classList.add('active');
+                            pill.style.background = '#0077C8'; pill.style.color = 'white'; pill.style.border = '1px solid #0077C8';
+                            showToast('✅ QRIS & Auto-Pay aktif untuk poket ini');
                         } else {
-                            showToast(`✅ ${pill.textContent.trim()} terhubung`);
+                            pill.classList.remove('active');
+                            pill.style.background = 'white'; pill.style.color = '#64748B'; pill.style.border = '1px solid #E2E8F0';
                         }
-                    } else {
-                        pill.classList.remove('active');
-                        pill.style.background = 'white';
-                        pill.style.color = '#64748B';
-                        pill.style.border = '1px solid #E2E8F0';
+                    } else if (ecoType === 'Investasi') {
+                        state.ecoInvestasiStep = 0;
+                        navigateTo('ecoInvestasi');
+                    } else if (ecoType === 'BCALife') {
+                        state.ecoBcaLifeStep = 0;
+                        navigateTo('ecoBcaLife');
+                    } else if (ecoType === 'Finance') {
+                        state.ecoBcaFinanceStep = 0;
+                        navigateTo('ecoBcaFinance');
                     }
                 };
             });
