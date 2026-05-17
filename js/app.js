@@ -28,6 +28,13 @@ document.addEventListener('DOMContentLoaded', () => {
         ecoBcaLifeStep: 0,
         ecoBcaFinanceStep: 0,
         ecoFinanceSim: { harga: 200000000, dp: 40000000, tenor: 36, cicilan: 4580000 },
+        existingBcaProducts: [
+            { id: 'fin1', type: 'finance', name: 'KKB Toyota Avanza', detail: 'Sisa 28 cicilan · Rp 4.580.000/bln', icon: '🚗', status: 'active', dueDate: 5 },
+            { id: 'life1', type: 'life', name: 'MyGuard Plus', detail: 'Premi Rp 42.000/bln · Auto-renew Apr 2026', icon: '🛡️', status: 'active', dueDate: 1 },
+            { id: 'inv1', type: 'investasi', name: 'BCA Dana Berencana', detail: 'Portofolio Rp 3.200.000 · Beli berkala Rp 500.000/bln', icon: '📈', status: 'active', dueDate: 25 }
+        ],
+        connectedLinks: [],
+        ecoConnectProductId: null,
         rewards: {
             points: 1250,
             level: "Budget Boss",
@@ -1071,6 +1078,90 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             </div>
         `,
+        ecoConnect: () => `
+            <div style="background:#F1F5F9;min-height:100vh;">
+                <header class="blue-header" style="height:130px;align-items:flex-start;padding-top:40px;">
+                    <div class="back-btn" id="btnBackFromEcoConnect"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></div>
+                    <h2 class="header-title">Hubungkan Produk BCA</h2>
+                </header>
+                <div style="margin-top:-20px;padding:0 16px;position:relative;z-index:1;padding-bottom:40px;">
+
+                    <!-- Step 1: Pilih produk existing -->
+                    <div id="ecoConnectStep0">
+                        <div style="background:white;border-radius:16px;padding:16px 20px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+                            <h3 style="color:#003366;font-size:0.95rem;font-weight:800;margin:0 0 4px;">Produk BCA Aktif Kamu</h3>
+                            <p style="font-size:0.75rem;color:#64748B;margin:0 0 16px;">Pilih produk yang ingin dihubungkan ke poket untuk auto-debit otomatis.</p>
+                            ${state.existingBcaProducts.map(prod => {
+                                const linked = state.connectedLinks.find(l => l.productId === prod.id);
+                                return `
+                                <div class="eco-connect-card" data-product-id="${prod.id}" style="border:${linked ? '2px solid #10B981' : '1px solid #E2E8F0'};border-radius:12px;padding:14px;margin-bottom:10px;background:${linked ? '#F0FDF4' : 'white'};cursor:pointer;display:flex;gap:14px;align-items:center;">
+                                    <div style="width:44px;height:44px;border-radius:12px;background:${linked ? '#DCFCE7' : '#F0F9FF'};display:flex;justify-content:center;align-items:center;font-size:1.4rem;flex-shrink:0;">${prod.icon}</div>
+                                    <div style="flex:1;">
+                                        <div style="font-weight:700;color:#003366;font-size:0.88rem;margin-bottom:3px;">${prod.name}</div>
+                                        <div style="font-size:0.72rem;color:#64748B;">${prod.detail}</div>
+                                        ${linked ? `<div style="font-size:0.7rem;color:#10B981;font-weight:700;margin-top:4px;">✅ Sudah terhubung ke Poket "makan"</div>` : `<div style="font-size:0.7rem;color:#0077C8;font-weight:600;margin-top:4px;">Auto-debit tgl ${prod.dueDate} setiap bulan</div>`}
+                                    </div>
+                                    <div style="width:22px;height:22px;border-radius:50%;border:2px solid ${linked ? '#10B981' : '#E2E8F0'};background:${linked ? '#10B981' : 'white'};display:flex;justify-content:center;align-items:center;flex-shrink:0;">
+                                        ${linked ? '<span style="color:white;font-size:0.75rem;">✓</span>' : ''}
+                                    </div>
+                                </div>`;
+                            }).join('')}
+
+                            <div style="border-top:1px solid #F1F5F9;margin-top:16px;padding-top:16px;">
+                                <p style="font-size:0.78rem;color:#64748B;margin:0 0 10px;">Belum punya produk yang kamu cari?</p>
+                                <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                                    <div class="eco-browse-new" data-type="investasi" style="padding:8px 14px;border-radius:20px;border:1px solid #E2E8F0;background:white;font-size:0.75rem;font-weight:600;color:#0077C8;cursor:pointer;">📈 Buka Investasi</div>
+                                    <div class="eco-browse-new" data-type="life" style="padding:8px 14px;border-radius:20px;border:1px solid #E2E8F0;background:white;font-size:0.75rem;font-weight:600;color:#0077C8;cursor:pointer;">🛡️ Beli Asuransi</div>
+                                    <div class="eco-browse-new" data-type="finance" style="padding:8px 14px;border-radius:20px;border:1px solid #E2E8F0;background:white;font-size:0.75rem;font-weight:600;color:#0077C8;cursor:pointer;">🚗 Ajukan KKB</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Pilih Poket (shown after selecting a product) -->
+                    <div id="ecoConnectStep1" style="display:none;">
+                        <div style="background:white;border-radius:16px;padding:16px 20px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+                            <div id="ecoConnectSelectedBanner" style="background:#F0F9FF;border-radius:10px;padding:10px 14px;margin-bottom:16px;display:flex;gap:12px;align-items:center;"></div>
+                            <h3 style="color:#003366;font-size:0.95rem;font-weight:800;margin:0 0 4px;">Pilih Poket Sumber Dana</h3>
+                            <p style="font-size:0.75rem;color:#64748B;margin:0 0 14px;">Cicilan/premi akan didebet otomatis dari poket yang dipilih setiap bulannya.</p>
+                            ${state.pockets.map(p => `
+                            <div class="eco-pocket-select" data-pocket-id="${p.id}" style="border:1px solid #E2E8F0;border-radius:12px;padding:14px;margin-bottom:10px;background:white;cursor:pointer;display:flex;gap:14px;align-items:center;">
+                                <div style="width:44px;height:44px;border-radius:12px;background:#F0F9FF;display:flex;justify-content:center;align-items:center;font-size:1.4rem;flex-shrink:0;">${p.type === 'emergency' ? '🚨' : p.type === 'shared' ? '👨‍👩‍👧' : '🚗'}</div>
+                                <div style="flex:1;">
+                                    <div style="font-weight:700;color:#003366;font-size:0.88rem;margin-bottom:2px;">${p.name}</div>
+                                    <div style="font-size:0.72rem;color:#64748B;">Saldo: IDR ${p.balance}</div>
+                                    <div style="height:4px;background:#E2E8F0;border-radius:2px;margin-top:6px;overflow:hidden;"><div style="height:100%;width:${p.progress}%;background:#0077C8;border-radius:2px;"></div></div>
+                                </div>
+                                <div style="font-size:0.7rem;color:#64748B;">${p.progress}%</div>
+                            </div>`).join('')}
+                            <div class="eco-pocket-select" data-pocket-id="new" style="border:1.5px dashed #0077C8;border-radius:12px;padding:14px;margin-bottom:10px;background:#F8FAFF;cursor:pointer;display:flex;gap:14px;align-items:center;">
+                                <div style="width:44px;height:44px;border-radius:12px;background:#EFF6FF;display:flex;justify-content:center;align-items:center;font-size:1.4rem;flex-shrink:0;">➕</div>
+                                <div style="flex:1;"><div style="font-weight:700;color:#0077C8;font-size:0.88rem;">Buat Poket Baru</div><div style="font-size:0.72rem;color:#64748B;">Buat poket khusus untuk produk ini</div></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Konfirmasi -->
+                    <div id="ecoConnectStep2" style="display:none;">
+                        <div style="background:white;border-radius:16px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+                            <div style="text-align:center;margin-bottom:20px;">
+                                <div style="font-size:3rem;margin-bottom:8px;">🔗</div>
+                                <h3 style="color:#003366;font-size:1rem;font-weight:800;margin-bottom:4px;">Konfirmasi Koneksi</h3>
+                                <p style="font-size:0.78rem;color:#64748B;">Periksa detail sebelum mengaktifkan auto-debit.</p>
+                            </div>
+                            <div id="ecoConnectSummary" style="background:#F8FAFC;border-radius:12px;padding:16px;margin-bottom:16px;"></div>
+                            <div style="background:#FFF7ED;border:1px solid #FED7AA;border-radius:10px;padding:12px;margin-bottom:16px;">
+                                <p style="font-size:0.75rem;color:#92400E;margin:0;">⚠️ Pastikan saldo poket mencukupi setiap tanggal jatuh tempo untuk menghindari gagal bayar.</p>
+                            </div>
+                            <p style="font-size:0.82rem;color:#64748B;margin-bottom:8px;text-align:center;">Masukkan PIN myBCA</p>
+                            <div style="display:flex;gap:10px;justify-content:center;margin-bottom:20px;">${Array(6).fill('<div style="width:40px;height:40px;border-radius:50%;border:2px solid #0077C8;display:flex;justify-content:center;align-items:center;font-size:1.2rem;color:#0077C8;">●</div>').join('')}</div>
+                            <button id="btnConfirmEcoConnect" style="width:100%;background:#0077C8;color:white;border:none;padding:14px;border-radius:12px;font-weight:700;font-size:0.95rem;cursor:pointer;">Aktifkan Auto-Debit ✓</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        `,
         onboardingTour: () => `
             <div class="tour-overlay ${state.showTour ? 'show' : ''}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10000; display: ${state.showTour ? 'block' : 'none'}; pointer-events: auto; overflow: hidden;">
                 
@@ -1289,6 +1380,36 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <span style="color: #0077C8; font-weight: 800;">›</span>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- LINKED PRODUCTS (existing BCA products auto-pay) -->
+                    <div style="margin-bottom: 24px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                            <h3 class="pd-section-title" style="margin: 0;">PRODUK TERHUBUNG</h3>
+                            <div class="eco-link-add-btn" style="background: #0077C8; color: white; font-size: 0.72rem; font-weight: 700; padding: 5px 12px; border-radius: 16px; cursor: pointer;">+ Hubungkan</div>
+                        </div>
+
+                        ${state.connectedLinks.length === 0 ? `
+                        <div style="background: white; border-radius: 12px; border: 1.5px dashed #CBD5E1; padding: 20px; text-align: center;">
+                            <div style="font-size: 2rem; margin-bottom: 8px;">🔗</div>
+                            <p style="font-size: 0.8rem; color: #64748B; margin: 0 0 12px;">Belum ada produk BCA yang terhubung ke poket ini.</p>
+                            <div class="eco-link-add-btn" style="display: inline-block; background: #0077C8; color: white; font-size: 0.78rem; font-weight: 700; padding: 8px 20px; border-radius: 20px; cursor: pointer;">Hubungkan Produk BCA</div>
+                        </div>` : `
+                        <div style="background: white; border-radius: 16px; border: 1px solid #F1F5F9; overflow: hidden;">
+                            ${state.connectedLinks.map((link, i) => {
+                                const prod = state.existingBcaProducts.find(p => p.id === link.productId);
+                                return prod ? `
+                                <div style="padding: 14px 16px; ${i < state.connectedLinks.length - 1 ? 'border-bottom: 1px solid #F1F5F9;' : ''} display: flex; gap: 14px; align-items: center;">
+                                    <div style="width: 40px; height: 40px; border-radius: 10px; background: #F0F9FF; display: flex; justify-content: center; align-items: center; font-size: 1.3rem; flex-shrink: 0;">${prod.icon}</div>
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: 700; font-size: 0.85rem; color: #003366; margin-bottom: 2px;">${prod.name}</div>
+                                        <div style="font-size: 0.72rem; color: #64748B;">${prod.detail}</div>
+                                        <div style="font-size: 0.7rem; color: #10B981; font-weight: 700; margin-top: 3px;">✅ Auto-debit tiap tgl ${prod.dueDate}</div>
+                                    </div>
+                                    <div class="eco-unlink-btn" data-link-id="${link.productId}" style="font-size: 0.68rem; color: #EF4444; border: 1px solid #FCA5A5; border-radius: 10px; padding: 4px 8px; cursor: pointer; white-space: nowrap;">Putus</div>
+                                </div>` : '';
+                            }).join('')}
+                        </div>`}
                     </div>
 
                     <h3 class="pd-section-title">ACCOUNT TRANSACTIONS</h3>
@@ -1775,18 +1896,97 @@ document.addEventListener('DOMContentLoaded', () => {
             ecoActions.forEach(action => {
                 action.onclick = () => {
                     const type = action.getAttribute('data-action');
-                    if (type === 'investasi') {
-                        state.ecoInvestasiStep = 0;
-                        navigateTo('ecoInvestasi');
-                    } else if (type === 'life') {
-                        state.ecoBcaLifeStep = 0;
-                        navigateTo('ecoBcaLife');
-                    } else if (type === 'finance') {
-                        state.ecoBcaFinanceStep = 0;
-                        navigateTo('ecoBcaFinance');
-                    }
+                    if (type === 'investasi') { state.ecoInvestasiStep = 0; navigateTo('ecoInvestasi'); }
+                    else if (type === 'life') { state.ecoBcaLifeStep = 0; navigateTo('ecoBcaLife'); }
+                    else if (type === 'finance') { state.ecoBcaFinanceStep = 0; navigateTo('ecoBcaFinance'); }
                 };
             });
+
+            // Linked Products section
+            document.querySelectorAll('.eco-link-add-btn').forEach(btn => {
+                btn.onclick = () => navigateTo('ecoConnect');
+            });
+            document.querySelectorAll('.eco-unlink-btn').forEach(btn => {
+                btn.onclick = () => {
+                    const pid = btn.getAttribute('data-link-id');
+                    state.connectedLinks = state.connectedLinks.filter(l => l.productId !== pid);
+                    showToast('🔗 Koneksi produk diputus');
+                    setTimeout(() => navigateTo('pocketDetail'), 800);
+                };
+            });
+        } else if (screenName === 'ecoConnect') {
+            document.getElementById('btnBackFromEcoConnect').onclick = () => navigateTo('pocketDetail');
+
+            let selectedProductId = null;
+            let selectedPocketId = null;
+
+            const step0 = document.getElementById('ecoConnectStep0');
+            const step1 = document.getElementById('ecoConnectStep1');
+            const step2 = document.getElementById('ecoConnectStep2');
+
+            // Select existing product
+            document.querySelectorAll('.eco-connect-card').forEach(card => {
+                card.onclick = () => {
+                    const alreadyLinked = state.connectedLinks.find(l => l.productId === card.getAttribute('data-product-id'));
+                    if (alreadyLinked) {
+                        showToast('✅ Produk ini sudah terhubung ke poket');
+                        return;
+                    }
+                    selectedProductId = card.getAttribute('data-product-id');
+                    const prod = state.existingBcaProducts.find(p => p.id === selectedProductId);
+                    // Update banner
+                    const banner = document.getElementById('ecoConnectSelectedBanner');
+                    banner.innerHTML = `<div style="font-size:1.5rem;">${prod.icon}</div><div><div style="font-weight:700;font-size:0.85rem;color:#003366;">${prod.name}</div><div style="font-size:0.72rem;color:#0369A1;">${prod.detail}</div></div>`;
+                    step0.style.display = 'none';
+                    step1.style.display = 'block';
+                };
+            });
+
+            // Browse new products shortcut
+            document.querySelectorAll('.eco-browse-new').forEach(btn => {
+                btn.onclick = () => {
+                    const type = btn.getAttribute('data-type');
+                    if (type === 'investasi') { state.ecoInvestasiStep = 0; navigateTo('ecoInvestasi'); }
+                    else if (type === 'life') { state.ecoBcaLifeStep = 0; navigateTo('ecoBcaLife'); }
+                    else if (type === 'finance') { state.ecoBcaFinanceStep = 0; navigateTo('ecoBcaFinance'); }
+                };
+            });
+
+            // Select pocket
+            document.querySelectorAll('.eco-pocket-select').forEach(card => {
+                card.onclick = () => {
+                    selectedPocketId = card.getAttribute('data-pocket-id');
+                    if (selectedPocketId === 'new') {
+                        showToast('📝 Navigating to Create Pocket...');
+                        setTimeout(() => navigateTo('createForm'), 800);
+                        return;
+                    }
+                    const prod = state.existingBcaProducts.find(p => p.id === selectedProductId);
+                    const pocket = state.pockets.find(p => p.id === parseInt(selectedPocketId));
+                    const summary = document.getElementById('ecoConnectSummary');
+                    summary.innerHTML = [
+                        ['Produk BCA', `${prod.icon} ${prod.name}`],
+                        ['Auto-Debit Dari', `Poket "${pocket.name}" (IDR ${pocket.balance})`],
+                        ['Nominal', prod.detail.split('·')[1]?.trim() || '-'],
+                        ['Tanggal Debit', `Setiap tgl ${prod.dueDate}`],
+                        ['Status', '🟡 Menunggu Konfirmasi']
+                    ].map(([k, v]) => `<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #F1F5F9;"><span style="font-size:0.77rem;color:#64748B;">${k}</span><span style="font-size:0.77rem;font-weight:700;color:#1e293b;">${v}</span></div>`).join('');
+                    step1.style.display = 'none';
+                    step2.style.display = 'block';
+                };
+            });
+
+            // Confirm connection
+            const btnConfirm = document.getElementById('btnConfirmEcoConnect');
+            if (btnConfirm) {
+                btnConfirm.onclick = () => {
+                    if (selectedProductId && selectedPocketId) {
+                        state.connectedLinks.push({ productId: selectedProductId, pocketId: selectedPocketId });
+                        showToast('🎉 Auto-debit berhasil diaktifkan!');
+                        setTimeout(() => navigateTo('pocketDetail'), 1200);
+                    }
+                };
+            }
         } else if (screenName === 'pocketTransfer') {
             document.getElementById('btnBackToPocketDetail').onclick = () => navigateTo('pocketDetail');
             
