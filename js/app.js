@@ -458,10 +458,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                     
                     <!-- Tabs -->
-                    <div class="ai-tabs-container">
+                    <div class="ai-tabs-container" style="overflow-x: auto; white-space: nowrap; scrollbar-width: none;">
                         <div class="ai-tab" data-target="transactions">Account Transactions</div>
                         <div class="ai-tab" data-target="card">Card</div>
                         <div class="ai-tab active" data-target="pocket">Pocket</div>
+                        <div class="ai-tab" data-target="insight">Insight</div>
                     </div>
                     
                     <!-- Tab Contents -->
@@ -582,7 +583,14 @@ document.addEventListener('DOMContentLoaded', () => {
                                         </div>
                                         <div class="pi-info" style="flex: 1;">
                                             <div style="font-size: 1.1rem; font-weight: 800; color: #1e293b; margin-bottom: 4px;">IDR <span class="dots">●●●●●●●</span></div>
-                                            <div style="font-size: 0.8rem; color: #64748B;">${p.name}</div>
+                                            <div style="font-size: 0.8rem; color: #64748B; margin-bottom: 6px;">${p.name}</div>
+                                            <!-- Mini Progress Bar -->
+                                            <div style="display: flex; align-items: center; gap: 8px;">
+                                                <div style="flex: 1; height: 4px; background: #E2E8F0; border-radius: 2px; overflow: hidden;">
+                                                    <div style="height: 100%; width: ${p.progress}%; background: ${p.progress >= 50 ? '#10B981' : '#0077C8'}; border-radius: 2px;"></div>
+                                                </div>
+                                                <span style="font-size: 0.65rem; color: #64748B; font-weight: 700;">${p.progress}%</span>
+                                            </div>
                                         </div>
                                         <span class="acc-arrow" style="font-size: 1.4rem; color: #0077C8; font-weight: 300;">></span>
                                     </div>
@@ -683,6 +691,51 @@ document.addEventListener('DOMContentLoaded', () => {
                         <!-- END RE-ADDED FEATURES -->
                         
                     </div>
+                    
+                    <!-- INSIGHT TAB -->
+                    <div class="ai-tab-content" id="tab-insight" style="display: none;">
+                        <div class="goal-motivation-engine" style="margin-bottom: 24px;">
+                            <h3 style="margin-bottom: 16px; color: #003366; font-size: 1rem;">Overall Progress</h3>
+                            
+                            <!-- Overall Progress Dashboard -->
+                            <div style="background: white; border-radius: 16px; padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); margin-bottom: 16px; border: 1px solid #F1F5F9;">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 12px;">
+                                    <div>
+                                        <h3 style="font-size: 0.95rem; color: #003366; margin-bottom: 4px; font-weight: 800;">Total Goals</h3>
+                                        <div style="font-size: 0.75rem; color: #64748B;">Target: IDR 30.000.000</div>
+                                    </div>
+                                    <div style="font-size: 1.3rem; font-weight: 800; color: #0077C8;">32%</div>
+                                </div>
+                                
+                                <!-- Progress Bar -->
+                                <div style="height: 14px; background: #E2E8F0; border-radius: 8px; overflow: hidden; margin-bottom: 20px;">
+                                    <div style="height: 100%; width: 32%; background: linear-gradient(90deg, #0077C8, #00A3E0); border-radius: 8px;"></div>
+                                </div>
+                                
+                                <!-- Predictive Time-to-Goal -->
+                                <div style="background: #F0F9FF; border-left: 3px solid #00A3E0; padding: 12px 16px; border-radius: 0 8px 8px 0; display: flex; gap: 12px; align-items: flex-start;">
+                                    <div style="font-size: 1.2rem; margin-top: -2px;">🤖</div>
+                                    <div>
+                                        <h4 style="font-size: 0.8rem; color: #0369A1; font-weight: 800; margin-bottom: 4px;">AI Wealth Insight</h4>
+                                        <p style="font-size: 0.75rem; color: #0284C7; line-height: 1.4; margin: 0;">You are saving consistently across 3 active pockets. At this rate, your total goals will be met by <strong>August 2028</strong>.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <h3 style="margin-bottom: 16px; margin-top: 24px; color: #003366; font-size: 1rem;">Pocket Performance</h3>
+                            <div style="background: white; border-radius: 16px; padding: 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); border: 1px solid #F1F5F9;">
+                                ${state.pockets.map(p => `
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                    <span style="font-size: 0.85rem; color: #1e293b; font-weight: 600;">${p.type === 'emergency' ? '🚨' : p.type === 'shared' ? '👨‍👩‍👧' : '🚗'} ${p.name}</span>
+                                    <span style="font-size: 0.8rem; color: ${p.progress >= 50 ? '#10B981' : '#0077C8'}; font-weight: 700;">${p.progress}%</span>
+                                </div>
+                                <div style="height: 6px; background: #E2E8F0; border-radius: 3px; overflow: hidden; margin-bottom: 16px;">
+                                    <div style="height: 100%; width: ${p.progress}%; background: ${p.progress >= 50 ? '#10B981' : '#0077C8'}; border-radius: 3px;"></div>
+                                </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 
                 <!-- Allocation Modal Overlay -->
@@ -757,31 +810,98 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `,
         qrisSelection: () => `
-            <div class="qris-selection-screen">
-                <header class="blue-header">
-                    <div class="back-btn" id="btnBackToHomeFromQRIS">
-                        <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+            <div class="qris-scanner-screen" style="height: 100%; width: 100%; background: #1a1a1a; position: relative; overflow: hidden; display: flex; flex-direction: column;">
+                
+                <!-- Top Header Overlay -->
+                <div style="padding: 40px 20px 20px 20px; display: flex; justify-content: space-between; align-items: center; color: white; position: relative; z-index: 10;">
+                    <div style="display: flex; align-items: center; gap: 16px;">
+                        <div id="btnBackToHomeFromQRIS" style="cursor: pointer;">
+                            <svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+                        </div>
+                        <h2 style="font-size: 1.1rem; font-weight: 600; margin: 0;">Scan QRIS</h2>
                     </div>
-                    <h2 class="header-title">Bayar Pakai QRIS</h2>
-                </header>
-                <div class="qris-content">
-                    <div class="qris-info">
-                        <h3>Pilih Poket Sumber Dana</h3>
-                        <p>Pay with QRIS directly from your pocket (food, shopping, and more).</p>
+                    <div style="display: flex; gap: 20px;">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg>
                     </div>
-                    <div class="qris-pocket-list">
-                        ${state.pockets.map(p => `
-                            <div class="qris-pocket-item" data-id="${p.id}">
-                                <div class="pocket-icon">${p.type === 'emergency' ? '🚨' : p.type === 'shared' ? '👨‍👩‍👧' : '🥖'}</div>
-                                <div class="pocket-details">
-                                    <span class="name">${p.name}</span>
-                                    <span class="balance">Saldo: IDR ${p.balance}</span>
+                </div>
+
+                <!-- Scanner Target Area (Simulated) -->
+                <div style="flex: 1; display: flex; justify-content: center; align-items: center; position: relative;">
+                    <div style="width: 250px; height: 250px; border: 2px solid rgba(255,255,255,0.3); position: relative;">
+                        <!-- Corner accents -->
+                        <div style="position: absolute; top: -2px; left: -2px; width: 30px; height: 30px; border-top: 4px solid white; border-left: 4px solid white;"></div>
+                        <div style="position: absolute; top: -2px; right: -2px; width: 30px; height: 30px; border-top: 4px solid white; border-right: 4px solid white;"></div>
+                        <div style="position: absolute; bottom: -2px; left: -2px; width: 30px; height: 30px; border-bottom: 4px solid white; border-left: 4px solid white;"></div>
+                        <div style="position: absolute; bottom: -2px; right: -2px; width: 30px; height: 30px; border-bottom: 4px solid white; border-right: 4px solid white;"></div>
+                    </div>
+                    <div style="position: absolute; bottom: 40px; color: white; font-size: 0.9rem; font-weight: 600; text-align: center;">
+                        <div style="background: rgba(0,0,0,0.5); padding: 8px 16px; border-radius: 20px;">QRIS Supported</div>
+                    </div>
+                </div>
+
+                <!-- Bottom Sheet -->
+                <div style="background: white; border-radius: 24px 24px 0 0; padding: 16px 20px 30px 20px; position: relative; z-index: 10;">
+                    <div style="width: 40px; height: 4px; background: #E2E8F0; border-radius: 2px; margin: 0 auto 20px auto;"></div>
+                    
+                    <h3 style="text-align: center; color: #003366; font-size: 0.95rem; font-weight: 700; margin-bottom: 16px;">Other QRIS Methods</h3>
+                    
+                    <div style="display: flex; justify-content: center; gap: 12px; margin-bottom: 24px;">
+                        <div style="flex: 1; border: 1px solid #E2E8F0; border-radius: 12px; padding: 12px 0; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+                            <div style="color: #0077C8; font-size: 1.5rem; display: flex; align-items: center;">
+                                <div style="position: relative; width: 24px; height: 24px;">
+                                    <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>
+                                    <div style="position: absolute; top: -4px; right: -8px; font-size: 0.5rem; background: white; color: #0077C8; font-weight: bold; padding: 1px 2px; border-radius: 4px;">Rp</div>
                                 </div>
-                                <div class="select-radio"></div>
+                            </div>
+                            <span style="font-size: 0.8rem; font-weight: 600; color: #475569;">Payment</span>
+                        </div>
+                        <div style="flex: 1; border: 1px solid #E2E8F0; border-radius: 12px; padding: 12px 0; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+                            <div style="color: #0077C8; font-size: 1.5rem; display: flex; align-items: center;">
+                                <div style="position: relative; width: 24px; height: 24px;">
+                                    <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M3 15h18v-2H3v2zm0 4h18v-2H3v2zm0-8h18V9H3v2zm0-6v2h18V5H3z"/></svg>
+                                    <div style="position: absolute; top: -4px; right: -8px; font-size: 0.5rem; background: white; color: #0077C8; font-weight: bold; padding: 1px 2px; border-radius: 4px;">Rp</div>
+                                </div>
+                            </div>
+                            <span style="font-size: 0.8rem; font-weight: 600; color: #475569;">Transfer</span>
+                        </div>
+                        <div style="flex: 1; border: 1px solid #E2E8F0; border-radius: 12px; padding: 12px 0; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+                            <div style="color: #0077C8; font-size: 1.5rem; display: flex; align-items: center;">
+                                <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                            </div>
+                            <span style="font-size: 0.8rem; font-weight: 600; color: #475569;">Tap</span>
+                        </div>
+                    </div>
+
+                    <div style="height: 1px; background: #F1F5F9; margin-bottom: 20px;"></div>
+
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                        <h3 style="color: #003366; font-size: 0.95rem; font-weight: 700; margin: 0;">Source of Fund</h3>
+                        <span style="color: #64748B; font-size: 0.75rem;">Pay directly from pocket</span>
+                    </div>
+
+                    <div style="display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px; margin-left: -20px; padding-left: 20px; padding-right: 20px; scrollbar-width: none;">
+                        
+                        <!-- Main Account (Always Available) -->
+                        <div class="qris-source-card active" style="min-width: 140px; border: 2px solid #0077C8; background: #F0F9FF; border-radius: 12px; padding: 12px; cursor: pointer;">
+                            <div style="font-size: 0.7rem; color: #0077C8; margin-bottom: 8px; font-weight: 700;">Main Account</div>
+                            <div style="font-weight: 800; color: #1e293b; font-size: 0.9rem; margin-bottom: 4px;">Tahapan Xpresi</div>
+                            <div style="font-size: 0.8rem; color: #0077C8; font-weight: 700;">IDR ${state.balance}</div>
+                        </div>
+
+                        <!-- Filtered Pockets -->
+                        ${state.pockets.filter(p => p.qrisEnabled).map(p => `
+                            <div class="qris-source-card" style="min-width: 140px; border: 1px solid #E2E8F0; background: white; border-radius: 12px; padding: 12px; cursor: pointer;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                    <div style="font-size: 0.7rem; color: #64748B; font-weight: 700;">QRIS Pocket</div>
+                                    <div style="font-size: 0.8rem;">${p.type === 'emergency' ? '🚨' : p.type === 'shared' ? '👨‍👩‍👧' : '🚗'}</div>
+                                </div>
+                                <div style="font-weight: 800; color: #1e293b; font-size: 0.9rem; margin-bottom: 4px;">${p.name}</div>
+                                <div style="font-size: 0.8rem; color: #64748B; font-weight: 700;">IDR ${p.balance}</div>
                             </div>
                         `).join('')}
                     </div>
-                    <button class="primary-button" id="btnStartScan">Buka Scanner</button>
+
                 </div>
             </div>
         `,
@@ -903,6 +1023,46 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div class="pd-action-item" id="btnPocketLock">
                                 <div class="pd-action-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg></div>
                                 <span>Lock</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Goal Visibility & Motivation Engine -->
+                    <div class="goal-motivation-engine" style="margin-top: 20px; margin-bottom: 24px;">
+                        <!-- Visual Progress Dashboard & Predictive Time-to-Goal -->
+                        <div style="background: white; border-radius: 16px; padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); margin-bottom: 16px; border: 1px solid #F1F5F9;">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 12px;">
+                                <div>
+                                    <h3 style="font-size: 0.95rem; color: #003366; margin-bottom: 4px; font-weight: 800;">Goal Progress</h3>
+                                    <div style="font-size: 0.75rem; color: #64748B;">Target: IDR 50.000.000</div>
+                                </div>
+                                <div style="font-size: 1.3rem; font-weight: 800; color: #0077C8;">45%</div>
+                            </div>
+                            
+                            <!-- Progress Bar -->
+                            <div style="height: 14px; background: #E2E8F0; border-radius: 8px; overflow: hidden; margin-bottom: 20px;">
+                                <div style="height: 100%; width: 45%; background: linear-gradient(90deg, #0077C8, #00A3E0); border-radius: 8px; transition: width 1s ease-in-out;"></div>
+                            </div>
+                            
+                            <!-- Predictive Time-to-Goal -->
+                            <div style="background: #F0F9FF; border-left: 3px solid #00A3E0; padding: 12px 16px; border-radius: 0 8px 8px 0; display: flex; gap: 12px; align-items: flex-start;">
+                                <div style="font-size: 1.2rem; margin-top: -2px;">🤖</div>
+                                <div>
+                                    <h4 style="font-size: 0.8rem; color: #0369A1; font-weight: 800; margin-bottom: 4px;">AI Prediction</h4>
+                                    <p style="font-size: 0.75rem; color: #0284C7; line-height: 1.4; margin: 0;">Based on your current saving rate of IDR 2.500.000/month, you will reach your goal in <strong>11 months (April 2027)</strong>.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Smart Motivation & Milestones -->
+                        <div style="background: linear-gradient(135deg, #FEF08A 0%, #FDE047 100%); border-radius: 16px; padding: 16px; box-shadow: 0 4px 12px rgba(253, 224, 71, 0.2); display: flex; align-items: center; gap: 16px; position: relative; overflow: hidden;">
+                            <div style="position: absolute; right: -10px; top: -10px; font-size: 5rem; opacity: 0.15; transform: rotate(15deg);">🏆</div>
+                            <div style="background: white; width: 44px; height: 44px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.4rem; flex-shrink: 0; z-index: 1; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+                                🔥
+                            </div>
+                            <div style="z-index: 1;">
+                                <h4 style="font-size: 0.9rem; color: #854D0E; font-weight: 800; margin-bottom: 2px;">3-Month Streak!</h4>
+                                <p style="font-size: 0.75rem; color: #A16207; line-height: 1.3; margin: 0;">You've saved consistently for 3 months. Next milestone: 50% completion (+500 Pts).</p>
                             </div>
                         </div>
                     </div>
@@ -1313,21 +1473,25 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } else if (screenName === 'qrisSelection') {
             document.getElementById('btnBackToHomeFromQRIS').onclick = () => navigateTo('home');
-            document.querySelectorAll('.qris-pocket-item').forEach(item => {
-                item.onclick = () => {
-                    document.querySelectorAll('.qris-pocket-item').forEach(i => i.classList.remove('selected'));
-                    item.classList.add('selected');
-                    state.selectedQrisPocketId = item.getAttribute('data-id');
+            
+            const sourceCards = document.querySelectorAll('.qris-source-card');
+            sourceCards.forEach(card => {
+                card.onclick = () => {
+                    // Reset all
+                    sourceCards.forEach(c => {
+                        c.classList.remove('active');
+                        c.style.border = '1px solid #E2E8F0';
+                        c.style.background = 'white';
+                    });
+                    
+                    // Set active
+                    card.classList.add('active');
+                    card.style.border = '2px solid #0077C8';
+                    card.style.background = '#F0F9FF';
+                    
+                    showToast('Sumber Dana dipilih');
                 };
             });
-            document.getElementById('btnStartScan').onclick = () => {
-                if (!state.selectedQrisPocketId) {
-                    showToast("Pilih poket terlebih dahulu!");
-                    return;
-                }
-                const selectedPocket = state.pockets.find(p => p.id == state.selectedQrisPocketId);
-                showToast(`Membayar menggunakan Poket: ${selectedPocket.name}...`);
-            };
         } else if (screenName === 'rewardHub') {
             document.getElementById('btnBackFromRewards').onclick = () => navigateTo('home');
         } else if (screenName === 'onboarding') {
