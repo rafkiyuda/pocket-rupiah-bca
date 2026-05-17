@@ -520,6 +520,30 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     <!-- TRANSACTIONS TAB -->
                     <div class="ai-tab-content" id="tab-transactions" style="display: none;">
+                        <!-- GOAL ENGINE CARD -->
+                        <div id="goalEngineCard" style="background: linear-gradient(135deg, #7C3AED 0%, #4F46E5 100%); border-radius: 20px; padding: 18px; margin-bottom: 20px; color: white; cursor: pointer; position: relative; overflow: hidden; box-shadow: 0 8px 24px rgba(124,58,237,0.3);">
+                            <div style="position: absolute; top: -20px; right: -10px; font-size: 6rem; opacity: 0.08;">⚡</div>
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; position: relative; z-index: 1;">
+                                <div style="background: rgba(255,255,255,0.15); border-radius: 8px; padding: 4px 10px; font-size: 0.65rem; font-weight: 700;">⚡ GOAL ENGINE</div>
+                                <div style="background: rgba(255,255,255,0.2); font-size: 0.68rem; font-weight: 700; padding: 3px 10px; border-radius: 10px;">AI Optimized</div>
+                            </div>
+                            <h3 style="font-size: 1rem; font-weight: 800; margin: 0 0 4px; position: relative; z-index: 1;">Smart Allocation Plan</h3>
+                            <p style="font-size: 0.75rem; opacity: 0.85; margin: 0 0 14px; position: relative; z-index: 1;">Alokasi otomatis IDR 8.000.000/bln berdasarkan Need vs Want & prioritas goal.</p>
+                            <div style="position: relative; z-index: 1; margin-bottom: 14px;">
+                                ${state.goalEngine.optimizedAlloc.map(a => `
+                                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                                    <div style="font-size: 0.85rem; width: 20px; text-align: center; flex-shrink: 0;">${a.icon}</div>
+                                    <div style="flex: 1;"><div style="height: 6px; background: rgba(255,255,255,0.15); border-radius: 3px; overflow: hidden;"><div style="height: 100%; width: ${Math.round(a.monthly / state.goalEngine.income * 100)}%; background: rgba(255,255,255,0.8); border-radius: 3px;"></div></div></div>
+                                    <div style="font-size: 0.65rem; font-weight: 700; white-space: nowrap; opacity: 0.9;">Rp ${(a.monthly/1000000).toFixed(1)}Jt</div>
+                                </div>`).join('')}
+                            </div>
+                            <div style="display: flex; gap: 8px; position: relative; z-index: 1;">
+                                <div style="flex:1;background:rgba(255,255,255,0.1);border-radius:10px;padding:8px;text-align:center;"><div style="font-size:0.65rem;opacity:0.7;margin-bottom:2px;">Kebutuhan</div><div style="font-size:0.9rem;font-weight:800;">${state.goalEngine.needs}%</div></div>
+                                <div style="flex:1;background:rgba(255,255,255,0.1);border-radius:10px;padding:8px;text-align:center;"><div style="font-size:0.65rem;opacity:0.7;margin-bottom:2px;">Keinginan</div><div style="font-size:0.9rem;font-weight:800;">${state.goalEngine.wants}%</div></div>
+                                <div style="flex:1;background:rgba(255,255,255,0.1);border-radius:10px;padding:8px;text-align:center;"><div style="font-size:0.65rem;opacity:0.7;margin-bottom:2px;">Tabungan</div><div style="font-size:0.9rem;font-weight:800;">${state.goalEngine.savings}%</div></div>
+                            </div>
+                        </div>
+
                         <div class="pd-search-row" style="margin-bottom: 20px;">
                             <div class="pd-search-box">
                                 <span class="search-icon">🔍</span>
@@ -596,44 +620,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                         </div>
                         ` : ''}
-
-                        <!-- GOAL ENGINE CARD -->
-                        <div id="goalEngineCard" style="background: linear-gradient(135deg, #7C3AED 0%, #4F46E5 100%); border-radius: 20px; padding: 18px; margin-bottom: 24px; color: white; cursor: pointer; position: relative; overflow: hidden; box-shadow: 0 8px 24px rgba(124,58,237,0.3);">
-                            <div style="position: absolute; top: -20px; right: -10px; font-size: 6rem; opacity: 0.08;">⚡</div>
-                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; position: relative; z-index: 1;">
-                                <div style="background: rgba(255,255,255,0.15); border-radius: 8px; padding: 4px 10px; font-size: 0.65rem; font-weight: 700;">⚡ GOAL ENGINE</div>
-                                <div style="background: rgba(255,255,255,0.2); font-size: 0.68rem; font-weight: 700; padding: 3px 10px; border-radius: 10px;">AI Optimized</div>
-                            </div>
-                            <h3 style="font-size: 1rem; font-weight: 800; margin: 0 0 4px; position: relative; z-index: 1;">Smart Allocation Plan</h3>
-                            <p style="font-size: 0.75rem; opacity: 0.85; margin: 0 0 14px; position: relative; z-index: 1;">Alokasi otomatis IDR 8.000.000/bln berdasarkan Need vs Want & prioritas goal.</p>
-                            <!-- Mini allocation bars -->
-                            <div style="position: relative; z-index: 1; margin-bottom: 14px;">
-                                ${state.goalEngine.optimizedAlloc.map(a => `
-                                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
-                                    <div style="font-size: 0.85rem; width: 20px; text-align: center; flex-shrink: 0;">${a.icon}</div>
-                                    <div style="flex: 1;">
-                                        <div style="height: 6px; background: rgba(255,255,255,0.15); border-radius: 3px; overflow: hidden;">
-                                            <div style="height: 100%; width: ${Math.round(a.monthly / state.goalEngine.income * 100)}%; background: rgba(255,255,255,0.8); border-radius: 3px;"></div>
-                                        </div>
-                                    </div>
-                                    <div style="font-size: 0.65rem; font-weight: 700; white-space: nowrap; opacity: 0.9;">Rp ${(a.monthly/1000000).toFixed(1)}Jt</div>
-                                </div>`).join('')}
-                            </div>
-                            <div style="display: flex; gap: 8px; position: relative; z-index: 1;">
-                                <div style="flex: 1; background: rgba(255,255,255,0.1); border-radius: 10px; padding: 8px; text-align: center;">
-                                    <div style="font-size: 0.65rem; opacity: 0.7; margin-bottom: 2px;">Kebutuhan</div>
-                                    <div style="font-size: 0.9rem; font-weight: 800;">${state.goalEngine.needs}%</div>
-                                </div>
-                                <div style="flex: 1; background: rgba(255,255,255,0.1); border-radius: 10px; padding: 8px; text-align: center;">
-                                    <div style="font-size: 0.65rem; opacity: 0.7; margin-bottom: 2px;">Keinginan</div>
-                                    <div style="font-size: 0.9rem; font-weight: 800;">${state.goalEngine.wants}%</div>
-                                </div>
-                                <div style="flex: 1; background: rgba(255,255,255,0.1); border-radius: 10px; padding: 8px; text-align: center;">
-                                    <div style="font-size: 0.65rem; opacity: 0.7; margin-bottom: 2px;">Tabungan</div>
-                                    <div style="font-size: 0.9rem; font-weight: 800;">${state.goalEngine.savings}%</div>
-                                </div>
-                            </div>
-                        </div>
 
                         <div class="rp-main-container" style="background: white; border-radius: 16px; padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); border: 1px solid #F1F5F9; margin-bottom: 24px;">
                             <div class="rupiah-pocket-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
