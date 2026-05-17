@@ -344,13 +344,16 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
 
                         <div class="form-group">
-                            <label>Connect to BCA Ecosystem</label>
-                            <p class="field-subtext">Link pocket for auto-payments</p>
-                            <div class="ecosystem-pills" style="margin-top: 12px;">
-                                <span class="eco-pill" data-eco="QRIS">🔄 QRIS & Auto-Pay</span>
-                                <span class="eco-pill" data-eco="BCALife">🛡️ BCA Life</span>
-                                <span class="eco-pill" data-eco="Sekuritas">📈 BCA Sekuritas</span>
-                                <span class="eco-pill locked" data-eco="Finance">🚗 BCA Finance</span>
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
+                                <label style="margin-bottom: 0;">Connect to BCA Ecosystem</label>
+                                <span style="background: #E0F2FE; color: #0077C8; font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; font-weight: 700;">NEW</span>
+                            </div>
+                            <p class="field-subtext">Link your pocket to myBCA ecosystem for faster goal completion and protection.</p>
+                            <div class="ecosystem-pills" style="margin-top: 12px; display: flex; flex-wrap: wrap; gap: 10px;">
+                                <span class="eco-pill active" data-eco="QRIS" style="cursor: pointer; padding: 8px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; border: 1px solid #0077C8; background: #0077C8; color: white;">🔄 QRIS & Auto-Pay</span>
+                                <span class="eco-pill" data-eco="Investasi" style="cursor: pointer; padding: 8px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; border: 1px solid #E2E8F0; background: white; color: #64748B;">📈 Investasi (Reksa Dana)</span>
+                                <span class="eco-pill" data-eco="BCALife" style="cursor: pointer; padding: 8px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; border: 1px solid #E2E8F0; background: white; color: #64748B;">🛡️ BCA Life Protection</span>
+                                <span class="eco-pill" data-eco="Finance" style="cursor: pointer; padding: 8px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; border: 1px solid #E2E8F0; background: white; color: #64748B;">🚗 BCA Finance</span>
                             </div>
                         </div>
                     </div>
@@ -1089,6 +1092,43 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     </div>
                     
+                    <!-- BCA Ecosystem Integration Layer -->
+                    <div class="ecosystem-integration-layer" style="margin-bottom: 32px;">
+                        <h3 class="pd-section-title" style="margin-bottom: 12px;">ECOSYSTEM RECOMMENDATIONS</h3>
+                        
+                        <div style="background: white; border-radius: 16px; border: 1px solid #F1F5F9; box-shadow: 0 2px 8px rgba(0,0,0,0.04); overflow: hidden;">
+                            <!-- Investasi (Reksa Dana) -->
+                            <div class="eco-action-item" data-action="investasi" style="padding: 16px; border-bottom: 1px solid #F1F5F9; display: flex; gap: 16px; align-items: center; cursor: pointer;">
+                                <div style="width: 44px; height: 44px; background: #ECFDF5; border-radius: 12px; display: flex; justify-content: center; align-items: center; font-size: 1.4rem; flex-shrink: 0;">📈</div>
+                                <div style="flex: 1;">
+                                    <h4 style="font-size: 0.9rem; color: #003366; font-weight: 800; margin: 0; margin-bottom: 3px;">myBCA Investasi</h4>
+                                    <p style="font-size: 0.73rem; color: #64748B; margin: 0; line-height: 1.4;">Grow savings faster with Reksa Dana. Move pocket funds to Investasi seamlessly.</p>
+                                </div>
+                                <span style="color: #0077C8; font-weight: 800;">›</span>
+                            </div>
+                            
+                            <!-- BCA Life -->
+                            <div class="eco-action-item" data-action="life" style="padding: 16px; border-bottom: 1px solid #F1F5F9; display: flex; gap: 16px; align-items: center; cursor: pointer;">
+                                <div style="width: 44px; height: 44px; background: #EEF2FF; border-radius: 12px; display: flex; justify-content: center; align-items: center; font-size: 1.4rem; flex-shrink: 0;">🛡️</div>
+                                <div style="flex: 1;">
+                                    <h4 style="font-size: 0.9rem; color: #003366; font-weight: 800; margin: 0; margin-bottom: 3px;">BCA Life Protection</h4>
+                                    <p style="font-size: 0.73rem; color: #64748B; margin: 0; line-height: 1.4;">Secure your goal. Get life protection coverage tailored to your IDR 50.000.000 target.</p>
+                                </div>
+                                <span style="color: #0077C8; font-weight: 800;">›</span>
+                            </div>
+                            
+                            <!-- BCA Finance -->
+                            <div class="eco-action-item" data-action="finance" style="padding: 16px; display: flex; gap: 16px; align-items: center; cursor: pointer;">
+                                <div style="width: 44px; height: 44px; background: #FFF7ED; border-radius: 12px; display: flex; justify-content: center; align-items: center; font-size: 1.4rem; flex-shrink: 0;">🚗</div>
+                                <div style="flex: 1;">
+                                    <h4 style="font-size: 0.9rem; color: #003366; font-weight: 800; margin: 0; margin-bottom: 3px;">BCA Finance</h4>
+                                    <p style="font-size: 0.73rem; color: #64748B; margin: 0; line-height: 1.4;">Use this pocket's balance as a down payment. Get pre-approved BCA Finance credit.</p>
+                                </div>
+                                <span style="color: #0077C8; font-weight: 800;">›</span>
+                            </div>
+                        </div>
+                    </div>
+
                     <h3 class="pd-section-title">ACCOUNT TRANSACTIONS</h3>
                     <div class="pd-search-row">
                         <div class="pd-search-box">
@@ -1490,8 +1530,28 @@ document.addEventListener('DOMContentLoaded', () => {
             const ecoPills = document.querySelectorAll('.eco-pill');
             ecoPills.forEach(pill => {
                 pill.onclick = () => {
-                    pill.classList.toggle('selected');
-                    showToast(`Terhubung ke ${pill.textContent}`);
+                    const isActive = pill.classList.contains('active');
+                    if (!isActive) {
+                        pill.classList.add('active');
+                        pill.style.background = '#0077C8';
+                        pill.style.color = 'white';
+                        pill.style.border = '1px solid #0077C8';
+                        const ecoType = pill.getAttribute('data-eco');
+                        if (ecoType === 'Investasi') {
+                            showToast("📈 API Connected: myBCA Investasi — Reksa Dana");
+                        } else if (ecoType === 'BCALife') {
+                            showToast("🛡️ API Connected: BCA Life Insurance Engine");
+                        } else if (ecoType === 'Finance') {
+                            showToast("🚗 API Connected: BCA Finance Quotation");
+                        } else {
+                            showToast(`✅ ${pill.textContent.trim()} terhubung`);
+                        }
+                    } else {
+                        pill.classList.remove('active');
+                        pill.style.background = 'white';
+                        pill.style.color = '#64748B';
+                        pill.style.border = '1px solid #E2E8F0';
+                    }
                 };
             });
 
@@ -1499,17 +1559,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 continueBtn.onclick = () => {
                     const newPocket = {
                         id: state.pockets.length + 1,
-                        name: state.newPocketData.name,
+                        name: state.newPocketData.name || 'My Pocket',
                         category: state.newPocketData.category,
                         balance: "0",
                         target: "1.000.000",
                         progress: 0,
                         type: state.newPocketData.type,
-                        locked: state.newPocketData.locked
+                        locked: state.newPocketData.locked,
+                        qrisEnabled: false
                     };
                     state.pockets.push(newPocket);
-                    showToast("Pocket Created Successfully!");
-                    // Reset newPocketData
+                    showToast("🎉 Pocket Created Successfully!");
+                    state.rewards.points += 500;
                     state.newPocketData = { name: "", type: "personal", locked: false, category: "Others" };
                     setTimeout(() => navigateTo('pocketsDashboard'), 1000);
                 };
@@ -1546,6 +1607,21 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('btnPocketLock').onclick = () => navigateTo('pocketLock');
             const btnCopy = document.getElementById('btnCopyPocketAcc');
             if (btnCopy) btnCopy.onclick = () => showToast("Account number copied!");
+
+            // Ecosystem Integration Actions in Pocket Detail
+            const ecoActions = document.querySelectorAll('.eco-action-item');
+            ecoActions.forEach(action => {
+                action.onclick = () => {
+                    const type = action.getAttribute('data-action');
+                    if (type === 'investasi') {
+                        showToast("Routing to myBCA Investasi... Auto-filling mutual fund purchase with pocket balance via API.");
+                    } else if (type === 'life') {
+                        showToast("Fetching BCA Life personalized protection quote based on IDR 50.000.000 target...");
+                    } else if (type === 'finance') {
+                        showToast("Opening BCA Finance portal with pre-approved credit check...");
+                    }
+                };
+            });
         } else if (screenName === 'pocketTransfer') {
             document.getElementById('btnBackToPocketDetail').onclick = () => navigateTo('pocketDetail');
             
