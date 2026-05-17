@@ -678,44 +678,28 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                         </div>
 
-                        <div class="forex-pocket-card" style="background: white; border-radius: 12px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); display: flex; gap: 16px; margin-bottom: 32px;">
-                            <div class="fp-icon-cluster" style="position: relative; width: 50px; height: 50px; flex-shrink: 0;">
-                                <div style="width: 40px; height: 40px; background: #0077C8; border-radius: 8px; position: absolute; top: 5px; left: 0;"></div>
-                                <div style="position: absolute; top: -5px; right: 0; background: #FDE047; color: #1e293b; font-size: 0.7rem; font-weight: bold; width: 22px; height: 22px; border-radius: 50%; display: flex; justify-content: center; align-items: center;">$</div>
-                                <div style="position: absolute; bottom: 0; left: -5px; background: #4ADE80; color: white; font-size: 0.7rem; font-weight: bold; width: 22px; height: 22px; border-radius: 50%; display: flex; justify-content: center; align-items: center;">¥</div>
-                            </div>
-                            <div class="fp-info" style="flex: 1;">
-                                <h4 style="font-size: 0.85rem; color: #003366; margin-bottom: 4px;">Forex Pocket</h4>
-                                <p style="font-size: 0.75rem; color: #64748B; margin-bottom: 8px; line-height: 1.4;">With Forex Pocket, transactions in various currencies are easier and more convenient.</p>
-                                <span style="color: #0077C8; font-size: 0.8rem; font-weight: 700;">Activate Now</span>
-                            </div>
-                        </div>
-
                         <!-- PROTECTION & SHARED EXPANSION CARD -->
-                        <div class="rp-main-container" style="background: white; border-radius: 16px; padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); border: 1px solid #F1F5F9; margin-bottom: 24px;">
+                        <div class="rp-main-container" style="background: white; border-radius: 16px; padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); border: 1px solid #F1F5F9; margin-bottom: 16px;">
                             <div class="rupiah-pocket-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
                                 <div style="display: flex; align-items: flex-start; gap: 12px;">
-                                    <!-- Shield icon matching wallet illustration style -->
                                     <div style="position: relative; width: 40px; height: 40px; background: #0077C8; border-radius: 8px 12px 12px 12px; display: flex; justify-content: center; align-items: center; margin-top: 4px; flex-shrink: 0;">
                                         <div style="position: absolute; top: -4px; left: 6px; width: 24px; height: 12px; background: #E0F2FE; border-radius: 4px; transform: rotate(-10deg);"></div>
                                         <div style="position: absolute; bottom: -6px; left: -8px; background: #FDE047; color: #b45309; font-size: 0.6rem; font-weight: bold; width: 22px; height: 22px; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border: 2px solid white;">🛡️</div>
                                     </div>
                                     <div>
                                         <div style="color: #475569; font-size: 0.85rem; margin-bottom: 4px;">Protection & Shared</div>
-                                        <div style="font-size: 1.1rem; font-weight: 800; color: #1e293b;">Keluarga & Perlindungan</div>
+                                        <div style="font-size: 1.1rem; font-weight: 800; color: #1e293b;">Family & Protection</div>
                                     </div>
                                 </div>
-                                <div style="background: #EFF6FF; color: #0077C8; font-size: 0.65rem; font-weight: 700; padding: 3px 10px; border-radius: 10px; margin-top: 4px;">Baru</div>
+                                <div style="background: #EFF6FF; color: #0077C8; font-size: 0.65rem; font-weight: 700; padding: 3px 10px; border-radius: 10px; margin-top: 4px;">New</div>
                             </div>
 
-                            <div style="font-size: 0.75rem; color: #475569; margin-bottom: 20px;">Kelola keuangan <strong>keluarga bersama</strong>, rekomendasi proteksi, & alert real-time</div>
+                            <div style="font-size: 0.75rem; color: #475569; margin-bottom: 20px;">Manage <strong>family finances together</strong>, get proactive protection recommendations.</div>
 
-                            <!-- Feature items matching pocket-item-box style -->
                             <div style="margin-bottom: 20px;">
                                 ${[
-                                    { icon: '👨‍👩‍👧', label: 'Shared Pocket', sub: 'Keluarga Santoso · 3 anggota', pct: 65, color: '#10B981' },
-                                    { icon: '🛡️', label: 'Proteksi Jiwa', sub: 'Belum aktif · BCA Life tersedia', pct: 0, color: '#EF4444' },
-                                    { icon: '🔔', label: 'Alert Keuangan', sub: '2 alert aktif hari ini', pct: 80, color: '#0077C8' }
+                                    { icon: '👨‍👩‍👧', label: 'Shared Pocket', sub: 'Keluarga Santoso · 3 members', pct: 65, color: '#10B981' },
+                                    { icon: '🛡️', label: 'Life Protection', sub: 'Not active · BCA Life available', pct: 0, color: '#EF4444' }
                                 ].map(f => `
                                 <div style="cursor: pointer; border: 1px solid #E2E8F0; border-radius: 12px; padding: 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 16px; background: white; transition: all 0.3s ease;">
                                     <div style="font-size: 1.5rem; color: #0077C8;">${f.icon}</div>
@@ -734,7 +718,20 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
 
                             <div style="text-align: center;">
-                                <span id="btnOpenSharedProtection" onclick="navigateTo('sharedProtection')" style="color: #0077C8; font-weight: 800; font-size: 0.95rem; display: inline-block; cursor: pointer; padding: 8px; background: white; border-radius: 8px;">Jelajahi Semua Fitur</span>
+                                <span id="btnOpenSharedProtection" onclick="navigateTo('sharedProtection')" style="color: #0077C8; font-weight: 800; font-size: 0.95rem; display: inline-block; cursor: pointer; padding: 8px; background: white; border-radius: 8px;">Explore All Features</span>
+                            </div>
+                        </div>
+
+                        <div class="forex-pocket-card" style="background: white; border-radius: 12px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); display: flex; gap: 16px; margin-bottom: 32px;">
+                            <div class="fp-icon-cluster" style="position: relative; width: 50px; height: 50px; flex-shrink: 0;">
+                                <div style="width: 40px; height: 40px; background: #0077C8; border-radius: 8px; position: absolute; top: 5px; left: 0;"></div>
+                                <div style="position: absolute; top: -5px; right: 0; background: #FDE047; color: #1e293b; font-size: 0.7rem; font-weight: bold; width: 22px; height: 22px; border-radius: 50%; display: flex; justify-content: center; align-items: center;">$</div>
+                                <div style="position: absolute; bottom: 0; left: -5px; background: #4ADE80; color: white; font-size: 0.7rem; font-weight: bold; width: 22px; height: 22px; border-radius: 50%; display: flex; justify-content: center; align-items: center;">¥</div>
+                            </div>
+                            <div class="fp-info" style="flex: 1;">
+                                <h4 style="font-size: 0.85rem; color: #003366; margin-bottom: 4px;">Forex Pocket</h4>
+                                <p style="font-size: 0.75rem; color: #64748B; margin-bottom: 8px; line-height: 1.4;">With Forex Pocket, transactions in various currencies are easier and more convenient.</p>
+                                <span style="color: #0077C8; font-size: 0.8rem; font-weight: 700;">Activate Now</span>
                             </div>
                         </div>
 
