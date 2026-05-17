@@ -362,8 +362,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             <p class="field-subtext">Link your pocket to myBCA ecosystem for faster goal completion and protection.</p>
                             <div class="ecosystem-pills" style="margin-top: 12px; display: flex; flex-wrap: wrap; gap: 10px;">
                                 <span class="eco-pill active" data-eco="QRIS" style="cursor: pointer; padding: 8px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; border: 1px solid #0077C8; background: #0077C8; color: white;">🔄 QRIS & Auto-Pay</span>
-                                <span class="eco-pill" data-eco="Investasi" style="cursor: pointer; padding: 8px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; border: 1px solid #E2E8F0; background: white; color: #64748B;">📈 Investasi (Reksa Dana)</span>
-                                <span class="eco-pill" data-eco="BCALife" style="cursor: pointer; padding: 8px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; border: 1px solid #E2E8F0; background: white; color: #64748B;">🛡️ BCA Life Protection</span>
+                                <span class="eco-pill" data-eco="Investasi" style="cursor: pointer; padding: 8px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; border: 1px solid #E2E8F0; background: white; color: #64748B;">📈 BCA Sekuritas</span>
+                                <span class="eco-pill" data-eco="BCALife" style="cursor: pointer; padding: 8px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; border: 1px solid #E2E8F0; background: white; color: #64748B;">🛡️ BCA Life</span>
                                 <span class="eco-pill" data-eco="Finance" style="cursor: pointer; padding: 8px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; border: 1px solid #E2E8F0; background: white; color: #64748B;">🚗 BCA Finance</span>
                             </div>
                         </div>
@@ -1350,12 +1350,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         <h3 class="pd-section-title" style="margin-bottom: 12px;">ECOSYSTEM RECOMMENDATIONS</h3>
                         
                         <div style="background: white; border-radius: 16px; border: 1px solid #F1F5F9; box-shadow: 0 2px 8px rgba(0,0,0,0.04); overflow: hidden;">
-                            <!-- Investasi (Reksa Dana) -->
+                            <!-- Investasi — BCA Sekuritas -->
                             <div class="eco-action-item" data-action="investasi" style="padding: 16px; border-bottom: 1px solid #F1F5F9; display: flex; gap: 16px; align-items: center; cursor: pointer;">
                                 <div style="width: 44px; height: 44px; background: #ECFDF5; border-radius: 12px; display: flex; justify-content: center; align-items: center; font-size: 1.4rem; flex-shrink: 0;">📈</div>
                                 <div style="flex: 1;">
-                                    <h4 style="font-size: 0.9rem; color: #003366; font-weight: 800; margin: 0; margin-bottom: 3px;">myBCA Investasi</h4>
-                                    <p style="font-size: 0.73rem; color: #64748B; margin: 0; line-height: 1.4;">Grow savings faster with Reksa Dana. Move pocket funds to Investasi seamlessly.</p>
+                                    <h4 style="font-size: 0.9rem; color: #003366; font-weight: 800; margin: 0; margin-bottom: 3px;">BCA Sekuritas</h4>
+                                    <p style="font-size: 0.73rem; color: #64748B; margin: 0; line-height: 1.4;">Grow savings faster with Reksa Dana & Obligasi. Move pocket funds to BCA Sekuritas seamlessly.</p>
                                 </div>
                                 <span style="color: #0077C8; font-weight: 800;">›</span>
                             </div>
@@ -1364,7 +1364,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div class="eco-action-item" data-action="life" style="padding: 16px; border-bottom: 1px solid #F1F5F9; display: flex; gap: 16px; align-items: center; cursor: pointer;">
                                 <div style="width: 44px; height: 44px; background: #EEF2FF; border-radius: 12px; display: flex; justify-content: center; align-items: center; font-size: 1.4rem; flex-shrink: 0;">🛡️</div>
                                 <div style="flex: 1;">
-                                    <h4 style="font-size: 0.9rem; color: #003366; font-weight: 800; margin: 0; margin-bottom: 3px;">BCA Life Protection</h4>
+                                    <h4 style="font-size: 0.9rem; color: #003366; font-weight: 800; margin: 0; margin-bottom: 3px;">BCA Life</h4>
                                     <p style="font-size: 0.73rem; color: #64748B; margin: 0; line-height: 1.4;">Secure your goal. Get life protection coverage tailored to your IDR 50.000.000 target.</p>
                                 </div>
                                 <span style="color: #0077C8; font-weight: 800;">›</span>
