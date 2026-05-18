@@ -628,7 +628,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <!-- POCKET TAB -->
                     <div class="ai-tab-content active" id="tab-pocket">
                         <!-- SMART ALLOCATION PLAN (GOAL ENGINE) -->
-                        <div style="background: linear-gradient(135deg, #0077C8 0%, #00A3E0 100%); border-radius: 20px; padding: 18px; margin-bottom: 20px; color: white; position: relative; overflow: hidden; box-shadow: 0 8px 24px rgba(0,119,200,0.25);">
+                        <div id="tour-target-5" style="background: linear-gradient(135deg, #0077C8 0%, #00A3E0 100%); border-radius: 20px; padding: 18px; margin-bottom: 20px; color: white; position: relative; overflow: hidden; box-shadow: 0 8px 24px rgba(0,119,200,0.25);">
                             <div style="position: absolute; top: -20px; right: -10px; font-size: 6rem; opacity: 0.08;">⚡</div>
                             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; position: relative; z-index: 1;">
                                 <div style="background: rgba(255,255,255,0.15); border-radius: 8px; padding: 4px 10px; font-size: 0.65rem; font-weight: 700;">⚡ GOAL ENGINE</div>
@@ -766,15 +766,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                         </div>
 
-                        <!-- CARD ITEM -->
-                        <div class="card-item-box" style="margin-bottom: 32px;">
-                            <div class="card-img-placeholder">💳</div>
-                            <div class="card-info">
-                                <strong>6019 - **** - **** - **59</strong>
-                                <span>PASPOR BCA GPN XPRESI</span>
-                            </div>
-                            <span class="acc-arrow" style="font-size: 1.4rem; color: #0077C8; font-weight: 300;">></span>
-                        </div>
+
 
                         <!-- END RE-ADDED FEATURES -->
                         
@@ -824,7 +816,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <h3 style="margin-bottom: 16px; color: #003366; font-size: 1rem;">Overall Progress</h3>
                             
                             <!-- Overall Progress Dashboard -->
-                            <div style="background: white; border-radius: 16px; padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); margin-bottom: 16px; border: 1px solid #F1F5F9;">
+                            <div id="tour-target-7" style="background: white; border-radius: 16px; padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); margin-bottom: 16px; border: 1px solid #F1F5F9;">
                                 <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 12px;">
                                     <div>
                                         <h3 style="font-size: 0.95rem; color: #003366; margin-bottom: 4px; font-weight: 800;">Total Goals</h3>
@@ -1578,13 +1570,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     <!-- Triangle pointer -->
                     <div id="tourPointerTriangle" style="position: absolute; top: -10px; width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-bottom: 10px solid #39A9DB; transition: all 0.3s ease;"></div>
                     
-                    <div class="tour-step-info" style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; opacity: 0.9;">Step ${state.onboardingStep + 1} of 4</div>
+                    <div class="tour-step-info" style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; opacity: 0.9;">Step ${state.onboardingStep + 1} of 5</div>
                     
-                    <h3 id="tourTitle" style="font-size: 1.2rem; font-weight: 800; margin-bottom: 12px; line-height: 1.3;">1. Buat Poket Pertamamu</h3>
+                    <h3 id="tourTitle" style="font-size: 1.2rem; font-weight: 800; margin-bottom: 12px; line-height: 1.3;">1. Kelola & Buat Poket</h3>
                     
                     <div id="tourDesc" style="font-size: 0.95rem; line-height: 1.5; font-weight: 500; opacity: 0.95;">
-                        <p style="margin-bottom: 12px;">Mulai atur keuanganmu dengan membuat Poket. Skenario: Pisahkan dana untuk jajan, liburan, atau dana darurat agar tidak tercampur dengan rekening utama.</p>
-                        <div class="tour-tip-badge" style="background: rgba(255,255,255,0.2); padding: 8px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 700;">Tip: Klik tulisan 'More' di bagian bawah daftar poket!</div>
+                        <p style="margin-bottom: 12px;">Mulai pisahkan tabunganmu dengan mudah. Skenario: Pisahkan dana untuk jajan, liburan, atau dana darurat agar tidak tercampur dengan rekening utama. Klik 'More' untuk menambah Poket baru.</p>
+                        <div class="tour-tip-badge" style="background: rgba(255,255,255,0.2); padding: 8px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 700;">Tip: Gunakan Poket terpisah agar pengeluaran lebih teratur!</div>
                     </div>
                     
                     <div class="tour-footer" style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px;">
@@ -2594,38 +2586,57 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const tourData = [
             { 
-                title: "1. Buat Poket Pertamamu", 
-                desc: "Mulai atur keuanganmu dengan membuat Poket. Skenario: Pisahkan dana untuk jajan, liburan, atau dana darurat agar tidak tercampur dengan rekening utama.",
-                tip: "Tip: Klik tulisan 'More' di bagian bawah daftar poket!"
+                title: "1. Kelola & Buat Poket", 
+                desc: "Mulai pisahkan tabunganmu dengan mudah. Skenario: Pisahkan dana untuk jajan, liburan, atau dana darurat agar tidak tercampur dengan rekening utama. Klik 'More' untuk menambah Poket baru.",
+                tip: "Tip: Gunakan Poket terpisah agar pengeluaran lebih teratur!",
+                selector: "tour-target-1"
             },
             { 
-                title: "2. Lihat Detail & Motivasi", 
-                desc: "Skenario: Bosan menabung? Klik salah satu Poket untuk melihat Goal Visibility Dashboard. Prediksi AI akan menghitung kapan targetmu tercapai!",
-                tip: "Tip: Pertahankan konsistensi menabungmu untuk mendapat 'Streak' dan Poin Reward!"
+                title: "2. AI Goal Predictor", 
+                desc: "Skenario: Bosan menabung? Klik salah satu Poket untuk melihat Goal Visibility Dashboard. Prediksi AI akan menghitung kapan targetmu tercapai secara presisi!",
+                tip: "Tip: Pertahankan konsistensi menabungmu untuk mendapat 'Streak' dan Poin Reward!",
+                selector: "tour-target-2"
+            },
+            {
+                title: "3. Smart Auto-Allocation",
+                desc: "Fitur pintar alokasi otomatis! AI akan mendeteksi dana masuk dan menyebarkannya ke setiap Poket secara adil sesuai skala prioritas dan target Anda.",
+                tip: "Tip: Klik tombol alokasi saat menerima pemasukan baru untuk langsung mengalokasikannya!",
+                selector: "tour-target-5"
             },
             { 
-                title: "3. AI Wealth Insight", 
-                desc: "Skenario: Ingin tahu kondisi keuangan secara keseluruhan? Buka tab 'Insight'. AI kami akan merangkum performa semua poketmu secara cerdas.",
-                tip: "Tip: Evaluasi performa menabungmu setiap akhir bulan di halaman ini."
+                title: "4. AI Life-Stage Detection", 
+                desc: "AI secara otomatis menganalisis profil dan aktivitas transaksimu untuk mendeteksi fase kehidupanmu (misal: 'Young Professional') dan memberikan rekomendasi finansial terbaik.",
+                tip: "Tip: Lihat rekomendasi aksi 'Next-Best Actions' di bagian bawah kartu untuk mengaktifkan produk pendukung!",
+                selector: "lifeStageCard"
             },
             { 
-                title: "4. Auto-Allocation & QRIS", 
-                desc: "Skenario: Ada gaji masuk? AI akan tawarkan alokasi otomatis! Kamu juga bisa bayar belanjaan langsung dari Poket jajan via QRIS.",
-                tip: "Tip: Aktifkan 'QRIS Payment' saat membuat poket khusus pengeluaran."
+                title: "5. Lacak Progress Kumulatif", 
+                desc: "Pantau persentase pencapaian seluruh tujuan finansialmu dalam satu progress bar terpadu beserta estimasi waktu target kumulatif tercapai secara pintar oleh AI.",
+                tip: "Tip: Performa menabung Anda dihitung secara dinamis setiap bulannya sesuai keaktifan menabung Anda.",
+                selector: "tour-target-7"
             }
         ];
 
         function updateTourHighlight() {
-            if (state.onboardingStep === 2) {
+            const stepData = tourData[state.onboardingStep];
+            if (!stepData) return;
+
+            // Handle dynamic tab transitions
+            if (state.onboardingStep >= 3) {
+                // Steps 4 and 5: Switch to Insight tab
                 const insightTab = document.querySelector('.ai-tab[data-target="insight"]');
-                if (insightTab) insightTab.click();
-            } else if (state.onboardingStep === 3) {
+                if (insightTab && !insightTab.classList.contains('active')) {
+                    insightTab.click();
+                }
+            } else {
+                // Steps 1, 2, and 3: Switch to Pocket tab
                 const pocketTab = document.querySelector('.ai-tab[data-target="pocket"]');
-                if (pocketTab) pocketTab.click();
+                if (pocketTab && !pocketTab.classList.contains('active')) {
+                    pocketTab.click();
+                }
             }
 
-            const targetId = 'tour-target-' + (state.onboardingStep + 1);
-            const targetEl = document.getElementById(targetId);
+            const targetEl = document.getElementById(stepData.selector);
             const cutout = document.getElementById('tour-cutout');
             const card = document.getElementById('tourCard');
             const pointer = document.getElementById('tourPointerTriangle');
