@@ -2657,20 +2657,43 @@ document.addEventListener('DOMContentLoaded', () => {
                     cutout.setAttribute('width', rect.width + 8);
                     cutout.setAttribute('height', rect.height + 8);
                     
-                    let cardTop = relTop + rect.height + 20;
-                    const estimatedCardHeight = card.offsetHeight || 250;
-                    if (cardTop + estimatedCardHeight > appContainer.clientHeight) {
-                        cardTop = relTop - estimatedCardHeight - 20;
-                        pointer.style.bottom = "-10px";
-                        pointer.style.top = "auto";
-                        pointer.style.borderBottom = "none";
-                        pointer.style.borderTop = "10px solid #39A9DB";
-                    } else {
+                    const estimatedCardHeight = card.offsetHeight || 220;
+                    const containerHeight = appContainer.clientHeight;
+                    
+                    // Smart placement based on where there is more space
+                    const spaceAbove = relTop;
+                    const spaceBelow = containerHeight - (relTop + rect.height);
+                    
+                    let placeBelow = spaceBelow >= spaceAbove;
+                    
+                    // If target is very close to top, force below
+                    if (relTop < 100) {
+                        placeBelow = true;
+                    }
+                    // If target is very close to bottom, force above
+                    else if (containerHeight - (relTop + rect.height) < 100) {
+                        placeBelow = false;
+                    }
+                    
+                    let cardTop = 0;
+                    if (placeBelow) {
+                        cardTop = relTop + rect.height + 15;
                         pointer.style.top = "-10px";
                         pointer.style.bottom = "auto";
                         pointer.style.borderTop = "none";
                         pointer.style.borderBottom = "10px solid #39A9DB";
+                    } else {
+                        cardTop = relTop - estimatedCardHeight - 15;
+                        pointer.style.bottom = "-10px";
+                        pointer.style.top = "auto";
+                        pointer.style.borderBottom = "none";
+                        pointer.style.borderTop = "10px solid #39A9DB";
                     }
+                    
+                    // Prevent vertical overflow by clamping cardTop
+                    const minCardTop = 15;
+                    const maxCardTop = containerHeight - estimatedCardHeight - 15;
+                    cardTop = Math.max(minCardTop, Math.min(cardTop, maxCardTop));
                     
                     card.style.top = cardTop + 'px';
                     
