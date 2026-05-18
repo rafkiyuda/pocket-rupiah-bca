@@ -809,7 +809,6 @@ document.addEventListener('DOMContentLoaded', () => {
                                 `).join('')}
                             </div>
                         </div>
-                        </div>
                         <!-- END RE-ADDED FEATURES -->
                         
                     </div>
