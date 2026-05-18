@@ -776,39 +776,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             <span class="acc-arrow" style="font-size: 1.4rem; color: #0077C8; font-weight: 300;">></span>
                         </div>
 
-                        <!-- ACTIVE CHALLENGES & BADGES -->
-
-                        <div style="padding-bottom: 40px;">
-                            <h3 style="margin-bottom: 16px; color: #003366; font-size: 1rem;">Active Challenges</h3>
-                            
-                            <div class="challenge-card completed" style="background: white; border-radius: 12px; padding: 16px; margin-bottom: 12px; display: flex; gap: 12px; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-                                <div class="challenge-icon" style="font-size: 1.5rem;">✅</div>
-                                <div class="challenge-content" style="flex: 1;">
-                                    <div class="challenge-title" style="font-size: 0.85rem; color: #003366; font-weight: 700; margin-bottom: 4px;">First Pocket Created</div>
-                                    <div class="challenge-desc" style="font-size: 0.7rem; color: #64748B; line-height: 1.4;">Start your journey by creating your first saving pocket.</div>
-                                    <div class="challenge-reward" style="color: #10B981; font-weight: 700; font-size: 0.75rem; margin-top: 4px;">+500 Pts</div>
-                                </div>
-                            </div>
-
-                            <div class="challenge-card" style="background: white; border-radius: 12px; padding: 16px; margin-bottom: 12px; display: flex; gap: 12px; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-                                <div class="challenge-icon" style="font-size: 1.5rem;">📈</div>
-                                <div class="challenge-content" style="flex: 1;">
-                                    <div class="challenge-title" style="font-size: 0.85rem; color: #003366; font-weight: 700; margin-bottom: 4px;">Reach 50% Goal</div>
-                                    <div class="challenge-desc" style="font-size: 0.7rem; color: #64748B; line-height: 1.4;">Maintain your balance until you reach 50% of any goal.</div>
-                                    <div class="challenge-reward" style="color: #0077C8; font-weight: 700; font-size: 0.75rem; margin-top: 4px;">+1000 Pts</div>
-                                </div>
-                            </div>
-
-                            <h3 style="margin: 24px 0 16px 0; color: #003366; font-size: 1rem;">Your Badges</h3>
-                            <div class="badges-row" style="display: flex; gap: 16px; overflow-x: auto; padding-bottom: 8px;">
-                                ${state.rewards.badges.map(b => `
-                                    <div class="badge-item ${b.unlocked ? 'unlocked' : ''}" style="display: flex; flex-direction: column; align-items: center; opacity: ${b.unlocked ? '1' : '0.5'}; min-width: 60px;">
-                                        <div class="badge-circle" style="width: 50px; height: 50px; border-radius: 50%; background: ${b.unlocked ? '#FEF08A' : '#E2E8F0'}; display: flex; justify-content: center; align-items: center; font-size: 1.5rem; margin-bottom: 8px;">${b.icon}</div>
-                                        <span class="badge-name" style="font-size: 0.65rem; text-align: center; color: #64748B;">${b.name}</span>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
                         <!-- END RE-ADDED FEATURES -->
                         
                     </div>
